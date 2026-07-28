@@ -135,6 +135,23 @@ would leave the system in a state the agent never described to the user. The
 pre-flight existence check before any write also makes the failure clean rather
 than a half-written transaction being rolled back.
 
+*Not chosen: a tolerant bulk delete that skips already-missing ids and reports
+a count.* That is appealing given the plan's note that deletes are naturally
+idempotent under EVE's step-replay model, but it would hide a genuine mistake —
+an agent passing wrong ids would see a quiet "deleted 0" — and it creates an
+asymmetry with the strict single-item `deleteTask`. EVE records completed steps
+rather than blindly re-executing them, so the replay argument is weaker than it
+first appears; if a replay does hit an already-deleted row, a `NotFoundError`
+the model can read and re-verify is the honest outcome.
+
+**A batch may span several projects — build time.** The scope guard therefore
+loops over every *distinct* `projectId` in the resolved task set and runs once
+per project, before any write. Checking only the first task's project would let
+one status id be applied across two projects whenever the first task happened
+to own it — a §7 rule 2 breach that the all-or-nothing contract would then
+faithfully commit. Per-distinct-project is the smallest check that is actually
+sound, and a test asserts that both tasks are left untouched when it fires.
+
 ### `listTasks` owns the ordering and the completed-hiding default
 
 **Does the action apply the spec's ordering, or leave it to each interface?**
@@ -191,7 +208,25 @@ the flip is a single `UPDATE ... SET is_default = (id = $target)` across the
 whole project (so no reader ever observes zero or two defaults, and there is no
 read-then-write race window). The blueprint allowed a two-statement fallback if
 Drizzle's `.set()` typing fought the `sql` expression; it did not, so the
-one-statement form shipped.
+one-statement form shipped as
+``.set({ isDefault: sql`${priorities.id} = ${priority.id}::uuid` })``. The
+explicit `::uuid` cast was added at build time so Postgres compares a uuid to a
+uuid rather than to an untyped text parameter. The two-`UPDATE` fallback would
+have been only *equally* atomic to an outside reader, never strictly better, so
+nothing was lost by not needing it.
+
+### The delete guards count within the project, not just by id — build time
+
+**`deleteStatus`'s in-use count could be scoped to the status id alone. Should
+it also filter on the project id?** Both:
+`and(eq(tasks.statusId, status.id), eq(tasks.projectId, status.projectId))`,
+and the same in `deletePriority`.
+
+Product spec §7.3 words the rule as "no task *in its project* currently uses
+it". The two predicates are equivalent today, because §7 rule 2 already forbids
+a cross-project reference from existing at all — but writing the guard the way
+the spec states it means it stays *correct* rather than *accidentally correct*
+if that invariant is ever weakened.
 
 ### No migration, no new index
 
@@ -218,6 +253,20 @@ round-tripping through the database, not by trusting an inline echo of values
 the same function just wrote. The agent rarely needs the ids immediately,
 because `createTask` defaults both status and priority.
 
+*Not chosen: returning `{ project, statuses, priorities }`.* It saves the agent
+a round trip and reads nicely, but it breaks return-shape symmetry with every
+other create and weakens exactly the linkage test above.
+
+**A note on how that test got there — build time.** The plan was to prove the
+linkage through `listStatuses` / `listPriorities`, but those actions did not
+exist until build step 7, and every commit had to leave the tree green. Step 6
+therefore read the seeded rows back with direct Drizzle selects, and step 9
+swapped both assertions onto the real list actions and added the US-C1.3
+create-project-then-create-task test in the same edit. Both forms satisfy the
+actual requirement — prove the linkage against the database rather than against
+an echo of what `createProject` just wrote — so the intermediate state was
+never weaker in kind, only in the seam it exercised.
+
 Task reads and writes return a **`TaskView`** instead — the task's own fields
 plus nested `project`, `status` and `priority` objects. Both interfaces need
 the related names on every render: the UI shows them as chips (§8.1), and the
@@ -238,6 +287,14 @@ Description is the only nullable user-editable field. If it were merely
 optional, "omitted" and "set to empty" would be indistinguishable and a
 description could never be cleared once written. Every other update field is
 non-nullable, so absent-means-untouched suffices for them.
+
+**`normalizeDescription` tests a trimmed copy but stores the original —
+build time.** It decides null-vs-store with `value.trim() === ""`, then writes
+the untrimmed string. `descriptionSchema` deliberately omits `.trim()`, because
+leading indentation and trailing blank lines in free text are the author's
+formatting rather than noise; trimming on the way to storage would silently
+contradict that. Testing on a trimmed copy only changes the whitespace-only
+case, where there is nothing to preserve.
 
 ### No `.default()`, no `.max()`
 
