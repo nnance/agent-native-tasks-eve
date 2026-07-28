@@ -14,9 +14,16 @@
 
 import assert from "node:assert/strict"
 
-import { eq, inArray } from "drizzle-orm"
+import { asc, eq, inArray } from "drizzle-orm"
 
-import { CHAT_STATE_ID, chatState, projects } from "../../../lib/db/schema.ts"
+import {
+  CHAT_STATE_ID,
+  chatState,
+  priorities,
+  projects,
+  statuses,
+  tasks,
+} from "../../../lib/db/schema.ts"
 import { apiTestDatabase } from "./db.ts"
 import { apiJson } from "./server.ts"
 
@@ -45,6 +52,60 @@ export async function createFixtureProject(
 
   created.add(body.id)
   return body
+}
+
+/**
+ * Inserts a task directly, bypassing the API.
+ *
+ * Blocked-delete coverage for projects, statuses and priorities all need a
+ * task to exist, and those suites are exercised before POST /api/tasks is
+ * reached. Writing the row directly also means a delete-block assertion cannot
+ * fail for a reason that lives in the task endpoint — the same reasoning
+ * `seedTask` in tests/unit/actions/projects.test.ts already applies. Omitted
+ * status/priority take the project's first-by-order, mirroring §4.4.
+ */
+export async function createFixtureTask(
+  projectId: string,
+  title: string,
+  overrides: { statusId?: string; priorityId?: string } = {}
+): Promise<{ id: string; title: string }> {
+  const statusId =
+    overrides.statusId ??
+    (
+      await apiTestDatabase
+        .select({ id: statuses.id })
+        .from(statuses)
+        .where(eq(statuses.projectId, projectId))
+        .orderBy(asc(statuses.order))
+        .limit(1)
+    )[0]?.id
+
+  const priorityId =
+    overrides.priorityId ??
+    (
+      await apiTestDatabase
+        .select({ id: priorities.id })
+        .from(priorities)
+        .where(eq(priorities.projectId, projectId))
+        .orderBy(asc(priorities.order))
+        .limit(1)
+    )[0]?.id
+
+  assert.ok(statusId, "fixture task: the project has no status")
+  assert.ok(priorityId, "fixture task: the project has no priority")
+
+  const [row] = await apiTestDatabase
+    .insert(tasks)
+    .values({ projectId, title, statusId, priorityId })
+    .returning({ id: tasks.id, title: tasks.title })
+
+  assert.ok(row, "fixture task: the insert returned no row")
+  return row
+}
+
+/** Removes a fixture task, so a blocked-delete test can then unblock itself. */
+export async function deleteFixtureTask(taskId: string): Promise<void> {
+  await apiTestDatabase.delete(tasks).where(eq(tasks.id, taskId))
 }
 
 /**
