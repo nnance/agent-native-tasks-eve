@@ -18,25 +18,9 @@ import { after } from "node:test"
 
 import { createDatabase, type Database } from "../../lib/db/connect.ts"
 import { priorities, projects, statuses, tasks } from "../../lib/db/schema.ts"
-import { resolveDbUrls } from "../../lib/db/urls.ts"
-
-/**
- * Resolves the test database URL and refuses outright when it is the dev one —
- * the same guard scripts/reset.ts applies before any destructive statement.
- * Tests must never touch the dev database (plan §8 risk 11).
- */
-function resolveTestDbUrl(): string {
-  const { pooled } = resolveDbUrls("test")
-
-  if (pooled === process.env.DATABASE_URL) {
-    throw new Error(
-      "Refusing to run tests: the test database URL is identical to " +
-        "DATABASE_URL. The test database must be a separate Neon project."
-    )
-  }
-
-  return pooled
-}
+// The dev-vs-test guard lives in lib/db/urls.ts so this harness and Phase 2's
+// tests/api/ harness cannot drift apart: there is exactly one copy of it.
+import { resolveTestDbUrl } from "../../lib/db/urls.ts"
 
 const handle = createDatabase(resolveTestDbUrl(), { max: 2 })
 
