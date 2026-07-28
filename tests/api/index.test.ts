@@ -21,6 +21,7 @@ import {
   cleanupFixtures,
 } from "./support/fixtures.ts"
 import { apiJson, startApiServer, stopApiServer } from "./support/server.ts"
+import { registerChatStateSuite } from "./suites/chat-state.ts"
 import { registerPrioritiesSuite } from "./suites/priorities.ts"
 import { registerProjectsSuite } from "./suites/projects.ts"
 import { registerStatusesSuite } from "./suites/statuses.ts"
@@ -61,3 +62,4 @@ registerProjectsSuite()
 registerStatusesSuite()
 registerPrioritiesSuite()
 registerTasksSuite()
+registerChatStateSuite()
