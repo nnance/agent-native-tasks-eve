@@ -1,0 +1,3 @@
+$ node --env-file=<file setting DATABASE_URL and DATABASE_URL_TEST to the same fake URL> scripts/reset.ts --target=test
+Refusing to reset: the test database URL is identical to DATABASE_URL. The test database must be a separate Neon project.
+exit=1
