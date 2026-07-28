@@ -11,6 +11,11 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // lib/**, scripts/** and tests/** must also run under bare `node`, which
+    // does not implement tsconfig `paths`. Those files use relative imports
+    // with explicit .ts extensions instead; this flag makes that legal.
+    // Safe because noEmit is already set (no rewriting of specifiers).
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
