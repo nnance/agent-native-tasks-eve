@@ -1,6 +1,6 @@
 $ node --env-file=.env.local docs/verification/phase-0r/harness/dev-on-test.mjs   # first boot, port 3100, TEST database
 --- server log ---
-[harness] next dev :3100 -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test)
+[harness] next dev :3100 -> ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test)
 ▲ Next.js 16.2.6 (Turbopack)
 - Local:         http://localhost:3100
 - Network:       http://192.168.10.176:3100

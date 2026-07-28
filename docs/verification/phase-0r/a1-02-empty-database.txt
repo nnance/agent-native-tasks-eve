@@ -1,5 +1,5 @@
 $ node --env-file=.env.local docs/verification/phase-0r/harness/fresh-install.ts
-Wiping ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test) to a fresh install.
+Wiping ep-TEST-ENDPOINT-REDACTED.c-10.us-east-1.aws.neon.tech/neondb (test) to a fresh install.
 {
   severity_local: 'NOTICE',
   severity: 'NOTICE',
@@ -24,12 +24,12 @@ Wiping ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test) to a fres
   routine: 'reportDependentObjects'
 }
 Dropped the public and drizzle schemas.
-Applied migrations to ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb.
+Applied migrations to ep-TEST-ENDPOINT-REDACTED.c-10.us-east-1.aws.neon.tech/neondb.
 NOT seeded — the app boot is what must create the workspace.
 counts -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
 
 $ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "before the app is opened"
-== before the app is opened — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+== before the app is opened — ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
 counts -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
 every project row -> Result(0) []
 {

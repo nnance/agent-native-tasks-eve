@@ -1,7 +1,7 @@
 $ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/real-db-roundtrip.ts
 sentinel project name -> phase-1-verification-02e77c54-26ba-472b-98aa-5cc354324a8e
-dev  database -> ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
-test database -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb
+dev  database -> ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb
+test database -> ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb
 
 == PART 1: the suite's handle writes to the real test database ==
 -- baseline, from independent connections --

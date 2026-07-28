@@ -16,5 +16,5 @@
   line: '207',
   routine: 'transformCreateStmt'
 }
-Applied migrations to ep-morning-fog-avcf5gn5.c-11.us-east-1.aws.neon.tech/neondb (dev).
+Applied migrations to ep-DEV-ENDPOINT-REDACTED.c-11.us-east-1.aws.neon.tech/neondb (dev).
 exit=0

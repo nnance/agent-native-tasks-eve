@@ -2,7 +2,7 @@
 
 $ node --env-file=.env.local docs/verification/phase-0r/harness/dev-on-test.mjs   # SECOND boot, same test database
 --- server log (second boot) ---
-[harness] next dev :3100 -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test)
+[harness] next dev :3100 -> ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test)
 ▲ Next.js 16.2.6 (Turbopack)
 - Local:         http://localhost:3100
 - Network:       http://192.168.10.176:3100
@@ -16,11 +16,11 @@ $ node --env-file=.env.local docs/verification/phase-0r/harness/dev-on-test.mjs 
 (no "[seed] created the default project and its lists" line above = the boot hook took the skip branch)
 
 $ node --env-file=.env.local --env-file-if-exists=.env.test scripts/seed.ts --target=test | head -2
-Seeding ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test).
+Seeding ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test).
 Skipped: the projects table is not empty; nothing was created.
 
 $ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "after the app was reopened"
-== after the app was reopened — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+== after the app was reopened — ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
 counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
 every project row -> Result(1) [
   {

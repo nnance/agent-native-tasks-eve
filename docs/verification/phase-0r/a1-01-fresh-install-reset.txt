@@ -3,7 +3,7 @@ $ pnpm db:reset:test
 > agent-native-tasks-eve@0.0.1 db:reset:test /Users/nicknance/Developer/genai/agent-native-tasks-eve
 > node --env-file=.env.local --env-file-if-exists=.env.test scripts/reset.ts --target=test
 
-Resetting ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test).
+Resetting ep-TEST-ENDPOINT-REDACTED.c-10.us-east-1.aws.neon.tech/neondb (test).
 {
   severity_local: 'NOTICE',
   severity: 'NOTICE',
@@ -28,7 +28,7 @@ Resetting ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test).
   routine: 'reportDependentObjects'
 }
 Dropped the public and drizzle schemas.
-Applied migrations to ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb.
+Applied migrations to ep-TEST-ENDPOINT-REDACTED.c-10.us-east-1.aws.neon.tech/neondb.
 Seeded: created the starter project and its defaults.
 {
   "project": {

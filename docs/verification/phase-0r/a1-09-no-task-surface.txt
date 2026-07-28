@@ -25,6 +25,6 @@ $ curl -s -o /dev/null -w "%{http_code}
 404
 
 $ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "tasks after the agent attempt" | head -3
-== tasks after the agent attempt — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+== tasks after the agent attempt — ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
 counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
 every project row -> Result(1) [

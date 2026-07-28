@@ -80,8 +80,8 @@ A green suite that skipped its way to green would look identical at a glance, so
 [`04-db-identity.txt`](./04-db-identity.txt):
 
 ```
-resolved dev  (DATABASE_URL)      -> ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
-resolved test (DATABASE_URL_TEST) -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb
+resolved dev  (DATABASE_URL)      -> ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb
+resolved test (DATABASE_URL_TEST) -> ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb
 same connection string?           -> false
 same host?                        -> false
 
@@ -95,7 +95,7 @@ guard exists to catch — and then imports the real `tests/support/db.ts`. The g
 initialisation, before any connection is opened — [`05-guard-refuses-dev-db.txt`](./05-guard-refuses-dev-db.txt):
 
 ```
-sabotaged: DATABASE_URL_TEST now resolves to ep-morning-fog-avcf5gn5-pooler.c-11…/neondb
+sabotaged: DATABASE_URL_TEST now resolves to ep-DEV-ENDPOINT-REDACTED-pooler.c-11…/neondb
 sabotaged: identical to DATABASE_URL -> true
 
 RESULT: import threw, as required.
