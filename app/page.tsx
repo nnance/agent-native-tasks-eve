@@ -103,7 +103,19 @@ export default function MessageScrollerDemo() {
             <CardDescription>How can I help you today?</CardDescription>
             <CardAction>
               <Tooltip>
-                <TooltipTrigger render={<Button variant="outline" size="icon" aria-label="Reset conversation" onClick={() => setMessages(initialMessages)} disabled={isBusy}><RotateCwIcon /></Button>} />
+                <TooltipTrigger
+                  render={
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Reset conversation"
+                      onClick={() => setMessages(initialMessages)}
+                      disabled={isBusy}
+                    >
+                      <RotateCwIcon />
+                    </Button>
+                  }
+                />
                 <TooltipContent>
                   <p>Reset</p>
                 </TooltipContent>
@@ -172,7 +184,18 @@ export default function MessageScrollerDemo() {
                 </div>
                 <InputGroupAddon align="block-end" className="pt-1">
                   <DropdownMenu>
-                    <DropdownMenuTrigger render={<InputGroupButton aria-label="Add files" type="button" size="icon-sm" variant="outline"><PlusIcon /></InputGroupButton>} />
+                    <DropdownMenuTrigger
+                      render={
+                        <InputGroupButton
+                          aria-label="Add files"
+                          type="button"
+                          size="icon-sm"
+                          variant="outline"
+                        >
+                          <PlusIcon />
+                        </InputGroupButton>
+                      }
+                    />
                     <DropdownMenuContent
                       align="start"
                       side="top"

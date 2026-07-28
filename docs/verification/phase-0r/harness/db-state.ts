@@ -10,10 +10,7 @@ import { sql } from "drizzle-orm"
 
 import { createDatabase } from "../../../../lib/db/connect.ts"
 import { describeSeedState } from "../../../../lib/db/seed.ts"
-import {
-  describeDbUrl,
-  resolveDbUrls,
-} from "../../../../lib/db/urls.ts"
+import { describeDbUrl, resolveDbUrls } from "../../../../lib/db/urls.ts"
 
 const label = process.argv[2] ?? "state"
 const { pooled } = resolveDbUrls("test")

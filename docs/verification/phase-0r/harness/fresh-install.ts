@@ -10,10 +10,7 @@ import { sql } from "drizzle-orm"
 
 import { createDatabase } from "../../../../lib/db/connect.ts"
 import { runMigrations } from "../../../../lib/db/migrate.ts"
-import {
-  describeDbUrl,
-  resolveDbUrls,
-} from "../../../../lib/db/urls.ts"
+import { describeDbUrl, resolveDbUrls } from "../../../../lib/db/urls.ts"
 
 const { pooled, direct } = resolveDbUrls("test")
 

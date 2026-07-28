@@ -85,11 +85,7 @@ await withRollback(async (tx: Database) => {
   const task = await createTask({ projectId: main.id, title: "Fix header" }, tx)
   await expectBlocked(
     "updateTask({ taskId, projectId: <Website> }) — moving a task between projects",
-    () =>
-      updateTask(
-        { taskId: task.id, projectId: other.id } as never,
-        tx
-      )
+    () => updateTask({ taskId: task.id, projectId: other.id } as never, tx)
   )
   const stillThere = await getTask({ taskId: task.id }, tx)
   // Read the raw column too, not just the joined view, so the assertion is
@@ -126,9 +122,8 @@ await withRollback(async (tx: Database) => {
   )
 
   console.log("\n================ §7.3 Delete-if-unused ===================")
-  await expectBlocked(
-    "deleteProject on a project that still has tasks",
-    () => deleteProject({ projectId: main.id }, tx)
+  await expectBlocked("deleteProject on a project that still has tasks", () =>
+    deleteProject({ projectId: main.id }, tx)
   )
   await expectBlocked(
     `deleteStatus on '${stillThere.status.name}', a status a task is using`,
@@ -194,14 +189,23 @@ await withRollback(async (tx: Database) => {
         tx
       )
   )
-  await updatePriority({ priorityId: mainPriorities[2]!.id, isDefault: true }, tx)
+  await updatePriority(
+    { priorityId: mainPriorities[2]!.id, isDefault: true },
+    tx
+  )
   const afterMove = await listPriorities({ projectId: main.id }, tx)
   console.log(
     "\nafter moving the default to 'High':",
-    afterMove.map((p) => `${p.name}${p.isDefault ? " (default)" : ""}`).join(", ")
+    afterMove
+      .map((p) => `${p.name}${p.isDefault ? " (default)" : ""}`)
+      .join(", ")
   )
   const defaults = afterMove.filter((p) => p.isDefault).length
-  console.log("  priorities flagged default ->", defaults, defaults === 1 ? "(exactly one)" : "FAIL")
+  console.log(
+    "  priorities flagged default ->",
+    defaults,
+    defaults === 1 ? "(exactly one)" : "FAIL"
+  )
   if (defaults !== 1) failures += 1
 
   console.log("\n===== US-E2.4 Deleting the default reassigns it ==========")
@@ -232,11 +236,15 @@ await withRollback(async (tx: Database) => {
   const freshPriorities = await listPriorities({ projectId: fresh.id }, tx)
   console.log(
     "  seeded statuses  ->",
-    freshStatuses.map((s) => `${s.order}:${s.name}${s.isCompleted ? " (completed)" : ""}`).join(", ")
+    freshStatuses
+      .map((s) => `${s.order}:${s.name}${s.isCompleted ? " (completed)" : ""}`)
+      .join(", ")
   )
   console.log(
     "  seeded priorities->",
-    freshPriorities.map((p) => `${p.order}:${p.name}${p.isDefault ? " (default)" : ""}`).join(", ")
+    freshPriorities
+      .map((p) => `${p.order}:${p.name}${p.isDefault ? " (default)" : ""}`)
+      .join(", ")
   )
   console.log(
     "  a task created with no status/priority took ->",

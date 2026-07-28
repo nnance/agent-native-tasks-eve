@@ -27,12 +27,17 @@ console.log()
 process.env.DATABASE_URL_TEST = dev
 process.env.TEST_DATABASE_URL = dev
 console.log("sabotaged: DATABASE_URL_TEST now resolves to", describeDbUrl(dev))
-console.log("sabotaged: identical to DATABASE_URL ->", dev === process.env.DATABASE_URL)
+console.log(
+  "sabotaged: identical to DATABASE_URL ->",
+  dev === process.env.DATABASE_URL
+)
 console.log()
 
 try {
   await import("../../../../tests/support/db.ts")
-  console.log("RESULT: NO ERROR THROWN — the guard did not fire. This is a FAIL.")
+  console.log(
+    "RESULT: NO ERROR THROWN — the guard did not fire. This is a FAIL."
+  )
   process.exitCode = 1
 } catch (error) {
   console.log("RESULT: import threw, as required.")

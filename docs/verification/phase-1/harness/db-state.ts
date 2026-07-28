@@ -21,7 +21,9 @@ for (const target of ["dev", "test"] as const) {
   const { database, close } = createDatabase(pooled)
 
   try {
-    console.log(`== ${label} — ${target.toUpperCase()} — ${describeDbUrl(pooled)} ==`)
+    console.log(
+      `== ${label} — ${target.toUpperCase()} — ${describeDbUrl(pooled)} ==`
+    )
 
     const counts = await database.execute<Record<string, string>>(sql`select
         (select count(*) from projects)   as projects,

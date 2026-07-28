@@ -64,18 +64,24 @@ try {
   console.log("test database ->", describeDbUrl(testUrl))
   console.log()
 
-  console.log("== PART 1: the suite's handle writes to the real test database ==")
+  console.log(
+    "== PART 1: the suite's handle writes to the real test database =="
+  )
   console.log("-- baseline, from independent connections --")
   const devBefore = await counts(devSide.database, "dev ")
   const testBefore = await counts(testSide.database, "test")
   console.log()
 
-  console.log("-- createProject() through tests/support/db.ts's testDatabase (committed) --")
+  console.log(
+    "-- createProject() through tests/support/db.ts's testDatabase (committed) --"
+  )
   const project = await createProject({ name: SENTINEL }, testDatabase)
   console.log("   returned project ->", { id: project.id, name: project.name })
   console.log()
 
-  console.log("-- observed from an INDEPENDENT connection to the TEST database --")
+  console.log(
+    "-- observed from an INDEPENDENT connection to the TEST database --"
+  )
   const seenOnTest = await findSentinel(testSide.database)
   console.log("   rows found ->", seenOnTest.length)
   console.log(
@@ -92,12 +98,16 @@ try {
   )
   console.log()
 
-  console.log("-- observed from an INDEPENDENT connection to the DEV database --")
+  console.log(
+    "-- observed from an INDEPENDENT connection to the DEV database --"
+  )
   const seenOnDev = await findSentinel(devSide.database)
   console.log("   rows found ->", seenOnDev.length, "(must be 0)")
   console.log()
 
-  console.log("-- a real §7.3 RuleViolation, raised by the real database's own data --")
+  console.log(
+    "-- a real §7.3 RuleViolation, raised by the real database's own data --"
+  )
   const task = await createTask(
     { projectId: project.id, title: "blocks the project delete" },
     testDatabase
@@ -116,7 +126,10 @@ try {
 
   console.log("-- cleanup: remove the task, then the project --")
   await deleteTask({ taskId: task.id }, testDatabase)
-  console.log("   deleted the task ->", await deleteProject({ projectId: project.id }, testDatabase))
+  console.log(
+    "   deleted the task ->",
+    await deleteProject({ projectId: project.id }, testDatabase)
+  )
   console.log()
 
   console.log("-- final state, from independent connections --")
@@ -132,11 +145,16 @@ try {
   )
   console.log()
 
-  console.log("== PART 2: withRollback isolation, the strategy every test uses ==")
+  console.log(
+    "== PART 2: withRollback isolation, the strategy every test uses =="
+  )
   const insideName = `phase-1-rollback-${crypto.randomUUID()}`
   const insideId = await withRollback(async (tx) => {
     const p = await createProject({ name: insideName }, tx)
-    const visible = await tx.select().from(projects).where(eq(projects.name, insideName))
+    const visible = await tx
+      .select()
+      .from(projects)
+      .where(eq(projects.name, insideName))
     console.log("   inside the transaction, rows visible ->", visible.length)
     console.log(
       "   inside the transaction, seeded statuses ->",
@@ -148,7 +166,11 @@ try {
     .select()
     .from(projects)
     .where(eq(projects.id, insideId))
-  console.log("   after withRollback returned, rows on test DB ->", afterRollback.length, "(must be 0)")
+  console.log(
+    "   after withRollback returned, rows on test DB ->",
+    afterRollback.length,
+    "(must be 0)"
+  )
   await counts(testSide.database, "test")
 } finally {
   await devSide.close()
