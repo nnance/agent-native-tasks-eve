@@ -432,6 +432,127 @@ diffs are about behaviour rather than whitespace.
 
 ---
 
+## Deviations from the implementation plan
+
+**No architectural deviation.** The client data layer, key shapes, invalidation
+strategy, split-screen shell, testid conventions and the five-file E2E layout
+are all as §2.5–§2.7 and §4.1–§4.4 describe them. What follows is the complete
+list of places where the phase departed from the plan's letter, and why.
+
+**1. `db.reset()` is `TRUNCATE … CASCADE` + seed, not drop + migrate + seed.**
+§4.4 words per-test isolation as drop, `scripts/migrate.ts`, `scripts/seed.ts`.
+The implemented reset gives the identical guarantee — every test starts from a
+freshly seeded, otherwise-empty database — in one round trip, with migrations
+run once per file instead of once per test. The schema cannot change between
+tests, so re-running DDL roughly fifty times against a remote Neon instance buys
+nothing and would dominate the runtime. This is a deviation in mechanism, not in
+the isolation property the plan was buying, which is why it is recorded here as
+well as under the design decisions.
+
+**2. `harness/fixtures.ts` is a fifth harness module.** §4.1's tree names
+`browser.ts`, `server.ts`, `db.ts` and `setup.ts` only. Preconditions had to
+live somewhere, and folding them into `db.ts` would have mixed "assert on rows"
+with "write rows" — different jobs with different blast radii. Fixtures are
+written through the shared `lib/actions` layer against the test database, so
+they go through the real rules rather than hand-inserting rows.
+
+**3. Five helpers beyond the `Browser` shape §4.2 sketches** — `texts`,
+`waitTexts`, `waitTextIn`, `waitAttr` and `waitCount`. None is speculative:
+each was added in response to a specific first-run failure (documented in
+"Three harness waits" above and in `browser.ts` next to the helper), and all
+five poll inside the page via `eval` / `wait --fn` rather than sleeping, because
+§4.5 forbids retrying flake away and a sleep is a retry with extra steps.
+
+**4. The projects panel landed two build-sequence steps early.** The phase's own
+build sequence puts the projects panel after the E2E harness.
+`01-foundation.test.ts`'s wrong-database probe creates a project *through the
+UI* — the single check that would catch `@next/env` letting `.env.local` win
+over the harness's `DATABASE_URL` while every other test still passed — so the
+panel was built alongside the harness rather than later. The alternative was to
+weaken the probe to a task-based one, which would have tested less. Same end
+state: the browser validation and the Epic C E2E file still landed together in
+the projects commit.
+
+**5. An extra `style:` commit precedes the phase work.** `pnpm format` rewrote
+fourteen pre-existing files (`app/layout.tsx`,
+`components/ui/dropdown-menu.tsx`, `docs/verification/**/harness/*.ts` and
+others) that predate the current Prettier config. Phase 2 deliberately left
+those alone to avoid touching published verification evidence; Phase 3 paid the
+cost once, in an isolated commit, so that every later diff in the phase is about
+behaviour rather than whitespace.
+
+**6. `04-statuses-ui` and `05-priorities-ui` assert the blocked-delete messages
+in the order the action layer actually checks them** — last-remaining before
+in-use — which is the reverse of the order US-D2 and US-E2 list the criteria in.
+This was confirmed against `lib/actions/statuses.ts` and
+`lib/actions/priorities.ts` before the assertions were written. The tests
+describe the system as built; the story text describes two rules without
+claiming a precedence between them.
+
+---
+
+## Known gaps and what the next phase inherits
+
+**Nothing in Phase 3's scope was left unfinished.** All thirteen stories in
+scope (US-B1–B6, US-C1–C3, US-D1–D2, US-E1–E2) pass, the exit criterion is met
+by `pnpm test:e2e` against a production build (47/47, verified independently of
+the implementation session), and the §3.2 phase-boundary checks are all clean.
+
+### Deliberately deferred
+
+- **Screenshot baselines are evidence, not a gate.** `tests/e2e/baselines/`
+  is committed as the phase brief requires, but `diff screenshot --baseline` is
+  not asserted inside the suite, per plan §3.2. Whoever wants visual regression
+  as a gate should first decide how to handle cross-machine font rendering;
+  turning it on naively would make it the suite's first flake source.
+- **`tests/e2e/README.md` records US-F1–F6 and US-G1–G4 as open gaps** in its
+  coverage table, with the files they will land in (`06-agent-chat.test.ts` for
+  Phase 4/5, `07-live-sync.test.ts` and `08-parity.test.ts` for Phase 6/7). The
+  coverage table is the handoff: it should stay complete, so a story without a
+  covering test stays visibly marked rather than silently absent.
+
+### Inherited by later phases
+
+- **Phase 6 attaches live sync to `lib/queries/`.** The directory exists
+  precisely so `onEvent` has one place to hook, the key shapes are the plan's so
+  prefix invalidation works, and `refetchOnWindowFocus` / `refetchInterval` are
+  already configured on the `QueryClient`. The 30-second poll is the current
+  freshness mechanism and is expected to become redundant, not to stay
+  alongside the event stream.
+- **Phase 5 inherits an untouched chat kit.** `lib/ai.ts`,
+  `components/message-animated.tsx` and every chat-kit component under
+  `components/ui/` are exactly as Phase 0 left them; only the scripted
+  transcript was removed. The right pane is
+  `components/workspace/chat-pane-placeholder.tsx` — static chrome plus a
+  visibly disabled composer — and replacing it is the whole of that phase's UI
+  work.
+- **The `TASK_ORDER` tie-break carried over from Phase 2 is still open.**
+  `lib/actions/tasks.ts` has no final deterministic tie-break, so two tasks
+  sharing a `created_at` sort arbitrarily. Phase 3 did not hit it — E2E fixtures
+  are created through separate HTTP-less action calls in distinct transactions,
+  and the UI's own creates are separate transactions — but it remains a §5/§6
+  parity risk once the agent starts creating tasks in batches, which is Phase 4.
+
+### Two product observations, neither a defect
+
+Both surfaced during verification, both are recorded in
+`docs/verification/phase-3/README.md` under *Observations*, and neither is
+required or forbidden by any criterion in scope. They are decisions someone
+should make deliberately rather than inherit by accident:
+
+1. **The create forms keep their text after a successful submit.**
+   `components/shared/inline-name-form.tsx` holds the input in local state and
+   never clears it, so after adding the project "Website" the field still reads
+   `Website`, and a second click on submit would create a duplicate. This
+   affects all three create forms, since they share the component.
+2. **Filter, search and show-completed state resets when the tab is switched.**
+   Going to *Manage lists* and back clears the whole filter bar, and the
+   *Managing lists for* selection returns to the first project. This follows
+   directly from the "two independent selection states" decision plus component
+   unmounting; it is consistent rather than glitchy.
+
+---
+
 ## Verification evidence
 
 `docs/verification/phase-3/`:
