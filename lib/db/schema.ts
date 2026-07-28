@@ -17,9 +17,13 @@ import {
 export const projects = pgTable("projects", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
+  // `clock_timestamp()` rather than `now()` — see the note on tasks.createdAt.
+  // listProjects orders by this column, so transaction-constant timestamps
+  // would make the project list order arbitrary whenever several projects are
+  // created in one transaction (which the seed does).
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .default(sql`clock_timestamp()`),
 })
 
 export const statuses = pgTable(
@@ -68,12 +72,19 @@ export const tasks = pgTable(
     priorityId: uuid("priority_id")
       .notNull()
       .references(() => priorities.id, { onDelete: "restrict" }),
+    // `clock_timestamp()`, not `now()`. Postgres evaluates `now()` as
+    // `transaction_timestamp()`, which is constant for an entire transaction,
+    // so several tasks created in one transaction would share a `created_at`
+    // and "oldest first" would stop meaning insertion order. That is a parity
+    // risk (§5, §6) before it is a test-flake one: the UI and the agent could
+    // list the same tasks in different orders. `clock_timestamp()` advances
+    // per statement, so creation order is preserved.
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .defaultNow(),
+      .default(sql`clock_timestamp()`),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
-      .defaultNow()
+      .default(sql`clock_timestamp()`)
       .$onUpdate(() => new Date()),
   },
   (t) => [
