@@ -21,6 +21,7 @@ import {
   cleanupFixtures,
 } from "./support/fixtures.ts"
 import { apiJson, startApiServer, stopApiServer } from "./support/server.ts"
+import { registerPrioritiesSuite } from "./suites/priorities.ts"
 import { registerProjectsSuite } from "./suites/projects.ts"
 import { registerStatusesSuite } from "./suites/statuses.ts"
 
@@ -57,3 +58,4 @@ describe("harness", () => {
 
 registerProjectsSuite()
 registerStatusesSuite()
+registerPrioritiesSuite()
