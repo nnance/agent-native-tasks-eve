@@ -1,6 +1,4 @@
-import "@/lib/env"
-
-import { pathToFileURL } from "node:url"
+import "../env.ts"
 
 import { asc, eq, sql } from "drizzle-orm"
 
@@ -8,10 +6,10 @@ import {
   DEFAULT_PRIORITIES,
   DEFAULT_STATUSES,
   SEED_PROJECT_NAME,
-} from "@/lib/domain/defaults"
+} from "../domain/defaults.ts"
 
-import { closeDb, db, type Database } from "./client"
-import { priorities, projects, statuses } from "./schema"
+import { db, type Database } from "./client.ts"
+import { priorities, projects, statuses } from "./schema.ts"
 
 export type SeedResult = { seeded: boolean; projectId: string }
 
@@ -106,25 +104,4 @@ export async function describeSeedState(database: Database = db) {
   ])
 
   return { project, statuses: projectStatuses, priorities: projectPriorities }
-}
-
-const invokedDirectly =
-  process.argv[1] !== undefined &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
-
-if (invokedDirectly) {
-  ensureSeeded()
-    .then(async (result) => {
-      console.log(
-        result.seeded
-          ? `Seeded: created the "${SEED_PROJECT_NAME}" project and its defaults.`
-          : "Skipped: the projects table is not empty; nothing was created."
-      )
-      console.log(JSON.stringify(await describeSeedState(), null, 2))
-    })
-    .catch((error) => {
-      console.error(error)
-      process.exitCode = 1
-    })
-    .finally(closeDb)
 }
