@@ -1,0 +1,11 @@
+Phase 3 verification — browser hygiene (implementation plan §3.1)
+Session: phase-3-verify | URL: http://localhost:3100 | 2026-07-28T22:04:02Z
+Steps: load /, switch to Manage lists, switch back to Tasks.
+
+$ agent-browser errors
+^ empty = no uncaught page errors
+
+$ agent-browser console
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+^ only React DevTools info + Next.js dev HMR/Fast Refresh logs; no warnings, no errors

@@ -1,0 +1,62 @@
+Phase 3 verification — project-scoped status/priority option sets
+Captured in the browser (agent-browser session `phase-3-verify`) against
+http://localhost:3100, by reading the live <select> options out of the DOM.
+Native <select> popups do not appear in screenshots, so the option lists are
+captured as text; the accompanying screenshots show the same dialog.
+
+Workspace state at capture time
+  Personal        statuses  To Do / In Progress / Done
+                  priorities Medium (default) / High / Someday
+  Marketing site  statuses  Backlog / Blocked / In Progress / Done
+                  priorities Low / Medium (default) / High
+  Solo            statuses  To Do
+                  priorities Low (default)
+
+
+### US-B1.5 — the create dialog offers only the selected project's lists
+Command: agent-browser eval over [data-testid="task-form-status"] /
+         [data-testid="task-form-priority"] after switching
+         [data-testid="task-form-project"].
+
+Project selected: Personal
+  statuses:   ["Project default", "To Do", "In Progress", "Done"]
+  priorities: ["Project default", "Medium", "High", "Someday"]
+
+Project selected: Marketing site
+  statuses:   ["Project default", "Backlog", "Blocked", "In Progress", "Done"]
+  priorities: ["Project default", "Low", "Medium", "High"]
+
+Project selected: Solo
+  statuses:   ["Project default", "To Do"]
+  priorities: ["Project default", "Low"]
+
+No project's list ever leaks into another's, and the "Project default"
+sentinel is what makes status/priority optional inputs (US-B1.1).
+
+
+### US-B4.3 / US-B4.4 — the edit dialog for a Marketing site task
+Task: "Ship the marketing page" (project Marketing site)
+
+  statuses:          ["Backlog", "Blocked", "In Progress", "Done"]
+  priorities:        ["Low", "Medium", "High"]
+  task-form-project-readonly: "Website"   <- rendered as static text
+  task-form-project (a <select>): absent
+
+  (captured before the project was renamed to "Marketing site"; the
+   read-only field renders whatever the task's project is currently named)
+
+There is no project control in the edit dialog at all — only a read-only
+label — so the UI offers no way to move a task between projects.
+
+
+### US-B5.2 — each task row's quick-move select, in the project's order
+Command: agent-browser eval over every [data-testid^="task-row-"] select.
+
+  "Draft the launch plan"      (Personal)       ["To Do", "In Progress", "Done"]
+  "Fix the sticky header bug"  (Personal)       ["To Do", "In Progress", "Done"]
+  "Write release notes"        (Personal)       ["To Do", "In Progress", "Done"]
+  "Ship the marketing page"    (Marketing site) ["Backlog", "Blocked", "In Progress", "Done"]
+
+The Marketing site row lists Backlog before Blocked before In Progress before
+Done — the order set with the reorder buttons in US-D1.2, not alphabetical and
+not creation order (Blocked was created last and moved up twice).

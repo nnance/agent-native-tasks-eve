@@ -1,0 +1,38 @@
+Phase 3 verification — API guard transcript
+Captured against the dev server on http://localhost:3100 (next dev, DATABASE_URL = Neon dev branch)
+Date: 2026-07-28T22:02:47Z
+
+### US-B1.2 — a task cannot be created without a project
+$ curl -X POST /api/tasks -d '{"title":"No project"}'
+{"error":"Invalid request.","issues":[{"expected":"string","code":"invalid_type","path":["projectId"],"message":"Invalid input: expected string, received undefined"}]}
+HTTP 400
+
+$ curl -X POST /api/tasks -d '{"title":"Null project","projectId":null}'
+{"error":"Invalid request.","issues":[{"expected":"string","code":"invalid_type","path":["projectId"],"message":"Invalid input: expected string, received null"}]}
+HTTP 400
+
+### US-B1.2 — a task cannot be created without a title
+$ curl -X POST /api/tasks -d '{"projectId":"651db98f-..."}'
+{"error":"Invalid request.","issues":[{"expected":"string","code":"invalid_type","path":["title"],"message":"Invalid input: expected string, received undefined"}]}
+HTTP 400
+
+$ curl -X POST /api/tasks -d '{"projectId":"651db98f-...","title":""}'
+{"error":"Invalid request.","issues":[{"origin":"string","code":"too_small","minimum":1,"inclusive":true,"path":["title"],"message":"Title cannot be empty"}]}
+HTTP 400
+
+### US-B1.5 — a status from another project is rejected
+(Personal project + Marketing site's 'Backlog' status 77b2cd22-...)
+{"error":"Status 'Backlog' belongs to a different project. A task in 'Personal' can only use that project's own statuses."}
+HTTP 409
+
+### US-B1.5 — a priority from another project is rejected
+{"error":"Priority 'Low' belongs to a different project. A task in 'Personal' can only use that project's own priorities."}
+HTTP 409
+
+### US-B4.4 — a task cannot be moved to another project through the API either
+$ curl -X PATCH /api/tasks/<Draft the launch plan> -d '{"projectId":"<Marketing site>"}'
+{"error":"Invalid request.","issues":[{"code":"unrecognized_keys","keys":["projectId"],"path":[],"message":"Unrecognized key: \"projectId\""}]}
+HTTP 400
+
+$ curl /api/tasks/<Draft the launch plan>  (project unchanged)
+{"id":"6de830a1-c442-44c6-a8d5-ea65e4b4cb18","title":"Draft the launch plan","description":null,"createdAt":"2026-07-28T21:43:53.448Z","updatedAt":"2026-07-28T21:59:02.951Z","project":{"id":"651db98f-07e1-4a06-b822-68af3db0671c","name":"Personal"},"status":{"id":"255473c0-e55c-4696-aaa6-1ebd95776cf4","name":"To Do","order":0,"isCompleted":false},"priority":{"id":"e8627b6c-109f-4e2f-9ca5-4de40bc141ad","name":"Someday","order":2,"isDefault":false}}
