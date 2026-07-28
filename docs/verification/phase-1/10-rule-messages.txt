@@ -1,0 +1,70 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/rule-messages.ts
+fixtures: project 'Design' with
+  statuses  -> [ '0:To Do', '1:In Progress', '2:Done*' ]
+  priorities-> [ '0:Low', '1:Medium*', '2:High' ]
+plus a second project 'Website' for the scoping checks.
+
+================ §7.1 Project immutability ================
+
+updateTask({ taskId, projectId: <Website> }) — moving a task between projects
+  ZodError: [{"code":"unrecognized_keys","path":[],"message":"Unrecognized key: \"projectId\""}]
+  task's stored project_id after the rejected attempt -> unchanged (still 'Design')
+
+================ §7.2 Scoped references ==================
+
+createTask with a status belonging to another project
+  RuleViolation: Status 'To Do' belongs to a different project. A task in 'Design' can only use that project's own statuses.
+
+updateTask with a priority belonging to another project
+  RuleViolation: Priority 'Low' belongs to a different project. A task in 'Design' can only use that project's own priorities.
+
+================ §7.3 Delete-if-unused ===================
+
+deleteProject on a project that still has tasks
+  RuleViolation: Project 'Design' still has 1 task. Delete or move those tasks first, then delete the project.
+
+deleteStatus on 'To Do', a status a task is using
+  RuleViolation: Status 'To Do' is used by 1 task. Move those tasks to another status (or delete them) first, then delete the status.
+
+deletePriority on 'Medium', a priority a task is using
+  RuleViolation: Priority 'Medium' is used by 1 task. Move those tasks to another priority (or delete them) first, then delete the priority.
+
+================ §7.5 Minimum lists ======================
+  'Solo' pared down to 1 status and 1 priority, both unused
+
+deleteStatus on the project's last remaining status (unused)
+  RuleViolation: 'To Do' is the only status in 'Solo'. Every project must keep at least one status, so it cannot be deleted. Create another status first.
+
+deletePriority on the project's last remaining priority (unused)
+  RuleViolation: 'Low' is the only priority in 'Solo'. Every project must keep at least one priority, so it cannot be deleted. Create another priority first.
+
+===== §4.3 / US-E1.3 Exactly one default, always =========
+
+createPriority({ isDefault: true }) — the field does not exist on the schema
+  ZodError: [{"code":"unrecognized_keys","path":[],"message":"Unrecognized key: \"isDefault\""}]
+
+updatePriority({ isDefault: false }) — a default can never be un-set alone
+  ZodError: [{"code":"invalid_value","path":["isDefault"],"message":"Invalid input: expected true"}]
+
+after moving the default to 'High': Low, Medium, High (default)
+  priorities flagged default -> 1 (exactly one)
+
+===== US-E2.4 Deleting the default reassigns it ==========
+deletePriority on the current default ('High') …
+  surviving priorities -> 0:Low (default), 1:Medium
+  default moved to the survivor at order 0 -> yes
+
+===== §7.4 New projects are usable immediately ===========
+  seeded statuses  -> 0:To Do, 1:In Progress, 2:Done (completed)
+  seeded priorities-> 0:Low, 1:Medium (default), 2:High
+  a task created with no status/priority took -> To Do (first by order) / Medium (the default)
+
+===== §7.6 Concurrent edits (last write wins) ============
+  NOT exercised in Phase 1. This rule is about two interfaces racing;
+  there is only one interface (this layer) so far. The action layer takes
+  no locks and holds no versions, which is the precondition, but the rule
+  itself is an Epic G / US-G3 concern verified in Phase 6.
+
+
+unexpected results: 0
+EXIT=0

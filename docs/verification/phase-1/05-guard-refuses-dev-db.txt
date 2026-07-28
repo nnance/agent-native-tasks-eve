@@ -1,0 +1,12 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/guard-refuses-dev.ts
+baseline: dev  -> ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
+baseline: test -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb
+baseline: distinct -> true
+
+sabotaged: DATABASE_URL_TEST now resolves to ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
+sabotaged: identical to DATABASE_URL -> true
+
+RESULT: import threw, as required.
+  error name    -> Error
+  error message -> Refusing to run tests: the test database URL is identical to DATABASE_URL. The test database must be a separate Neon project.
+EXIT=0

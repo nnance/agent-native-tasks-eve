@@ -1,0 +1,51 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/real-db-roundtrip.ts
+sentinel project name -> phase-1-verification-02e77c54-26ba-472b-98aa-5cc354324a8e
+dev  database -> ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
+test database -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb
+
+== PART 1: the suite's handle writes to the real test database ==
+-- baseline, from independent connections --
+   counts on dev  -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+   counts on test -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+
+-- createProject() through tests/support/db.ts's testDatabase (committed) --
+   returned project -> {
+  id: '5077faef-a33f-4752-9450-72c7b9bf668e',
+  name: 'phase-1-verification-02e77c54-26ba-472b-98aa-5cc354324a8e'
+}
+
+-- observed from an INDEPENDENT connection to the TEST database --
+   rows found -> 1
+   seeded statuses   -> [ '0:To Do', '1:In Progress', '2:Done (completed)' ]
+   seeded priorities -> [ '0:Low', '1:Medium (default)', '2:High' ]
+
+-- observed from an INDEPENDENT connection to the DEV database --
+   rows found -> 0 (must be 0)
+
+-- a real §7.3 RuleViolation, raised by the real database's own data --
+   created task -> {
+  id: '0ddf98f7-5e32-463a-8398-282eb57b3103',
+  title: 'blocks the project delete'
+}
+   threw -> RuleViolation
+   message -> Project 'phase-1-verification-02e77c54-26ba-472b-98aa-5cc354324a8e' still has 1 task. Delete or move those tasks first, then delete the project.
+   is RuleViolation -> true
+
+-- cleanup: remove the task, then the project --
+   deleted the task -> {
+  id: '5077faef-a33f-4752-9450-72c7b9bf668e',
+  name: 'phase-1-verification-02e77c54-26ba-472b-98aa-5cc354324a8e'
+}
+
+-- final state, from independent connections --
+   counts on dev  -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+   counts on test -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+   dev  unchanged -> true
+   test restored  -> true
+
+== PART 2: withRollback isolation, the strategy every test uses ==
+   inside the transaction, rows visible -> 1
+   inside the transaction, seeded statuses -> 3
+   after withRollback returned, rows on test DB -> 0 (must be 0)
+   counts on test -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+EXIT=0

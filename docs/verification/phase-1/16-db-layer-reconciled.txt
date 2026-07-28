@@ -1,0 +1,55 @@
+$ # Scope: "lib/db/schema.ts ... lib/db/client.ts — the single connection.
+$ #  Both partly exist from Phase 0; reconcile rather than duplicate."
+
+$ # There is exactly ONE place a postgres() socket is opened:
+$ grep -rn "postgres(" lib/ scripts/ instrumentation.ts
+lib/db/connect.ts:34:  const client = postgres(connectionString, {
+
+$ # ...and exactly ONE exported singleton handle:
+$ grep -rn "export const db" lib/
+lib/db/client.ts:25:export const db = handle.database
+
+$ # Every table is declared once, in lib/db/schema.ts:
+$ grep -rn "pgTable(" lib/
+lib/db/schema.ts:17:export const projects = pgTable("projects", {
+lib/db/schema.ts:25:export const statuses = pgTable(
+lib/db/schema.ts:39:export const priorities = pgTable(
+lib/db/schema.ts:53:export const tasks = pgTable(
+lib/db/schema.ts:89:export const chatState = pgTable(
+
+$ # Phase 1 changes to lib/db/ (git diff --stat against the branch base):
+$ git diff --stat main -- lib/db/
+ lib/db/connect.ts | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+$ # The one blocker fix: Database widened so a PgTransaction is assignable.
+$ git diff main -- lib/db/connect.ts
+diff --git a/lib/db/connect.ts b/lib/db/connect.ts
+index c568786..e444b6f 100644
+--- a/lib/db/connect.ts
++++ b/lib/db/connect.ts
+@@ -1,10 +1,21 @@
+-import { drizzle } from "drizzle-orm/postgres-js"
++import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js"
+ import postgres from "postgres"
+ 
+ import * as schema from "./schema.ts"
+ 
+-/** The injectable handle type for actions, scripts and tests. */
+-export type Database = ReturnType<typeof drizzle<typeof schema>>
++/**
++ * The injectable handle type for actions, scripts and tests.
++ *
++ * Deliberately widened from `ReturnType<typeof drizzle<typeof schema>>`: that
++ * type resolves to `PostgresJsDatabase<typeof schema> & { $client: Sql }`, and
++ * a `PgTransaction` carries no `$client`, so anything typed against it could
++ * never be handed a transaction. Every action in lib/actions/ takes this type
++ * as its `database` parameter precisely so a test can pass a rolled-back
++ * transaction (implementation plan §2.7 testability affordances), and so an
++ * action that opens its own transaction composes as a savepoint rather than
++ * needing a test-only branch.
++ */
++export type Database = PostgresJsDatabase<typeof schema>
+ 
+ /**
+  * Builds a throwaway connection against an explicit connection string.
