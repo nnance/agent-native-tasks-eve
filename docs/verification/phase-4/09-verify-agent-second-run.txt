@@ -1,0 +1,41 @@
+
+> agent-native-tasks-eve@0.0.1 verify:agent /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-tools.ts
+
+Server: http://127.0.0.1:59779 (test database)
+Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
+
+01 grounded read
+  ✔ the answer is preceded by a read tool call
+  ✔ the reply states the real count of 4
+  ✔ every committed task title appears in the reply
+  ✔ the nonexistent project is reported as not existing
+  ✔ no write tool ran in either turn
+
+02 project move refused
+  ✔ no update_task call attempted a project change
+  ✔ the refusal names the rule
+  ✔ an alternative is offered
+  ✔ the task is still in its original project
+
+03 blocked status delete
+  ✔ delete_status paused for approval
+  ✔ the status still exists after the approved-but-blocked delete
+  ✔ the blocking rule is relayed to the user
+  ✔ a concrete way forward is offered
+
+04 delete approval denied
+  ✔ delete_task paused for approval
+  ✔ the approval prompt carries the task id the tool would delete
+  ✔ the task still exists while the run is parked
+  ✔ the task still exists after the denial
+  ✔ the agent says nothing changed
+
+05 bulk approval approved
+  ✔ exactly one bulk_update_tasks call, and no single-task updates
+  ✔ the message states the count and the titles before the call
+  ✔ the approval prompt carries all three task ids
+  ✔ every seeded task is now In Progress
+  ✔ the summary reports the move
+
+All assertions passed.

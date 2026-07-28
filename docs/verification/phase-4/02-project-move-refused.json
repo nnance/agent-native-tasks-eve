@@ -1,0 +1,349 @@
+{
+  "scenario": "A task cannot change project — refused, explained, alternative offered",
+  "userStories": [
+    "US-F3.4"
+  ],
+  "model": "anthropic/claude-sonnet-5",
+  "projects": {
+    "from": "Phase4 MoveFrom 0b36876a",
+    "to": "Phase4 MoveTo 78a0e569"
+  },
+  "task": "Renew the SSL certificate",
+  "turns": [
+    {
+      "events": [
+        {
+          "data": {
+            "runtime": {
+              "agentId": "agent-native-tasks-eve",
+              "agentName": "agent-native-tasks-eve",
+              "eveVersion": "0.27.8",
+              "modelId": "anthropic/claude-sonnet-5"
+            }
+          },
+          "type": "session.started",
+          "meta": {
+            "at": "2026-07-28T23:12:54.068Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:12:54.068Z"
+          }
+        },
+        {
+          "data": {
+            "message": "Move the task \"Renew the SSL certificate\" out of \"Phase4 MoveFrom 0b36876a\" and into \"Phase4 MoveTo 78a0e569\".",
+            "parts": [
+              {
+                "text": "Move the task \"Renew the SSL certificate\" out of \"Phase4 MoveFrom 0b36876a\" and into \"Phase4 MoveTo 78a0e569\".",
+                "type": "text"
+              }
+            ],
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:12:54.069Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:12:54.069Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:56.779Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01CsLP9FwJKnxbA7iSAp1fLL",
+                "input": {
+                  "search": "Renew the SSL certificate"
+                },
+                "kind": "tool-call",
+                "toolName": "list_tasks"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:12:56.849Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01CsLP9FwJKnxbA7iSAp1fLL",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "e2a8b178-c05f-4189-a158-3c9d5051655b",
+                    "title": "Renew the SSL certificate",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:12:53.905Z",
+                    "updatedAt": "2026-07-28T23:12:53.905Z",
+                    "project": {
+                      "id": "80e95e85-635d-4d3f-8f14-168778b900a2",
+                      "name": "Phase4 MoveFrom 0b36876a"
+                    },
+                    "status": {
+                      "id": "6dd4822d-ad72-4f36-ab75-06256c4d872e",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "a13b363b-77da-41c6-af1d-e7732c39495d",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  }
+                ]
+              },
+              "toolName": "list_tasks"
+            },
+            "sequence": 0,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:12:56.992Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.003259,
+              "inputTokens": 11256,
+              "outputTokens": 103,
+              "cacheReadTokens": 11125,
+              "cacheWriteTokens": 129
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNG19EDQAR8GGKEY54DVWDH"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:12:56.996Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:12:57.036Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "I",
+            "messageSoFar": "I",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:58.535Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " found the task, but this isn't something I can do: a task's project is fixed once created —",
+            "messageSoFar": "I found the task, but this isn't something I can do: a task's project is fixed once created —",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:58.894Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " there's no move/reassign action, and this app doesn't let",
+            "messageSoFar": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:59.603Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can off",
+            "messageSoFar": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can off",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:59.629Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "er instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority",
+            "messageSoFar": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:12:59.995Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?",
+            "messageSoFar": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:13:00.353Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:13:00.360Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0038348,
+              "inputTokens": 11471,
+              "outputTokens": 158,
+              "cacheReadTokens": 11254,
+              "cacheWriteTokens": 215
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNG1CAN7CNVW47WCV4NJBVX"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:13:00.361Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:13:00.382Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:4a8578af-5aec-4951-9e75-e0d04a1642b1",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:13:00.383Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_tasks",
+          "input": {
+            "search": "Renew the SSL certificate"
+          }
+        }
+      ],
+      "approvalRequests": [],
+      "finalMessage": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "no update_task call attempted a project change",
+      "passed": true
+    },
+    {
+      "name": "the refusal names the rule",
+      "passed": true,
+      "detail": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?"
+    },
+    {
+      "name": "an alternative is offered",
+      "passed": true,
+      "detail": "I found the task, but this isn't something I can do: a task's project is fixed once created — there's no move/reassign action, and this app doesn't let a task change projects at all (that's a hard rule, not a permission issue).\n\n**What I can offer instead:** recreate an equivalent task in \"Phase4 MoveTo 78a0e569\" (same title, and I can copy the description/status/priority), then delete the original from \"Phase4 MoveFrom 0b36876a\".\n\nWant me to do that?"
+    },
+    {
+      "name": "the task is still in its original project",
+      "passed": true
+    }
+  ]
+}
