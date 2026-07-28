@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // eve's dev server writes a full snapshot of the source tree here on
+    // every boot, so linting it re-reports every warning once per snapshot.
+    ".eve/**",
+    "drizzle/**",
   ]),
 ]);
 
