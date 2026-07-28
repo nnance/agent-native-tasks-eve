@@ -24,6 +24,7 @@ import { apiJson, startApiServer, stopApiServer } from "./support/server.ts"
 import { registerPrioritiesSuite } from "./suites/priorities.ts"
 import { registerProjectsSuite } from "./suites/projects.ts"
 import { registerStatusesSuite } from "./suites/statuses.ts"
+import { registerTasksSuite } from "./suites/tasks.ts"
 
 before(async () => {
   await startApiServer()
@@ -59,3 +60,4 @@ describe("harness", () => {
 registerProjectsSuite()
 registerStatusesSuite()
 registerPrioritiesSuite()
+registerTasksSuite()
