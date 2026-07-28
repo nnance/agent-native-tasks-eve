@@ -355,4 +355,17 @@ no new row.
   `tests/api/` test should cover the `"pending"` and `"unknown"` branches, which
   this phase only verified by reasoning and by the `"current"` path.
 
-**Not carried forward:** every item in Phase 0r's scope was completed.
+**Carried forward to a later phase:**
+
+- **US-A1.4 is blocked, not passing.** The story's fourth acceptance criterion —
+  "a task can be created in the seeded project immediately, through either the UI
+  or the agent, with no additional setup" — could not be exercised, because no
+  task UI, no task route and no `agent/tools/` exist yet. That makes US-A1's
+  overall verdict **partial** (4 of 5 criteria pass); see
+  `docs/verification/phase-0r/README.md`. This is a scheduling artefact rather
+  than a defect: task creation is Phase 2 (server actions) and Phase 4 (agent
+  tools) work, and nothing in Phase 0r was supposed to deliver it. Whichever
+  phase first ships a task-creation surface owes a re-verification of A1.4
+  against the same fresh-install method used here.
+
+**Not carried forward:** every item in Phase 0r's own scope was completed.
