@@ -167,22 +167,58 @@ Plan §2.4's table has fifteen visual rows, four of which group two capabilities
 **filename**, so a grouped row can only ever be two files. Counting rows
 literally would have silently dropped four tools.
 
-### `never()` is written explicitly on all thirteen ungated tools
+### `never()` is written explicitly on every ungated tool
 
 The docs say an omitted `approval` behaves like `never()`. It is still written
 out, because the phase brief says "approval policies exactly as tabled … never()
 for the rest" and §2.4 writes `never()` in thirteen cells. Explicit is auditable
-by grep (6 `always()` + 13 `never()` = 19) and makes "this tool was considered
-and deliberately left ungated" visible, where an omission is indistinguishable
-from an oversight — on the one class of mistake that matters most here.
+by grep (6 `always()` + 12 `never()` + 1 policy = 19) and makes "this tool was
+considered and deliberately left ungated" visible, where an omission is
+indistinguishable from an oversight — on the one class of mistake that matters
+most here.
 
-### No custom, input-dependent approval policy anywhere
+### ~~No custom, input-dependent approval policy anywhere~~ — reversed in review
 
-Flat `always()` on six tools, `never()` on thirteen, zero policy functions. The
-plan's argument is structural rather than behavioural: every non-bulk write tool
-takes a **single id**, so multi-task work physically cannot reach the model
-without routing through a gated `bulk_*` tool. A "gate above N tasks" threshold
-would add a code path protecting no capability.
+**As shipped:** flat `always()` on six tools, `never()` on thirteen, zero policy
+functions. The argument was structural rather than behavioural: every non-bulk
+write tool takes a **single id**, so multi-task work supposedly could not reach
+the model without routing through a gated `bulk_*` tool.
+
+**That argument is only half true, and review caught the half that is false.**
+It holds for deletes, because `delete_task` is itself `always()` — a model that
+loops instead of calling `bulk_delete_tasks` still produces one prompt per task,
+N gated prompts and never zero. It does **not** hold for edits. `update_task`
+was `never()`, so "mark these three Done" answered with three `update_task`
+calls was three writes and no prompt at all: a silent violation of product spec
+§6, whose only remaining defence was `instructions.md` asking the model to
+prefer `bulk_update_tasks`. Plan §2.4's claim that approval is enforced "without
+relying on prompt compliance" was, for that one case, exactly a reliance on
+prompt compliance — and this record's own assumptions table had already conceded
+it ("observed twice, but not architecturally enforced").
+
+The clinching case is one the bulk tool cannot reach at all: "rename this one to
+X and that one to Y". `bulk_update_tasks` applies one status or priority to many
+tasks and has no title field, so *the only legal path* is a loop of
+`update_task` — and there the advice to prefer the bulk tool is not merely
+unenforced, it is inapplicable.
+
+**As it now stands:** `update_task` carries the one input-dependent policy in
+the inventory (`agent/lib/bulk-edit-gate.ts`), a direct reading of §6's own
+wording — the **first** task a turn edits runs free (§6: editing a single task
+is explicitly non-destructive), a **second, different** task in the same turn
+pauses. Two edits of the *same* task stay free, because that is still one task
+modified. The policy's limits are stated in the module and repeated under
+"Known gaps" below; the important one is that the AI SDK judges a step's tool
+calls one at a time and executes none until all are judged, so three parallel
+edits become one write plus two prompts rather than one prompt covering three.
+The bulk tool remains the right answer and `instructions.md` still says so —
+that is now an argument about the quality of the prompt the user sees, not the
+thing holding the rule.
+
+Live evidence: `docs/verification/phase-4/06-looped-edit-gated.json`, where the
+model loops `update_task` twice, the second call parks at `input.requested`
+carrying its task id, an API read taken while parked shows exactly one rename
+committed, and denying it leaves the second task untouched.
 
 ### No `outputSchema` on any tool
 
@@ -228,8 +264,10 @@ reason in the doc comment. Three independent grounds:
 disabled set exactly the nine named slugs, **in both directions**;
 `tool.inputSchema === <the object imported from lib/schemas>` by **object
 identity**; each approval policy, when invoked, returns `"user-approval"` for
-exactly the six gated tools and `"not-applicable"` for the other thirteen; and
-the six trimmed tools have `toModelOutput` while the rest do not.
+exactly the six gated tools and `"not-applicable"` for the other twelve, with
+`update_task`'s policy pinned by identity to the shared one and its behaviour
+asserted case by case in `tests/unit/agent/bulk-edit-gate.test.ts`; and the six
+trimmed tools have `toModelOutput` while the rest do not.
 
 The phase's central invariant is a table, and a table is what a test can check.
 The identity assertion makes "the tool restated the schema" impossible to merge,
@@ -284,9 +322,12 @@ own claim. Fixture projects are uniquely suffixed (`Phase4 <label> <uuid8>`) and
 cleaned up best-effort, matching the ownership-based isolation
 `tests/api/support/fixtures.ts` already established.
 
-### Five recorded scenarios, not the three the brief names
+### Six recorded scenarios, not the three the brief names
 
-The brief's three are all present, but two of them are worth splitting:
+The brief's three are all present, but two of them are worth splitting, and
+review added a sixth (`06`, the looped edit — see the reversed approval decision
+above; it is the only scenario where the model is *forced* down the single-task
+path, so it is the only one that exercises `update_task`'s gate):
 
 - A rule violation has two distinct shapes here. Project immutability is
   **structurally inexpressible** — the schema has no `projectId`, so no action
@@ -313,6 +354,12 @@ call the gated tool **in the same turn**, because the framework's durable pause
 *is* the confirmation. The rest of the file already read as if written against
 these tools and was left alone.
 
+Review added a fifth change to the same section: "prefer the bulk tools" now
+says *why* looping no longer works, because as of `update_task`'s policy it is
+true — a loop buys a queue of prompts and a non-atomic change rather than a way
+around the gate. An instruction the model can verify against the tool's own
+behaviour is worth more than one it has to take on trust.
+
 ### The six gated tools' descriptions state the approval fact
 
 US-F5.2 requires the user to see exactly what will change before approving, and
@@ -323,6 +370,13 @@ prompt shows the exact task ids you pass, so list the tasks by title and say how
 many there are in your message before calling."* A poor naming choice made now
 becomes a much harder rendering problem in Phase 5, so the descriptions are
 treated as product surface, not comments.
+
+`update_task`'s description now states its own, conditional version of the same
+fact ("the first task you edit in a turn runs immediately, but editing a second
+task with this tool pauses for the user's approval one task at a time"). A model
+that knows a loop will be interrupted has a concrete reason to reach for
+`bulk_update_tasks` — the description carries the incentive, and the policy
+carries the guarantee if it does not.
 
 ---
 
@@ -367,14 +421,24 @@ argued.
 | The stream event names and payload keys used to derive tool calls match what the runtime emits. | **Confirmed** against the installed `protocol/message.d.ts` and then observed live: `actions.requested` → `data.actions[]` with `kind: "tool-call"`, `toolName`, `input`; `input.requested` → `data.requests[]` with `requestId` and `action.{toolName,input}`; `message.completed` → `data.message`. | The harness records every event verbatim regardless, so a transcript stays valid evidence even if a derived summary needed re-deriving. |
 | An error rethrown from `execute` surfaces as a failed call or turn, not an infinitely replayed step. | `tools/overview.mdx` distinguishes completed steps (never re-run) from steps interrupted mid-execution (which do). A thrown application error is a completed attempt. Not observed — the rethrow branch is unreachable for the two expected failure classes by construction. | A genuine defect could be replayed a few times before the turn fails. Tolerable: every write action is transactional, so a replay repeats a query that already rolled back. |
 | Disabling `todo` does not measurably degrade multi-step planning on this product's requests. | Turns here are short and bounded (read, then one write or one bulk write); the durable todo list targets long autonomous runs. Scenario 5 is a compound request and the agent handled it in one bulk call both times. | Would show up in Phase 6's evals as losing track mid-plan. Remedy is a one-file revert. |
-| The model reliably prefers `bulk_*` over repeated single-task calls. | Behavioural, driven by `instructions.md` and the bulk descriptions. **Observed twice**, but not architecturally enforced. What *is* enforced: single-task tools take one id each, so multi-task work cannot silently escape the gate — worst case is N gated prompts, never zero. | US-F5.1 would fail on judgement, not plumbing. Remedy is description/instruction tightening, then Phase 6's evals, which exist for exactly this regression class. |
+| ~~The model reliably prefers `bulk_*` over repeated single-task calls.~~ **Retired — it was load-bearing for safety and should not have been.** | It is still true behaviourally (observed in every run), but it is no longer what holds product spec §6 for edits: `update_task` now pauses on the second task it edits in a turn, so a loop is N-1 gated prompts rather than N silent writes. See the reversed decision above. | Nothing safety-relevant. A model that loops anyway produces a worse prompt, not an unconfirmed change — a quality regression for Phase 6's evals. |
 | Running the harness with no other `pnpm dev` / `eve dev` active avoids contention over `.eve/` and `.next/`. | `reference/cli.md` describes `.eve/` state as per-app-root, and `tests/api/support/server.ts` already warns that concurrent dev servers on one `.next/` are a cache-corruption hazard. Both harness runs were done with no other server up. | Flaky or corrupt runs. Documented in `docs/verification/phase-4/README.md`. |
 
 ---
 
 ## Deviations from the implementation plan
 
-None of substance. Three clarifications where the plan is terser than the code:
+One of substance, taken in review:
+
+0. **`update_task`'s approval is a policy, not the tabled `never()`** (§2.4
+   table, and the brief's "approval policies exactly as tabled"). The table's
+   `never()` cell does not satisfy the spec it exists to serve — see the
+   reversed decision above for why, and `agent/lib/bulk-edit-gate.ts` for the
+   rule. §2.4's table row and its two bullets were corrected in
+   `docs/implementation-plan.md` rather than left to contradict the code; the
+   other eighteen cells are untouched.
+
+Then three clarifications where the plan is terser than the code:
 
 1. **Nineteen tool files against a fifteen-row table.** Four rows group two
    capabilities; filename-derived identity forces the split. This is a reading
@@ -418,6 +482,21 @@ already establish the `node --env-file … scripts/*.ts` pattern.
   `{ ok, data }` / `{ ok, kind, message }` envelope, and every gated tool
   produces one `input.requested` whose `action.input` is the full tool input.
   Two shapes, nineteen tools.
+- **The edit gate has two known limits, both fail-open, both worth an eval.**
+  `ApprovalContext` carries `session.id`, `session.turn.id` and a `callId` — no
+  list of the turn's other calls and nowhere durable to record one — so
+  `agent/lib/bulk-edit-gate.ts` counts distinct task ids in process memory.
+  Consequences, stated so a later phase does not discover them: (1) the AI SDK
+  hands the policy one call at a time and executes none until all are judged, so
+  *N parallel* `update_task` calls are one write plus N-1 prompts, not one
+  prompt covering N — the user learns about the change, but the first write has
+  already happened; (2) a turn resumed in a **different process** forgets what
+  it edited, and its next call runs free. Neither can gate a genuinely
+  single-task edit that §6 says must not be gated, which is the direction that
+  matters. Phase 6 should carry an eval that fails when a multi-task edit
+  request produces more than one ungated write, and the durable fix — should
+  EVE ever expose turn-scoped state to an approval policy — is to move the
+  counter there.
 - **`ask_question` is live but unexercised.** It is kept and instructed
   ("only for genuine ambiguity about *which* item"), but no scenario in this
   packet triggers it. Phase 5 should confirm it renders sanely in the chat pane.
@@ -437,5 +516,6 @@ summary:
 | `03-blocked-status-delete.json` | The `blocked` envelope end to end — gate fires, approval granted, `RuleViolation` thrown, relayed with a way forward |
 | `04-delete-approval-denied.json` | US-F3.3 — the row is read back **while parked** and still exists; the denial changes nothing |
 | `05-bulk-approval-approved.json` | US-F5 — one `bulk_update_tasks` call, zero `update_task` calls, all three ids in the prompt, every row moved |
-| `06-typecheck.txt`, `07-lint.txt`, `08-test-unit.txt` | Clean typecheck and lint; **222 unit tests, 0 failures** |
-| `09-verify-agent-second-run.txt` | The whole packet re-run back to back — 24/24 assertions again |
+| `06-looped-edit-gated.json` | US-F5 the other way round — a two-task rename the bulk tool cannot express, two `update_task` calls, the second parked at `input.requested`, exactly one rename committed while parked, denial leaves the second alone |
+| `07-typecheck.txt`, `08-lint.txt`, `09-test-unit.txt` | Clean typecheck and lint; **230 unit tests, 0 failures** |
+| `10-verify-agent-second-run.txt` | The whole packet re-run back to back — 27/27 assertions again |

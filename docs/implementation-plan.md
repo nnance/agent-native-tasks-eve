@@ -147,7 +147,7 @@ agent/
 | `list_tasks` | listTasks (filters + text search) | `never()` |
 | `get_task` | getTask | `never()` |
 | `create_task` | createTask | `never()` |
-| `update_task` | updateTask (title/description/status/priority; also serves "move status") | `never()` |
+| `update_task` | updateTask (title/description/status/priority; also serves "move status") | policy: free for the first task a turn edits, `user-approval` for a second |
 | `delete_task` | deleteTask | `always()` |
 | `bulk_update_tasks` | bulkUpdateTasks (move/edit many) | `always()` |
 | `bulk_delete_tasks` | bulkDeleteTasks | `always()` |
@@ -157,7 +157,8 @@ agent/
 | `delete_status` / `delete_priority` | delete* | `always()` |
 
 - Approval is **framework-enforced** (durable pause via `input.requested` → `inputResponses`), satisfying US-F3.3, US-F4.3, US-F5 without relying on prompt compliance. Bulk tools take an explicit array of task IDs, so "state exactly what will change" (US-F5.2) falls out of the approval prompt rendering the tool input.
-- Single-task edits route through `update_task` (no approval); the model is instructed to use bulk tools whenever more than one task is affected — and because non-bulk tools take a single ID, multi-task work *cannot* silently bypass the approval gate.
+- Single-task edits route through `update_task`, which runs without a prompt for the **first** task a turn edits (spec §6: editing one task is explicitly non-destructive) and requires approval for every further task in the same turn. The model is still instructed to use bulk tools whenever more than one task is affected, but that is now an argument about quality (one accurate prompt beats a queue of them), not the thing holding the safety rule.
+  - Deletes need no such policy: `delete_task` is `always()`, so a looped delete is N gated prompts, never zero. Edits had no equivalent backstop — a looped `update_task` was N *ungated* writes — and "prefer `bulk_update_tasks`" is not even available for a request like "rename this one to X and that one to Y", which the bulk tool cannot express. `agent/lib/bulk-edit-gate.ts` carries the policy and the reasoning; `docs/verification/phase-4/06-looped-edit-gated.json` is the live run.
 - `toModelOutput` trims large list results (return counts + compact rows to the model; full rows to the channel).
 - Idempotency: actions are safe to retry (create uses client-suppliable idempotent semantics where cheap; updates/deletes are naturally idempotent) per EVE's step-replay model.
 
