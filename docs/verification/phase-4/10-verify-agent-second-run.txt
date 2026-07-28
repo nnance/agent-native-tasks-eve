@@ -2,7 +2,7 @@
 > agent-native-tasks-eve@0.0.1 verify:agent /Users/nicknance/Developer/genai/agent-native-tasks-eve
 > node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-tools.ts
 
-Server: http://127.0.0.1:59779 (test database)
+Server: http://127.0.0.1:61055 (test database)
 Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
 
 01 grounded read
@@ -37,5 +37,12 @@ Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
   ✔ the approval prompt carries all three task ids
   ✔ every seeded task is now In Progress
   ✔ the summary reports the move
+
+06 looped single-task edits are gated
+  ✔ the request routes through repeated update_task calls, as it must
+  ✔ the second single-task edit paused for approval
+  ✔ the approval prompt names the task the pending edit would change
+  ✔ at most one task was renamed before the user was asked
+  ✔ declining leaves at most the one ungated single-task edit applied
 
 All assertions passed.

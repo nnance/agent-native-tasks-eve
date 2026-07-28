@@ -648,6 +648,127 @@ async function bulkApproved(client: Client, model: string): Promise<void> {
   })
 }
 
+/**
+ * US-F5.1 / product spec §6 — two tasks edited in one request pause, even when
+ * the bulk tool cannot express the request.
+ *
+ * Scenario 05 shows the happy path: asked to move several tasks the same way,
+ * the model routes it through one gated `bulk_update_tasks` call. That is
+ * behaviour, and behaviour is not a guarantee.
+ *
+ * This scenario removes the choice. `bulk_update_tasks` applies **one** status
+ * or priority to many tasks; it has no field for a title. So "rename this one
+ * to X and that one to Y" is a §6 bulk change ("a single request that would
+ * modify … more than one task") that the bulk tool structurally cannot carry —
+ * the model must loop `update_task`, and the instruction to prefer the bulk
+ * tool has nothing to offer. Everything standing between that request and two
+ * silent writes is `update_task`'s own approval policy
+ * (`agent/lib/bulk-edit-gate.ts`), and this is where it is exercised against
+ * the real runtime rather than a stubbed `ApprovalContext`.
+ *
+ * What §6 permits is one ungated single-task edit. What it forbids is the
+ * second one going through unannounced, so that is what the assertions pin,
+ * on committed rows read back while the run is still parked.
+ */
+async function loopedEditGated(client: Client, model: string): Promise<void> {
+  process.stdout.write("\n06 looped single-task edits are gated\n")
+
+  const project = await createProject("LoopedEdit")
+
+  const first = await createTask(project.id, "Rotate the signing keys")
+  const second = await createTask(project.id, "Backfill the search index")
+
+  const renamed = {
+    [first.id]: "Rotate the signing keys (Q3)",
+    [second.id]: "Backfill the search index (v2)",
+  }
+
+  const session = client.session()
+  const asked = await runTurn(
+    session,
+    `In the project "${project.name}", rename "${first.title}" to ` +
+      `"${renamed[first.id]}" and rename "${second.title}" to ` +
+      `"${renamed[second.id]}".`
+  )
+
+  /** How many of the two tasks currently carry their new title. */
+  const renameCount = async (): Promise<number> =>
+    (await readTasks(project.id)).filter((row) => row.title === renamed[row.id])
+      .length
+
+  const assertions: Assertion[] = []
+  const updateCalls = asked.toolCalls.filter(
+    (call) => call.name === "update_task"
+  )
+  const gated = asked.approvalRequests.filter(
+    (request) => request.action.toolName === "update_task"
+  )
+  const parkedRenames = await renameCount()
+
+  check(
+    assertions,
+    "the request routes through repeated update_task calls, as it must",
+    updateCalls.length >= 2,
+    JSON.stringify(toolNames(asked))
+  )
+  check(
+    assertions,
+    "the second single-task edit paused for approval",
+    gated.length >= 1,
+    JSON.stringify(asked.approvalRequests.map((r) => r.action.toolName))
+  )
+  check(
+    assertions,
+    "the approval prompt names the task the pending edit would change",
+    gated.some((request) => {
+      const input = request.action.input as { taskId?: string }
+      return input.taskId === first.id || input.taskId === second.id
+    }),
+    JSON.stringify(gated.map((request) => request.action.input))
+  )
+  check(
+    assertions,
+    "at most one task was renamed before the user was asked",
+    parkedRenames <= 1,
+    `${parkedRenames} of 2 renamed while parked`
+  )
+
+  const resumed =
+    asked.approvalRequests.length > 0
+      ? await runTurn(session, {
+          inputResponses: asked.approvalRequests.map((request) => ({
+            requestId: request.requestId,
+            optionId: "deny",
+          })),
+        })
+      : undefined
+
+  const deniedRenames = await renameCount()
+
+  check(
+    assertions,
+    "declining leaves at most the one ungated single-task edit applied",
+    deniedRenames <= 1,
+    JSON.stringify((await readTasks(project.id)).map((row) => row.title))
+  )
+
+  await writeTranscript("06-looped-edit-gated.json", {
+    scenario:
+      "A two-task rename — which bulk_update_tasks cannot express — pauses before the second task changes",
+    userStories: ["US-F5.1", "US-F5.2", "US-F5.3"],
+    model,
+    project: project.name,
+    seeded: [first, second].map((task) => ({
+      id: task.id,
+      title: task.title,
+      requestedTitle: renamed[task.id],
+    })),
+    routedThrough: toolNames(asked),
+    turns: resumed ? [asked, resumed] : [asked],
+    assertions,
+  })
+}
+
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
@@ -690,6 +811,7 @@ async function main(): Promise<void> {
     await blockedStatusDelete(client, model)
     await deleteDenied(client, model)
     await bulkApproved(client, model)
+    await loopedEditGated(client, model)
 
     await cleanUp()
   } finally {

@@ -4,8 +4,9 @@
 trimming, and `agent/instructions.md`. User stories in scope: **US-F2, US-F3,
 US-F4, US-F5**.
 
-**Verdict: PASS.** All 19 tools are discovered, all six gated tools pause for
-approval, and every scenario in this packet was driven against a **real** EVE
+**Verdict: PASS.** All 19 tools are discovered, all six unconditionally gated
+tools pause for approval, `update_task` pauses on the second task it edits in a
+turn, and every scenario in this packet was driven against a **real** EVE
 agent (`anthropic/claude-sonnet-5` through the AI Gateway) talking to a **real**
 Postgres. No model call is mocked, no tool is stubbed, and every post-condition
 below is an independent HTTP read of committed state rather than a restatement
@@ -49,10 +50,11 @@ the `.eve/` runtime state and the `.next/` build directory.
 | `03-blocked-status-delete.json` | **US-F4.3 + US-F3.4, end to end through the `blocked` envelope.** The gate fires, the approval is *granted*, the action then throws `RuleViolation`, and the agent relays the blocking reason and offers a way forward. The status still exists afterwards. |
 | `04-delete-approval-denied.json` | **US-F3.3.** `delete_task` pauses at `input.requested`; the prompt carries the exact task id; the row is read back **while parked** and still exists; the denial leaves it in place and the agent says nothing changed. This is what proves the pause is framework-enforced rather than prompt compliance. |
 | `05-bulk-approval-approved.json` | **US-F5.1/5.2/5.3/5.4.** A three-task move produces exactly one `bulk_update_tasks` call and zero `update_task` calls; the message states the count and titles first; the approval prompt carries all three ids; approving it moves every row (verified by API read). |
-| `06-typecheck.txt` | `pnpm typecheck` clean. |
-| `07-lint.txt` | `pnpm lint` clean (one pre-existing warning in `.remember/`, outside this phase's tree). |
-| `08-test-unit.txt` | `pnpm test:unit`: **222 tests, 0 failures**, including the 79 in `tests/unit/agent/`. |
-| `09-verify-agent-second-run.txt` | The whole packet re-run back to back, all assertions passing again. |
+| `06-looped-edit-gated.json` | **US-F5.1/5.2/5.3 — the structural half of the same rule.** A two-task *rename* is a §6 bulk change that `bulk_update_tasks` cannot express (it has no title field), so the model must loop `update_task` — and it does, twice. The second call pauses at `input.requested` carrying that task's id, an API read taken **while parked** shows exactly one rename committed, and denying it leaves the second task untouched. This is the case where preferring the bulk tool is not an option, so the gate is the only thing holding §6. |
+| `07-typecheck.txt` | `pnpm typecheck` clean. |
+| `08-lint.txt` | `pnpm lint` clean (one pre-existing warning in `.remember/`, outside this phase's tree). |
+| `09-test-unit.txt` | `pnpm test:unit`: **230 tests, 0 failures**, including the 99 in `tests/unit/agent/`. |
+| `10-verify-agent-second-run.txt` | The whole packet re-run back to back, all assertions passing again. |
 
 ## Reading a transcript
 

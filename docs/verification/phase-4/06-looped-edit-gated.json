@@ -1,0 +1,872 @@
+{
+  "scenario": "A two-task rename — which bulk_update_tasks cannot express — pauses before the second task changes",
+  "userStories": [
+    "US-F5.1",
+    "US-F5.2",
+    "US-F5.3"
+  ],
+  "model": "anthropic/claude-sonnet-5",
+  "project": "Phase4 LoopedEdit ae760a56",
+  "seeded": [
+    {
+      "id": "c29c7368-0ef6-4962-beb2-bb9d26955fc8",
+      "title": "Rotate the signing keys",
+      "requestedTitle": "Rotate the signing keys (Q3)"
+    },
+    {
+      "id": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+      "title": "Backfill the search index",
+      "requestedTitle": "Backfill the search index (v2)"
+    }
+  ],
+  "routedThrough": [
+    "list_projects",
+    "list_tasks",
+    "update_task",
+    "update_task"
+  ],
+  "turns": [
+    {
+      "events": [
+        {
+          "data": {
+            "runtime": {
+              "agentId": "agent-native-tasks-eve",
+              "agentName": "agent-native-tasks-eve",
+              "eveVersion": "0.27.8",
+              "modelId": "anthropic/claude-sonnet-5"
+            }
+          },
+          "type": "session.started",
+          "meta": {
+            "at": "2026-07-28T23:41:37.639Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:41:37.639Z"
+          }
+        },
+        {
+          "data": {
+            "message": "In the project \"Phase4 LoopedEdit ae760a56\", rename \"Rotate the signing keys\" to \"Rotate the signing keys (Q3)\" and rename \"Backfill the search index\" to \"Backfill the search index (v2)\".",
+            "parts": [
+              {
+                "text": "In the project \"Phase4 LoopedEdit ae760a56\", rename \"Rotate the signing keys\" to \"Rotate the signing keys (Q3)\" and rename \"Backfill the search index\" to \"Backfill the search index (v2)\".",
+                "type": "text"
+              }
+            ],
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:41:37.639Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:41:37.639Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:39.076Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01Djs4AAQ3Fo7gUk6Q612n6Z",
+                "input": {},
+                "kind": "tool-call",
+                "toolName": "list_projects"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:41:39.079Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01Djs4AAQ3Fo7gUk6Q612n6Z",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "c8d602ec-d685-472b-8143-946b1839ddf8",
+                    "name": "Personal",
+                    "createdAt": "2026-07-28T22:34:44.087Z"
+                  },
+                  {
+                    "id": "aa09013f-3b54-49df-9fe5-6bce7c3fc676",
+                    "name": "Phase4 Grounded 40962b72",
+                    "createdAt": "2026-07-28T23:40:42.548Z"
+                  },
+                  {
+                    "id": "32f44fad-dc49-4fe9-a881-80eab340da3f",
+                    "name": "Phase4 MoveFrom a54a51a1",
+                    "createdAt": "2026-07-28T23:40:53.830Z"
+                  },
+                  {
+                    "id": "24d6c31b-5e8c-47b2-83bf-37a0ced97595",
+                    "name": "Phase4 MoveTo fe15658c",
+                    "createdAt": "2026-07-28T23:40:54.195Z"
+                  },
+                  {
+                    "id": "b33b715e-0b25-4739-8701-037163ac607d",
+                    "name": "Phase4 BlockedStatus 456b3456",
+                    "createdAt": "2026-07-28T23:41:02.782Z"
+                  },
+                  {
+                    "id": "80947a8e-0f80-4925-a898-ec07c6fc7ca0",
+                    "name": "Phase4 DeleteDenied 030995e0",
+                    "createdAt": "2026-07-28T23:41:14.895Z"
+                  },
+                  {
+                    "id": "299accce-7dce-42a4-9afa-27775bb67229",
+                    "name": "Phase4 BulkMove a4b873cb",
+                    "createdAt": "2026-07-28T23:41:23.100Z"
+                  },
+                  {
+                    "id": "db11ff72-cffb-4c40-850a-2524f816ad7e",
+                    "name": "Phase4 LoopedEdit ae760a56",
+                    "createdAt": "2026-07-28T23:41:36.007Z"
+                  }
+                ]
+              },
+              "toolName": "list_projects"
+            },
+            "sequence": 0,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:41:39.127Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0027204,
+              "inputTokens": 11434,
+              "outputTokens": 46,
+              "cacheReadTokens": 11282,
+              "cacheWriteTokens": 150
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNHNWKCSW4X0EQPQE38AYRR"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:39.130Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:41:39.170Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01QYZinSn7JcsCfUTn6udrJh",
+                "input": {
+                  "projectId": "db11ff72-cffb-4c40-850a-2524f816ad7e"
+                },
+                "kind": "tool-call",
+                "toolName": "list_tasks"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:41:40.655Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01QYZinSn7JcsCfUTn6udrJh",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "c29c7368-0ef6-4962-beb2-bb9d26955fc8",
+                    "title": "Rotate the signing keys",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:41:36.677Z",
+                    "updatedAt": "2026-07-28T23:41:36.677Z",
+                    "project": {
+                      "id": "db11ff72-cffb-4c40-850a-2524f816ad7e",
+                      "name": "Phase4 LoopedEdit ae760a56"
+                    },
+                    "status": {
+                      "id": "f0862e78-1e78-48b8-99ee-095a9c98932f",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "e0e53133-dfab-4f0f-950c-60613a791ec7",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  },
+                  {
+                    "id": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+                    "title": "Backfill the search index",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:41:37.398Z",
+                    "updatedAt": "2026-07-28T23:41:37.398Z",
+                    "project": {
+                      "id": "db11ff72-cffb-4c40-850a-2524f816ad7e",
+                      "name": "Phase4 LoopedEdit ae760a56"
+                    },
+                    "status": {
+                      "id": "f0862e78-1e78-48b8-99ee-095a9c98932f",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "e0e53133-dfab-4f0f-950c-60613a791ec7",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  }
+                ]
+              },
+              "toolName": "list_tasks"
+            },
+            "sequence": 0,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:41:40.746Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0030404,
+              "inputTokens": 11905,
+              "outputTokens": 75,
+              "cacheReadTokens": 11432,
+              "cacheWriteTokens": 471
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNHNY37676E1QD5X2T0W28G"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:40.750Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:41:40.801Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:43.088Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "I'll rename both tasks in the \"Phase4 LoopedEdit ae760a",
+            "messageSoFar": "I'll rename both tasks in the \"Phase4 LoopedEdit ae760a",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:43.098Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "56\" project.",
+            "messageSoFar": "I'll rename both tasks in the \"Phase4 LoopedEdit ae760a56\" project.",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:43.427Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "I'll rename both tasks in the \"Phase4 LoopedEdit ae760a56\" project.",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:43.756Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01SsPK9b5D88LQLDU24RKFeZ",
+                "input": {
+                  "taskId": "c29c7368-0ef6-4962-beb2-bb9d26955fc8",
+                  "title": "Rotate the signing keys (Q3)"
+                },
+                "kind": "tool-call",
+                "toolName": "update_task"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:41:43.757Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01SsPK9b5D88LQLDU24RKFeZ",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "c29c7368-0ef6-4962-beb2-bb9d26955fc8",
+                  "title": "Rotate the signing keys (Q3)",
+                  "description": null,
+                  "createdAt": "2026-07-28T23:41:36.677Z",
+                  "updatedAt": "2026-07-28T23:41:43.982Z",
+                  "project": {
+                    "id": "db11ff72-cffb-4c40-850a-2524f816ad7e",
+                    "name": "Phase4 LoopedEdit ae760a56"
+                  },
+                  "status": {
+                    "id": "f0862e78-1e78-48b8-99ee-095a9c98932f",
+                    "name": "To Do",
+                    "order": 0,
+                    "isCompleted": false
+                  },
+                  "priority": {
+                    "id": "e0e53133-dfab-4f0f-950c-60613a791ec7",
+                    "name": "Medium",
+                    "order": 1,
+                    "isDefault": true
+                  }
+                }
+              },
+              "toolName": "update_task"
+            },
+            "sequence": 0,
+            "stepIndex": 2,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:41:44.284Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0041946,
+              "inputTokens": 12179,
+              "outputTokens": 181,
+              "cacheReadTokens": 11903,
+              "cacheWriteTokens": 274
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNHNZPVM9DJAK8DJBWN0XW5"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:44.288Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:41:44.342Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Now ren",
+            "messageSoFar": "Now ren",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:45.714Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "aming \"Backfill the search index\" to \"Backfill the search index (v2)\" — this second edit in the same turn will prompt for your approval.",
+            "messageSoFar": "Now renaming \"Backfill the search index\" to \"Backfill the search index (v2)\" — this second edit in the same turn will prompt for your approval.",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:46.207Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "Now renaming \"Backfill the search index\" to \"Backfill the search index (v2)\" — this second edit in the same turn will prompt for your approval.",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:46.735Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01NpTbQ3WjeZnHYFMLdFpH9A",
+                "input": {
+                  "taskId": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+                  "title": "Backfill the search index (v2)"
+                },
+                "kind": "tool-call",
+                "toolName": "update_task"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:41:46.737Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0039594,
+              "inputTokens": 12644,
+              "outputTokens": 152,
+              "cacheReadTokens": 12177,
+              "cacheWriteTokens": 465
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNHP35QH9NN6F6WMCT3SQVG"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:46.741Z"
+          }
+        },
+        {
+          "data": {
+            "requests": [
+              {
+                "action": {
+                  "callId": "toolu_01NpTbQ3WjeZnHYFMLdFpH9A",
+                  "input": {
+                    "taskId": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+                    "title": "Backfill the search index (v2)"
+                  },
+                  "kind": "tool-call",
+                  "toolName": "update_task"
+                },
+                "allowFreeform": false,
+                "display": "confirmation",
+                "options": [
+                  {
+                    "id": "approve",
+                    "label": "Yes"
+                  },
+                  {
+                    "id": "deny",
+                    "label": "No"
+                  }
+                ],
+                "prompt": "Approve tool call: update_task",
+                "requestId": "aitxt-MPV72NTzGbZTnNxjalLyzYyL"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "input.requested",
+          "meta": {
+            "at": "2026-07-28T23:41:46.754Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:46.755Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:0710e7ae-533a-4380-b1e8-6b4bc6678526",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:41:46.755Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_projects",
+          "input": {}
+        },
+        {
+          "name": "list_tasks",
+          "input": {
+            "projectId": "db11ff72-cffb-4c40-850a-2524f816ad7e"
+          }
+        },
+        {
+          "name": "update_task",
+          "input": {
+            "taskId": "c29c7368-0ef6-4962-beb2-bb9d26955fc8",
+            "title": "Rotate the signing keys (Q3)"
+          }
+        },
+        {
+          "name": "update_task",
+          "input": {
+            "taskId": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+            "title": "Backfill the search index (v2)"
+          }
+        }
+      ],
+      "approvalRequests": [
+        {
+          "action": {
+            "callId": "toolu_01NpTbQ3WjeZnHYFMLdFpH9A",
+            "input": {
+              "taskId": "d8c5fc7b-d034-4825-b481-62d00b28e996",
+              "title": "Backfill the search index (v2)"
+            },
+            "kind": "tool-call",
+            "toolName": "update_task"
+          },
+          "allowFreeform": false,
+          "display": "confirmation",
+          "options": [
+            {
+              "id": "approve",
+              "label": "Yes"
+            },
+            {
+              "id": "deny",
+              "label": "No"
+            }
+          ],
+          "prompt": "Approve tool call: update_task",
+          "requestId": "aitxt-MPV72NTzGbZTnNxjalLyzYyL"
+        }
+      ],
+      "finalMessage": "Now renaming \"Backfill the search index\" to \"Backfill the search index (v2)\" — this second edit in the same turn will prompt for your approval."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "error": {
+              "code": "TOOL_EXECUTION_DENIED",
+              "message": "Tool execution was denied."
+            },
+            "result": {
+              "callId": "toolu_01NpTbQ3WjeZnHYFMLdFpH9A",
+              "isError": true,
+              "kind": "tool-result",
+              "output": {
+                "approval": {
+                  "requestId": "aitxt-MPV72NTzGbZTnNxjalLyzYyL",
+                  "status": "denied"
+                },
+                "code": "TOOL_EXECUTION_DENIED",
+                "message": "Tool execution was denied.",
+                "tool": {
+                  "result": "not_run"
+                }
+              },
+              "toolName": "update_task"
+            },
+            "sequence": 0,
+            "stepIndex": 3,
+            "status": "rejected",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:41:46.915Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:41:46.915Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:41:46.916Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "The",
+            "messageSoFar": "The",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:48.042Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " first rename went through: \"Rotate the signing keys\" is now \"Rotate the signing keys (Q3)\".",
+            "messageSoFar": "The first rename went through: \"Rotate the signing keys\" is now \"Rotate the signing keys (Q3)\".",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:48.396Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " The second rename was declined, so \"Backfill the search index\" remains unchanged.",
+            "messageSoFar": "The first rename went through: \"Rotate the signing keys\" is now \"Rotate the signing keys (Q3)\". The second rename was declined, so \"Backfill the search index\" remains unchanged.",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:41:48.562Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "The first rename went through: \"Rotate the signing keys\" is now \"Rotate the signing keys (Q3)\". The second rename was declined, so \"Backfill the search index\" remains unchanged.",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:48.576Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.0031624,
+              "inputTokens": 12810,
+              "outputTokens": 63,
+              "cacheReadTokens": 12642,
+              "cacheWriteTokens": 166
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNHP5N1Y01YNZ0FR5JPAV9D"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:48.578Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:41:48.588Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:0710e7ae-533a-4380-b1e8-6b4bc6678526",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:41:48.589Z"
+          }
+        }
+      ],
+      "toolCalls": [],
+      "approvalRequests": [],
+      "finalMessage": "The first rename went through: \"Rotate the signing keys\" is now \"Rotate the signing keys (Q3)\". The second rename was declined, so \"Backfill the search index\" remains unchanged."
+    }
+  ],
+  "assertions": [
+    {
+      "name": "the request routes through repeated update_task calls, as it must",
+      "passed": true,
+      "detail": "[\"list_projects\",\"list_tasks\",\"update_task\",\"update_task\"]"
+    },
+    {
+      "name": "the second single-task edit paused for approval",
+      "passed": true,
+      "detail": "[\"update_task\"]"
+    },
+    {
+      "name": "the approval prompt names the task the pending edit would change",
+      "passed": true,
+      "detail": "[{\"taskId\":\"d8c5fc7b-d034-4825-b481-62d00b28e996\",\"title\":\"Backfill the search index (v2)\"}]"
+    },
+    {
+      "name": "at most one task was renamed before the user was asked",
+      "passed": true,
+      "detail": "1 of 2 renamed while parked"
+    },
+    {
+      "name": "declining leaves at most the one ungated single-task edit applied",
+      "passed": true,
+      "detail": "[\"Rotate the signing keys (Q3)\",\"Backfill the search index\"]"
+    }
+  ]
+}
