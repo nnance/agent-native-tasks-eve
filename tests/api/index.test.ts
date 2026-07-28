@@ -22,6 +22,7 @@ import {
 } from "./support/fixtures.ts"
 import { apiJson, startApiServer, stopApiServer } from "./support/server.ts"
 import { registerProjectsSuite } from "./suites/projects.ts"
+import { registerStatusesSuite } from "./suites/statuses.ts"
 
 before(async () => {
   await startApiServer()
@@ -55,3 +56,4 @@ describe("harness", () => {
 })
 
 registerProjectsSuite()
+registerStatusesSuite()
