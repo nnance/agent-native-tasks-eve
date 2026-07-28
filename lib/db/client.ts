@@ -1,9 +1,6 @@
-import "@/lib/env"
+import "../env.ts"
 
-import { drizzle } from "drizzle-orm/postgres-js"
-import postgres from "postgres"
-
-import * as schema from "./schema"
+import { createDatabase, type Database } from "./connect.ts"
 
 const connectionString = process.env.DATABASE_URL
 
@@ -13,28 +10,23 @@ if (!connectionString) {
   )
 }
 
-// Neon's pooled endpoint runs PgBouncer in transaction mode, which does not
-// support the session-level prepared statements postgres.js uses by default.
-const createClient = () =>
-  postgres(connectionString, { max: 5, prepare: false })
-
-// Reuse one client across dev hot-reloads so Next doesn't leak Neon
+// Reuse one handle across dev hot-reloads so Next doesn't leak Neon
 // connections on every recompile.
 const globalForDb = globalThis as unknown as {
-  __taskDbClient?: ReturnType<typeof createClient>
+  __taskDb?: ReturnType<typeof createDatabase>
 }
 
-const client = globalForDb.__taskDbClient ?? createClient()
+const handle = globalForDb.__taskDb ?? createDatabase(connectionString)
 
 if (process.env.NODE_ENV !== "production") {
-  globalForDb.__taskDbClient = client
+  globalForDb.__taskDb = handle
 }
 
-export const db = drizzle(client, { schema })
+export const db = handle.database
 
 /** The injectable handle type for actions and tests. */
-export type Database = typeof db
+export type { Database }
 
 export async function closeDb() {
-  await client.end({ timeout: 5 })
+  await handle.close()
 }
