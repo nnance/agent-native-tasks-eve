@@ -1,0 +1,62 @@
+$ pnpm test:unit
+
+> agent-native-tasks-eve@0.0.1 test:unit /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --test "tests/unit/**/*.test.ts"
+
+▶ default statuses
+  ✔ is exactly To Do, In Progress, Done in that order (0.41925ms)
+  ✔ marks Done, and only Done, as completed (0.048625ms)
+  ✔ puts the first status, the one new tasks take, at index 0 (0.052875ms)
+✔ default statuses (0.846125ms)
+▶ default priorities
+  ✔ is exactly Low, Medium, High in that order (0.04875ms)
+  ✔ designates exactly one default, and it is Medium (0.0535ms)
+✔ default priorities (0.168625ms)
+▶ seed project
+  ✔ is named Personal (0.342375ms)
+✔ seed project (0.381917ms)
+ℹ tests 6
+ℹ suites 3
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.063291
+exit=0
+
+$ pnpm test
+  ✔ is named Personal (0.377125ms)
+✔ seed project (0.436875ms)
+ℹ tests 6
+ℹ suites 3
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.695583
+
+$ pnpm test:api
+> node --test "tests/api/**/*.test.ts"
+
+ℹ tests 0
+ℹ suites 0
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2.382417
+
+$ pnpm test:e2e
+> node --test --test-concurrency=1 "tests/e2e/**/*.test.ts"
+
+ℹ tests 0
+ℹ suites 0
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2.500333

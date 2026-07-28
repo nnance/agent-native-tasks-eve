@@ -1,0 +1,39 @@
+$ node --env-file=.env.local docs/verification/phase-0r/harness/fresh-install.ts
+Wiping ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test) to a fresh install.
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'drop cascades to 5 other objects',
+  detail: 'drop cascades to table chat_state\n' +
+    'drop cascades to table priorities\n' +
+    'drop cascades to table projects\n' +
+    'drop cascades to table statuses\n' +
+    'drop cascades to table tasks',
+  file: 'dependency.c',
+  line: '1165',
+  routine: 'reportDependentObjects'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'drop cascades to table drizzle.__drizzle_migrations',
+  file: 'dependency.c',
+  line: '1176',
+  routine: 'reportDependentObjects'
+}
+Dropped the public and drizzle schemas.
+Applied migrations to ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb.
+NOT seeded — the app boot is what must create the workspace.
+counts -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
+
+$ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "before the app is opened"
+== before the app is opened — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+counts -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
+every project row -> Result(0) []
+{
+  "project": null,
+  "statuses": [],
+  "priorities": []
+}

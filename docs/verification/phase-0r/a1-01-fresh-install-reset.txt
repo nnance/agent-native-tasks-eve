@@ -1,0 +1,87 @@
+$ pnpm db:reset:test
+
+> agent-native-tasks-eve@0.0.1 db:reset:test /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --env-file=.env.local --env-file-if-exists=.env.test scripts/reset.ts --target=test
+
+Resetting ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb (test).
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'drop cascades to 5 other objects',
+  detail: 'drop cascades to table chat_state\n' +
+    'drop cascades to table priorities\n' +
+    'drop cascades to table projects\n' +
+    'drop cascades to table statuses\n' +
+    'drop cascades to table tasks',
+  file: 'dependency.c',
+  line: '1165',
+  routine: 'reportDependentObjects'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'drop cascades to table drizzle.__drizzle_migrations',
+  file: 'dependency.c',
+  line: '1176',
+  routine: 'reportDependentObjects'
+}
+Dropped the public and drizzle schemas.
+Applied migrations to ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb.
+Seeded: created the starter project and its defaults.
+{
+  "project": {
+    "id": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+    "name": "Personal",
+    "createdAt": "2026-07-28T16:25:57.929Z"
+  },
+  "statuses": [
+    {
+      "id": "d63e2b88-5943-460d-943c-89d646db49aa",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "5de85ec5-c35b-4f65-9f0e-41b351a962d3",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "f31d5259-216c-4dba-8f28-890a575a52ae",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "d4add632-511a-4362-ae45-fd3d3faadafd",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "fb3efcf2-29ba-41bd-bbaf-28d37de0fd55",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "9684882a-766b-4932-8edc-a393c62b552c",
+      "projectId": "694ae644-74ad-4c4a-beb8-1677ed77b1fc",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}
+
+exit: 0

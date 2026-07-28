@@ -1,0 +1,41 @@
+$ pnpm exec agent-browser --version
+agent-browser 0.33.1
+
+$ pnpm exec agent-browser doctor
+agent-browser doctor
+
+Environment
+  pass  CLI version 0.33.1 (macos aarch64)
+  pass  Home directory /Users/nicknance
+  pass  State and socket directory /Users/nicknance/.agent-browser
+  pass  290.2 GB free at state dir
+
+Chrome
+  pass  Google Chrome 150.0.7871.187 at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+  info  2 Chrome profile(s) at /Users/nicknance/Library/Application Support/Google/Chrome
+
+Daemons
+  pass  Session default (pid 14386)
+
+Security
+  info  No encryption key set (will be auto-generated on first auth save)
+        fix: export AGENT_BROWSER_ENCRYPTION_KEY=$(openssl rand -hex 32)
+
+Providers
+  info  Browserless: BROWSERLESS_API_KEY not set
+  info  Browserbase: BROWSERBASE_API_KEY not set
+  info  Browser Use: BROWSER_USE_API_KEY not set
+  info  Kernel: KERNEL_API_KEY not set
+  info  AgentCore: no AWS credentials in env (AWS_ACCESS_KEY_ID / AWS_PROFILE)
+  info  AI_GATEWAY_API_KEY not set (chat command disabled)
+        fix: export AI_GATEWAY_API_KEY=gw_...
+
+Network
+  pass  Chrome for Testing CDN reachable (45ms, HTTP 200)
+
+Launch test
+  pass  Headless launch + about:blank in 0.82s
+
+Summary: 8 pass, 0 warn, 0 fail
+
+tip: Run with --fix to attempt repairs.

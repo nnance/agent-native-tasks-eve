@@ -1,0 +1,10 @@
+=== live agent: can a task be created through the agent today? (US-A1.4, agent path) ===
+
+$ SID=$(curl -s -X POST localhost:3100/eve/v1/session -H "Content-Type: application/json" -d "{\"message\":\"Create a task titled Buy milk in the Personal project.\"}" | jq -r .sessionId)
+$ curl -sN "localhost:3100/eve/v1/session/$SID/stream"
+
+sessionId: wrun_01KYMRXGFDSH2FG549PEN4PC58
+
+{"data":{"finishReason":"stop","message":"I can't create that task yet — no data tools are wired up for me in this environment right now, so I have no way to read or modify your task list. Once the action layer is connected I'll be able to do this directly. In the meantime, you'd need to add \"Buy milk\" to the Personal project through the UI.","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.completed","meta":{"at":"2026-07-28T16:28:56.900Z"}}
+{"data":{"sequence":0,"turnId":"turn_0"},"type":"turn.completed","meta":{"at":"2026-07-28T16:28:56.909Z"}}
+{"data":{"continuationToken":"eve:4ad8d364-7a7e-4bb8-a215-1e436993a609","wait":"next-user-message"},"type":"session.waiting","meta":{"at":"2026-07-28T16:28:56.909Z"}}

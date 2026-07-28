@@ -47,6 +47,25 @@ export default withEve(nextConfig);
 - Agent routes auto-mounted **same-origin** at `/eve/v1/*` — no CORS, no URL env vars.
 - Default auth: `eveChannel({ auth: [vercelOidc(), localDev()] })` — localhost works in dev, prod needs real auth (or `none()` for public demos). Our v1 is single-user/no-auth, so this needs a deliberate choice at implementation time.
 
+> **Import paths (corrected in Phase 0r; verified against eve 0.27.8).** These
+> helpers do **not** come from one entry point, which an earlier draft of this
+> note implied. There are four distinct specifiers, confirmed against
+> `node_modules/eve/docs/channels/eve.mdx` and the `exports` map in
+> `node_modules/eve/package.json`:
+>
+> | Symbol | Import from |
+> | --- | --- |
+> | `defineAgent` | `eve` |
+> | `withEve` | `eve/next` |
+> | `eveChannel`, `defaultEveAuth` | `eve/channels/eve` |
+> | `localDev`, `vercelOidc` | `eve/channels/auth` |
+>
+> ```ts
+> // agent/channels/eve.ts
+> import { eveChannel } from "eve/channels/eve"
+> import { localDev, vercelOidc } from "eve/channels/auth"
+> ```
+
 ## 4. Tools — the agent half of our shared-action layer
 
 ```ts
@@ -128,6 +147,8 @@ Getting started: `/docs/getting-started`, `/docs/installation`, `/docs/project-s
 Core: `/docs/tools`, `/docs/human-in-the-loop`, `/docs/guides/state`, `/docs/guides/session-context`, `/docs/skills`
 Concepts: `/docs/concepts/execution-model-and-durability`, `/docs/concepts/sessions-runs-and-streaming`, `/docs/concepts/default-harness`, `/docs/concepts/security-model`
 Frontend: `/docs/guides/frontend/overview`, `/docs/guides/frontend/nextjs`, `/docs/channels/eve`, `/docs/channels/overview`, `/docs/guides/client/continuations`
+Auth: `/docs/guides/auth-and-route-protection` — read alongside `/docs/channels/eve`, which is where §3's four corrected import specifiers were verified
+Sandbox: `/docs/sandbox` — read before any `pnpm dev`-related dependency surprise; eve's default backend chain auto-installs `microsandbox` or `just-bash` into package.json unless disabled, which `agent/sandbox.ts` now does (see Phase 0r decisions).
 Evals: `/docs/evals/overview`, `/docs/evals/cases`, `/docs/evals/assertions`, `/docs/evals/running`
 Deploy: `/docs/guides/deployment/overview`, `/docs/guides/deployment/vercel`
 Reference: `/docs/reference/cli`, `/docs/reference/project-layout`, `/docs/reference/typescript-api`

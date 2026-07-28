@@ -1,0 +1,7 @@
+$ AGENT_BROWSER_SESSION=phase-0r-verify pnpm exec agent-browser open http://localhost:3100
+$ pnpm exec agent-browser snapshot -i
+- button "Reset conversation" [ref=e1]
+- group "Send" [ref=e2] clickable [onclick]
+  - button "Add files" [expanded=false, ref=e3]
+  - button "Send" [ref=e4]
+- button "Open Next.js Dev Tools" [expanded=false, ref=e5]

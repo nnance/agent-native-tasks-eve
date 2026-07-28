@@ -1,0 +1,6 @@
+=== US-A1.5: workspace state after the first open vs after the reopen ===
+
+$ diff <(state after first open) <(state after reopen)
+(no output from diff = byte-identical: same project id, same createdAt, same status and priority ids)
+
+lines compared:       61

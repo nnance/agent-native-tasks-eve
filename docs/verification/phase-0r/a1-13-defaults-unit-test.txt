@@ -1,0 +1,25 @@
+$ pnpm test:unit   # the defaults module is the single source of truth behind US-A1.2 and US-A1.3
+
+> agent-native-tasks-eve@0.0.1 test:unit /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --test "tests/unit/**/*.test.ts"
+
+▶ default statuses
+  ✔ is exactly To Do, In Progress, Done in that order (0.437291ms)
+  ✔ marks Done, and only Done, as completed (0.048167ms)
+  ✔ puts the first status, the one new tasks take, at index 0 (0.053ms)
+✔ default statuses (0.863417ms)
+▶ default priorities
+  ✔ is exactly Low, Medium, High in that order (0.051125ms)
+  ✔ designates exactly one default, and it is Medium (0.054041ms)
+✔ default priorities (0.164209ms)
+▶ seed project
+  ✔ is named Personal (0.37225ms)
+✔ seed project (0.429667ms)
+ℹ tests 6
+ℹ suites 3
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.191833

@@ -1,0 +1,30 @@
+=== US-A1.4: what task-creation surfaces exist in Phase 0r? ===
+
+$ find app -type f | sort   # every route in the app
+app/api/health/route.ts
+app/favicon.ico
+app/globals.css
+app/layout.tsx
+app/page.tsx
+
+$ ls agent/
+agent.ts
+channels
+instructions.md
+sandbox.ts
+skills
+
+$ ls agent/tools
+ls: agent/tools: No such file or directory
+
+$ grep -rniE "task(s)?" --include="*.ts" --include="*.tsx" app components lib/actions 2>/dev/null   # any task UI or action layer?
+(no matches above = no task UI, no task API route, no action layer)
+
+$ curl -s -o /dev/null -w "%{http_code}
+" localhost:3100/api/tasks
+404
+
+$ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "tasks after the agent attempt" | head -3
+== tasks after the agent attempt — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+every project row -> Result(1) [

@@ -1,3 +1,3 @@
-export { db, closeDb, type Database } from "./client"
-export * as schema from "./schema"
-export * from "./schema"
+export { db, closeDb, type Database } from "./client.ts"
+export * as schema from "./schema.ts"
+export * from "./schema.ts"
