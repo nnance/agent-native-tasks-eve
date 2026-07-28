@@ -1,0 +1,9 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/db-identity.ts
+resolved dev  (DATABASE_URL)      -> ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb
+resolved test (DATABASE_URL_TEST) -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb
+same connection string?           -> false
+same host?                        -> false
+
+dev: ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb -> current_database=neondb user=neondb_owner PostgreSQL 17.10 migrations_applied=1
+test: ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb -> current_database=neondb user=neondb_owner PostgreSQL 17.10 migrations_applied=1
+EXIT=0

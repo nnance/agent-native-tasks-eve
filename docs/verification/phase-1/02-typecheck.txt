@@ -1,0 +1,6 @@
+$ pnpm typecheck   # re-run with all five verification harnesses present (tsconfig includes **/*.ts)
+
+> agent-native-tasks-eve@0.0.1 typecheck /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> tsc --noEmit
+
+EXIT=0

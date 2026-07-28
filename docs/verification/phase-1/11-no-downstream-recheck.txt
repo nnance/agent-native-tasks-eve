@@ -1,0 +1,29 @@
+$ # Exit criterion: "Rules live here and are never re-checked downstream."
+$ # In Phase 1 the downstream consumers do not exist yet. What IS downstream today:
+
+$ find app agent -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.md" \) | sort
+agent/agent.ts
+agent/channels/eve.ts
+agent/instructions.md
+agent/sandbox.ts
+agent/skills/neon-postgres/SKILL.md
+agent/skills/neon/SKILL.md
+app/api/health/route.ts
+app/layout.tsx
+app/page.tsx
+
+$ # No API route imports lib/actions yet (Phase 2), and no EVE tool exists yet (Phase 4):
+$ grep -rn "lib/actions\|from \"@/lib/actions\"" app/ agent/ components/
+  (no matches — nothing downstream consumes the action layer yet)
+
+$ # And no rule vocabulary is duplicated downstream:
+$ grep -rniE "RuleViolation|still has|last remaining|only status|only priority|belongs to a different project" app/ agent/ components/
+agent/instructions.md:56:- A project's last remaining status or priority cannot be deleted.
+agent/instructions.md:57:- A project that still has tasks cannot be deleted.
+
+$ # Every rule check in the repo lives in lib/actions/ (throw sites):
+$ grep -rn "throw new RuleViolation" lib/ app/ agent/ components/ | sed "s/:.*//" | sort | uniq -c
+   2 lib/actions/priorities.ts
+   1 lib/actions/projects.ts
+   2 lib/actions/statuses.ts
+   4 lib/actions/tasks.ts

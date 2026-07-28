@@ -1,0 +1,41 @@
+$ # Confirmation/approval is per-interface UX and must NOT exist in the action layer
+$ grep -rniE "confirm|approv|areYouSure|prompt\(" lib/actions/ lib/schemas/ lib/domain/
+lib/actions/projects.ts:16: * - No `confirm`, `dryRun` or `approve` parameter exists here. Confirmation is
+lib/actions/projects.ts:17: *   per-interface UX — a dialog in the UI, an EVE approval gate for the agent
+lib/actions/tasks.ts:422: * Both bulk capabilities sit behind an EVE approval gate (plan §2.4) whose
+lib/actions/tasks.ts:423: * prompt renders the exact input, and US-F5.3 promises that on approval all
+
+$ # lib/domain/defaults.ts is imported by createProject, so seeded and later projects cannot drift
+lib/actions/priorities.ts:14: * lib/domain/defaults.ts encodes. "Highest priority first" is therefore
+lib/actions/projects.ts:32:import { DEFAULT_PRIORITIES, DEFAULT_STATUSES } from "../domain/defaults.ts"
+lib/actions/projects.ts:58: * The defaults come from lib/domain/defaults.ts and are never restated here:
+lib/db/seed.ts:9:} from "../domain/defaults.ts"
+
+  -> lib/actions/projects.ts uses them and never restates the values:
+lib/actions/projects.ts:32:import { DEFAULT_PRIORITIES, DEFAULT_STATUSES } from "../domain/defaults.ts"
+lib/actions/projects.ts:83:      DEFAULT_STATUSES.map((status, index) => ({
+lib/actions/projects.ts:92:      DEFAULT_PRIORITIES.map((priority, index) => ({
+lib/domain/defaults.ts:18:export const DEFAULT_STATUSES: readonly DefaultStatus[] = [
+lib/domain/defaults.ts:25:export const DEFAULT_PRIORITIES: readonly DefaultPriority[] = [
+lib/db/seed.ts:6:  DEFAULT_PRIORITIES,
+lib/db/seed.ts:7:  DEFAULT_STATUSES,
+lib/db/seed.ts:56:      DEFAULT_STATUSES.map((status, index) => ({
+lib/db/seed.ts:65:      DEFAULT_PRIORITIES.map((priority, index) => ({
+
+$ # ensureSeeded takes an injectable handle (the Phase 0 gap this phase was asked to close)
+28:export async function ensureSeeded(
+29-  database: Database = db
+30-): Promise<SeedResult> {
+31-  return database.transaction(async (tx) => {
+32-    // The CLI and the app-boot hook can race on a fresh database, and
+
+  -> and tests/unit/db/seed.test.ts drives it against a genuinely empty database:
+7:import { describeSeedState, ensureSeeded } from "../../../lib/db/seed.ts"
+8:import { withEmptyDb } from "../../support/db.ts"
+11: * `ensureSeeded(database)`'s injectable handle has existed since Phase 0 but
+19:describe("ensureSeeded against an empty database", () => {
+21:    await withEmptyDb(async (tx) => {
+23:      const first = await ensureSeeded(tx)
+52:      const second = await ensureSeeded(tx)
+74:    await withEmptyDb(async (tx) => {
+83:      const result = await ensureSeeded(tx)

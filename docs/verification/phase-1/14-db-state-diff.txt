@@ -1,0 +1,10 @@
+$ # A full pnpm test:unit run must leave BOTH databases exactly as it found them:
+$ #   - the test DB, because every test runs inside a rolled-back transaction
+$ #   - the dev DB, because the suite never connects to it at all
+
+$ diff <(normalised 12-db-state-before.txt) <(normalised 13-db-state-after.txt)
+  (no output — the two dumps are identical)
+
+RESULT: 105 tests ran against the real test database and left
+        both databases byte-for-byte unchanged. Project ids and
+        created_at timestamps are identical before and after.

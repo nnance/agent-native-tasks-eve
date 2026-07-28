@@ -1,0 +1,80 @@
+$ # One Zod schema and one action per product-spec §5 capability — 1:1, mechanically counted
+
+--- exported action functions (lib/actions/) ---
+  bulkDeleteTasks(
+  bulkUpdateTasks(
+  createPriority(
+  createProject(
+  createStatus(
+  createTask(
+  deletePriority(
+  deleteProject(
+  deleteStatus(
+  deleteTask(
+  getTask(
+  listPriorities(
+  listProjects(
+  listStatuses(
+  listTasks(
+  renameProject(
+  updatePriority(
+  updateStatus(
+  updateTask(
+
+action count   -> 19
+
+--- exported input schemas (lib/schemas/, excluding shared primitives in common.ts) ---
+  bulkDeleteTasksSchema
+  bulkUpdateTasksSchema
+  createPrioritySchema
+  createProjectSchema
+  createStatusSchema
+  createTaskSchema
+  deletePrioritySchema
+  deleteProjectSchema
+  deleteStatusSchema
+  deleteTaskSchema
+  getTaskSchema
+  listPrioritiesSchema
+  listProjectsSchema
+  listStatusesSchema
+  listTasksSchema
+  renameProjectSchema
+  updatePrioritySchema
+  updateStatusSchema
+  updateTaskSchema
+
+schema count   -> 19
+
+--- every one of the 19 is a strictObject: unknown keys are a loud error, never silently dropped ---
+strictObject occurrences -> 19
+lib/schemas/projects.ts:4
+lib/schemas/tasks.ts:7
+lib/schemas/priorities.ts:4
+lib/schemas/statuses.ts:4
+
+--- §7 rule 1, project immutability: updateTaskSchema (lines 57-76) has NO projectId ---
+export const updateTaskSchema = z
+  .strictObject({
+    taskId: idSchema,
+    title: titleSchema.optional(),
+    description: descriptionSchema.nullable().optional(),
+    statusId: idSchema.optional(),
+    priorityId: idSchema.optional(),
+  })
+  .refine(
+    (value) =>
+      value.title !== undefined ||
+      value.description !== undefined ||
+      value.statusId !== undefined ||
+      value.priorityId !== undefined,
+    {
+      message:
+        "Provide at least one of title, description, statusId or priorityId.",
+    }
+  )
+
+
+every projectId mention in lib/schemas/tasks.ts (only listTasks filter + createTask):
+28:  projectId: idSchema.optional(),
+42:  projectId: idSchema,

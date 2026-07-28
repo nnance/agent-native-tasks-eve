@@ -1,0 +1,173 @@
+$ pnpm test:unit
+
+> agent-native-tasks-eve@0.0.1 test:unit /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --env-file=.env.local --env-file-if-exists=.env.test --test "tests/unit/**/*.test.ts"
+
+▶ listPriorities
+  ✔ returns only the given project's priorities, in order (1654.10675ms)
+✔ listPriorities (1655.532833ms)
+▶ createPriority
+  ✔ appends the new priority and never makes it the default (914.886375ms)
+  ✔ has no isDefault field at all — the schema rejects one (442.060584ms)
+  ✔ rejects a blank name and an unknown project (639.867333ms)
+✔ createPriority (1998.01425ms)
+▶ updatePriority
+  ✔ renames a priority without touching order or the default (977.260917ms)
+  ✔ moves a priority and renumbers every sibling densely (1255.078125ms)
+  ✔ moves the default designation, leaving exactly one (962.942125ms)
+  ✔ leaves another project's default untouched (1404.517708ms)
+  ✔ re-designating the current default is idempotent (959.503166ms)
+  ✔ rejects isDefault: false — a default can never be un-set alone (611.498ms)
+  ✔ rejects an empty patch and an unknown id (698.071083ms)
+✔ updatePriority (6870.803459ms)
+▶ deletePriority
+  ✔ deletes an unused priority and renumbers the survivors (1215.309084ms)
+  ✔ reassigns the default to the survivor at order 0 (1271.08275ms)
+  ✔ leaves the default alone when a non-default is deleted (1052.615375ms)
+  ✔ blocks deletion of a priority a task still uses (1176.096875ms)
+  ✔ blocks deletion of the last remaining priority even when unused (1966.533834ms)
+  ✔ reports last-remaining, not in-use, when both block at once (2056.014709ms)
+  ✔ leaves other projects' priorities alone (1655.600166ms)
+  ✔ raises NotFoundError for an unknown id (260.640541ms)
+✔ deletePriority (10655.204209ms)
+▶ createProject
+  ✔ seeds the byte-identical default statuses from lib/domain/defaults.ts (1077.417625ms)
+  ✔ seeds the byte-identical default priorities, with exactly one default (612.424084ms)
+  ✔ trims the name and rejects a blank one (475.354209ms)
+  ✔ leaves the project immediately usable for task creation (1047.336ms)
+  ✔ rejects unknown keys rather than silently dropping them (96.172416ms)
+✔ createProject (3310.91725ms)
+▶ listProjects
+  ✔ returns projects oldest first (950.749791ms)
+✔ listProjects (951.259375ms)
+▶ renameProject
+  ✔ changes only the name (1190.824334ms)
+  ✔ raises NotFoundError for an unknown id (239.387333ms)
+  ✔ rejects a blank name (475.134875ms)
+✔ renameProject (1906.387667ms)
+▶ deleteProject
+  ✔ deletes an empty project and cascades its statuses and priorities (1142.085625ms)
+  ✔ blocks deletion when tasks remain, naming the count (1525.169417ms)
+  ✔ singularizes the count for one blocking task (1105.595042ms)
+  ✔ raises NotFoundError for an unknown id (370.233ms)
+✔ deleteProject (4144.222959ms)
+▶ listStatuses
+  ✔ returns only the given project's statuses, in order (1706.799333ms)
+✔ listStatuses (1708.123042ms)
+▶ createStatus
+  ✔ appends the new status to the end of the project's list (951.872833ms)
+  ✔ accepts an explicit completed flag (869.051917ms)
+  ✔ rejects a blank name and an unknown project (618.786875ms)
+✔ createStatus (2440.59925ms)
+▶ updateStatus
+  ✔ renames a status without touching its order or flag (958.174125ms)
+  ✔ toggles the completed flag (1261.020292ms)
+  ✔ moves a status to a new position and renumbers every sibling (1355.191209ms)
+  ✔ clamps an out-of-range target to the end of the list (1264.519292ms)
+  ✔ renames and reorders in one call (1364.707583ms)
+  ✔ rejects an empty patch, a blank name and an unknown id (745.227167ms)
+✔ updateStatus (6950.564208ms)
+▶ deleteStatus
+  ✔ deletes an unused status and renumbers the survivors densely (1304.8115ms)
+  ✔ blocks deletion of a status a task still uses (1223.690833ms)
+  ✔ blocks deletion of the last remaining status even when unused (1964.366084ms)
+  ✔ reports last-remaining, not in-use, when both block at once (2095.446583ms)
+  ✔ leaves other projects' statuses alone (1751.355666ms)
+  ✔ raises NotFoundError for an unknown id (346.163042ms)
+✔ deleteStatus (8687.266167ms)
+▶ createTask
+  ✔ defaults to the project's first status and default priority (1478.123125ms)
+  ✔ follows a reordered status list when picking the default status (1742.763125ms)
+  ✔ accepts an explicit status and priority from the same project (1127.870416ms)
+  ✔ rejects a status or priority from another project (1843.217ms)
+  ✔ requires a non-empty title and a project (607.917792ms)
+  ✔ stores a whitespace-only description as null (962.699542ms)
+✔ createTask (7765.365416ms)
+▶ getTask
+  ✔ returns the full description and the related chips (1049.007666ms)
+  ✔ raises NotFoundError for an unknown id (176.203791ms)
+✔ getTask (1225.9725ms)
+▶ updateTask
+  ✔ edits the title (1442.838ms)
+  ✔ refuses to clear the title (1045.943125ms)
+  ✔ clears the description on null and preserves it when the key is absent (1779.794625ms)
+  ✔ moves the task's status (1719.2355ms)
+  ✔ makes a project change inexpressible (1740.00875ms)
+  ✔ rejects a status or priority from another project (2537.240375ms)
+  ✔ rejects an empty patch and an unknown id (1131.113625ms)
+✔ updateTask (11397.628458ms)
+▶ listTasks
+  ✔ orders by priority desc then creation date asc, with completed last (2794.578333ms)
+  ✔ hides completed tasks unless includeCompleted is true (2930.985167ms)
+  ✔ lets an explicit statusId filter override the completed toggle (2792.518625ms)
+  ✔ filters by priority, combinable with the project filter (2846.154083ms)
+  ✔ searches title and description, case-insensitively (2964.562375ms)
+  ✔ scopes to one project when asked (2321.40775ms)
+  ✔ returns an empty list when nothing matches (2833.676667ms)
+  ✔ rejects an unknown filter key (85.158084ms)
+✔ listTasks (19570.392292ms)
+▶ deleteTask
+  ✔ removes the task and reports what went (1231.635917ms)
+  ✔ raises NotFoundError for an unknown id (252.940125ms)
+✔ deleteTask (1485.75175ms)
+▶ bulkUpdateTasks
+  ✔ applies one status across several tasks (2183.44925ms)
+  ✔ writes nothing when any id is missing (1442.94925ms)
+  ✔ refuses one status applied across two projects, writing nothing (2975.91025ms)
+  ✔ rejects an empty batch and a patch with nothing to apply (1135.367833ms)
+✔ bulkUpdateTasks (7738.413125ms)
+▶ bulkDeleteTasks
+  ✔ deletes every task in the batch (1783.673708ms)
+  ✔ deletes nothing when any id is missing (1278.086875ms)
+  ✔ rejects an empty batch (85.324833ms)
+✔ bulkDeleteTasks (3147.667ms)
+▶ ensureSeeded against an empty database
+  ✔ seeds the starter project with the documented defaults, exactly once (2199.298416ms)
+  ✔ is a no-op when any project already exists, whatever it is named (829.3015ms)
+✔ ensureSeeded against an empty database (3030.236875ms)
+▶ default statuses
+  ✔ is exactly To Do, In Progress, Done in that order (0.513667ms)
+  ✔ marks Done, and only Done, as completed (0.057875ms)
+  ✔ puts the first status, the one new tasks take, at index 0 (0.055917ms)
+✔ default statuses (1.013541ms)
+▶ default priorities
+  ✔ is exactly Low, Medium, High in that order (0.059042ms)
+  ✔ designates exactly one default, and it is Medium (0.106375ms)
+✔ default priorities (0.2265ms)
+▶ seed project
+  ✔ is named Personal (0.043917ms)
+✔ seed project (0.090625ms)
+▶ RuleViolation
+  ✔ is an Error, and is not a NotFoundError (0.295583ms)
+  ✔ carries its human-readable message and names itself (0.12075ms)
+✔ RuleViolation (0.810208ms)
+▶ NotFoundError
+  ✔ is an Error, and is not a RuleViolation (0.081541ms)
+  ✔ carries its message and names itself (0.047166ms)
+✔ NotFoundError (0.198958ms)
+▶ renumber
+  ✔ collapses gaps to a dense 0..n-1 sequence (0.566125ms)
+  ✔ sorts by stored order, not by input position (0.056833ms)
+  ✔ breaks ties on id so duplicate orders still resolve deterministically (0.055875ms)
+  ✔ handles the empty and single-element cases (0.050833ms)
+✔ renumber (1.139375ms)
+▶ reindexAfterMove
+  ✔ moves an item to the front (0.675125ms)
+  ✔ moves an item to the middle (0.056125ms)
+  ✔ moves an item to the end (0.044958ms)
+  ✔ clamps a target above the range to the last position (0.050334ms)
+  ✔ clamps a negative target to the first position (0.054292ms)
+  ✔ leaves the order untouched when the item is already in place (0.070041ms)
+  ✔ collapses gaps in the input while moving (0.045708ms)
+  ✔ handles a single-element list (0.035792ms)
+  ✔ throws when the moved id is not among the siblings (0.154166ms)
+✔ reindexAfterMove (1.340833ms)
+ℹ tests 105
+ℹ suites 27
+ℹ pass 105
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52673.50025
+EXIT=0

@@ -1,0 +1,61 @@
+$ # Dependency policy §1.1: no runtime or dev dependency added or removed in Phase 1
+
+$ git diff main -- package.json
+diff --git a/package.json b/package.json
+index a3e88f1..88a2069 100644
+--- a/package.json
++++ b/package.json
+@@ -10,9 +10,9 @@
+     "lint": "eslint",
+     "format": "prettier --write \"**/*.{ts,tsx}\"",
+     "typecheck": "tsc --noEmit",
+-    "test": "node --test \"tests/unit/**/*.test.ts\" \"tests/api/**/*.test.ts\"",
+-    "test:unit": "node --test \"tests/unit/**/*.test.ts\"",
+-    "test:api": "node --test \"tests/api/**/*.test.ts\"",
++    "test": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/unit/**/*.test.ts\" \"tests/api/**/*.test.ts\"",
++    "test:unit": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/unit/**/*.test.ts\"",
++    "test:api": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/api/**/*.test.ts\"",
+     "test:e2e": "node --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
+     "test:all": "pnpm test && pnpm test:e2e",
+     "db:generate": "drizzle-kit generate",
+
+  The ONLY package.json change is to three test scripts (the --env-file stack that
+  db:reset:test already used). No line inside "dependencies" or "devDependencies" changed:
+
+$ git diff main -- package.json | grep -E "^[+-][[:space:]]+\"[a-z@]" | grep -v "test"
+  (no matches — not one dependency line was added, removed or changed)
+
+$ # The lockfile is the second witness: an added dependency could not leave it untouched
+$ git diff main -- pnpm-lock.yaml | wc -l  ->  0
+
+$ # The test layer imports Node built-ins and nothing else
+$ grep -rhoE "from \"node:[a-z/]+\"" tests/ | sort -u
+from "node:assert/strict"
+from "node:test"
+
+$ # None of the rejected libraries appear anywhere in package.json, tests/ or lib/
+$ grep -riE "vitest|jest|playwright|cypress|dotenv|nanoid|date-fns|dayjs|supertest" package.json tests/ lib/
+  (no matches)
+  (an earlier run of this grep also included "chai" and matched the word "toolchain"
+   in tests/e2e/README.md — a false positive, not a dependency; it is dropped above.)
+
+$ # ids need no uuid/nanoid package: Postgres generates them via Drizzle's defaultRandom()
+$ grep -n "defaultRandom" lib/db/schema.ts
+18:  id: uuid("id").primaryKey().defaultRandom(),
+28:    id: uuid("id").primaryKey().defaultRandom(),
+42:    id: uuid("id").primaryKey().defaultRandom(),
+56:    id: uuid("id").primaryKey().defaultRandom(),
+
+$ # Test layout §4.1: tests live under tests/, never colocated with source
+$ find lib -name "*.test.ts" -o -name "*.spec.ts"
+  (none — no test files under lib/)
+
+$ find tests -name "*.test.ts" | sort
+tests/unit/actions/priorities.test.ts
+tests/unit/actions/projects.test.ts
+tests/unit/actions/statuses.test.ts
+tests/unit/actions/tasks.test.ts
+tests/unit/db/seed.test.ts
+tests/unit/domain/defaults.test.ts
+tests/unit/domain/errors.test.ts
+tests/unit/domain/reorder.test.ts
