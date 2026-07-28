@@ -526,12 +526,13 @@ the implementation session), and the §3.2 phase-boundary checks are all clean.
   `components/workspace/chat-pane-placeholder.tsx` — static chrome plus a
   visibly disabled composer — and replacing it is the whole of that phase's UI
   work.
-- **The `TASK_ORDER` tie-break carried over from Phase 2 is still open.**
-  `lib/actions/tasks.ts` has no final deterministic tie-break, so two tasks
-  sharing a `created_at` sort arbitrarily. Phase 3 did not hit it — E2E fixtures
-  are created through separate HTTP-less action calls in distinct transactions,
-  and the UI's own creates are separate transactions — but it remains a §5/§6
-  parity risk once the agent starts creating tasks in batches, which is Phase 4.
+- **The `TASK_ORDER` tie-break Phase 2 carried forward is closed, not
+  inherited.** It was fixed on `main` in #6 before this phase branched:
+  `TASK_ORDER` now ends `asc(tasks.createdAt), asc(tasks.id)`, so the sort is
+  total and two tasks sharing a `created_at` no longer order arbitrarily. Phase
+  3 depends on that being true — `02-tasks-ui` and `05-priorities-ui` assert
+  exact row orders over fixtures created in rapid succession — so the §5/§6
+  parity risk Phase 2 flagged is retired rather than passed on.
 
 ### Two product observations, neither a defect
 
