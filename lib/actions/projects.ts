@@ -49,7 +49,12 @@ export async function listProjects(
 ): Promise<Project[]> {
   listProjectsSchema.parse(input)
 
-  return database.select().from(projects).orderBy(asc(projects.createdAt))
+  // `asc(projects.id)` is a determinism backstop, not decoration: without a
+  // final key, projects sharing a `created_at` sort in planner-defined order.
+  return database
+    .select()
+    .from(projects)
+    .orderBy(asc(projects.createdAt), asc(projects.id))
 }
 
 /**

@@ -421,6 +421,36 @@ describe("listTasks", () => {
     })
   })
 
+  // Regression: `tasks.created_at` used to default to `now()`, which Postgres
+  // evaluates as `transaction_timestamp()` — constant for a whole transaction.
+  // Tasks created together therefore tied on the sort key and came back in
+  // planner-defined order, which is a parity risk (§5, §6) as well as a source
+  // of test flake. The default is `clock_timestamp()` now, so creation order
+  // survives even inside one transaction.
+  it("keeps creation order for same-priority tasks created in one transaction", async () => {
+    await withRollback(async (tx) => {
+      const built = await fixture(tx, `Ordering ${crypto.randomUUID()}`)
+      const high = built.priority.get("High")!.id
+
+      const titles = ["First", "Second", "Third", "Fourth", "Fifth"]
+      for (const title of titles) {
+        await createTask({ projectId: built.project.id, title, priorityId: high }, tx)
+      }
+
+      const listed = await listTasks({ projectId: built.project.id }, tx)
+      assert.deepStrictEqual(listed.map((t) => t.title), titles)
+
+      // The timestamps must actually differ — if they tie, the assertion above
+      // only passed by luck of the planner.
+      const stamps = listed.map((t) => t.createdAt.getTime())
+      assert.strictEqual(
+        new Set(stamps).size,
+        titles.length,
+        "created_at collided inside one transaction — is the default still clock_timestamp()?"
+      )
+    })
+  })
+
   // US-B2.3: completed tasks are hidden by default.
   it("hides completed tasks unless includeCompleted is true", async () => {
     await withRollback(async (tx) => {

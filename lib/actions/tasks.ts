@@ -104,11 +104,20 @@ function taskViewQuery(database: Database) {
  * the agent's list and the UI's list to agree, so it lives in the one shared
  * layer rather than being implemented twice. `priorities.order` ascending is
  * ascending urgency (Low=0 < Medium=1 < High=2), so "highest first" is DESC.
+ *
+ * `asc(tasks.id)` is the final tie-break and is load-bearing, not cosmetic.
+ * `tasks.created_at` defaults to `now()`, which Postgres evaluates as
+ * `transaction_timestamp()` — constant for a whole transaction. Any tasks
+ * created in one transaction therefore share a `created_at` and, without a
+ * further key, sort in whatever order the planner happens to produce. That is
+ * a parity bug before it is a test-flake bug: the UI and the agent could list
+ * the same tasks in different orders (§5, §6).
  */
 const TASK_ORDER = [
   asc(statuses.isCompleted),
   desc(priorities.order),
   asc(tasks.createdAt),
+  asc(tasks.id),
 ] as const
 
 /** Reads back one task in TaskView shape, or raises NotFoundError. */
