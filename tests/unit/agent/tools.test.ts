@@ -20,6 +20,9 @@
  * 3. **The approval table, asserted by calling each policy.** `always()`
  *    returns a fresh closure per call, so identity comparison would prove
  *    nothing; invoking it and checking the status is the only honest form.
+ *    The exception is `update_task`, whose policy is input- and turn-dependent
+ *    (`agent/lib/bulk-edit-gate.ts`): there the shared function *is* the
+ *    identity to pin, and its behaviour is asserted in its own test file.
  */
 
 import assert from "node:assert/strict"
@@ -30,6 +33,7 @@ import { describe, it } from "node:test"
 import { isDisabledToolSentinel, type ToolDefinition } from "eve/tools"
 import type { ApprovalContext } from "eve/tools"
 
+import { afterFirstTaskInTurn } from "../../../agent/lib/bulk-edit-gate.ts"
 import * as schemas from "../../../lib/schemas/index.ts"
 
 const toolsDir = fileURLToPath(
@@ -88,9 +92,13 @@ const INVENTORY = [
     trimmed: false,
   },
   {
+    // The one row that is neither always() nor never(): a single-task edit
+    // runs free, a second task in the same turn pauses. The policy's own
+    // behaviour is asserted in bulk-edit-gate.test.ts; here we only pin that
+    // update_task advertises that shared policy and no other.
     name: "update_task",
     schema: schemas.updateTaskSchema,
-    gated: false,
+    gated: "policy",
     trimmed: false,
   },
   {
@@ -253,7 +261,14 @@ describe("the plan §2.4 tool inventory", () => {
         assert.equal(authored.get(entry.name)?.inputSchema, entry.schema)
       })
 
-      it(`approval is ${entry.gated ? "always()" : "never()"}`, async () => {
+      const expected =
+        entry.gated === "policy"
+          ? "afterFirstTaskInTurn"
+          : entry.gated
+            ? "always()"
+            : "never()"
+
+      it(`approval is ${expected}`, async () => {
         const policy = authored.get(entry.name)?.approval
 
         assert.equal(
@@ -261,6 +276,11 @@ describe("the plan §2.4 tool inventory", () => {
           "function",
           `${entry.name} must state its approval policy explicitly.`
         )
+
+        if (entry.gated === "policy") {
+          assert.equal(policy, afterFirstTaskInTurn)
+          return
+        }
 
         assert.equal(
           await policy?.(approvalContext(entry.name)),

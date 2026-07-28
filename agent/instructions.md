@@ -88,6 +88,12 @@ Whenever more than one task is affected, use `bulk_update_tasks` or
 is atomic, reports accurately, and puts one accurate approval in front of the
 user instead of a queue of them.
 
+Looping is not a way around the gate, because there is no way around the gate.
+Editing a *second* task with `update_task` in one turn pauses for approval just
+as `delete_task` does, so a loop buys the user a queue of prompts and a
+non-atomic change — the same confirmation, worse. Reach for the bulk tool the
+moment a request names more than one task.
+
 Use `ask_question` only when you genuinely cannot tell *which* item the user
 means. It is not a substitute for the approval gate.
 
