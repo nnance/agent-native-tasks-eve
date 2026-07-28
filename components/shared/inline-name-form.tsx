@@ -17,6 +17,11 @@ import { nameSchema } from "@/lib/schemas"
  * The server's message is rendered verbatim in the same slot as the local
  * validation message, so a caller has one place to look and the E2E suite has
  * one testid to assert.
+ *
+ * `resetOnSuccess` is for the *create* forms. Without it the field keeps its
+ * text after a successful create, so a second click on Add silently creates a
+ * duplicate. Rename forms do not need it — the parent unmounts the form on
+ * success — which is why this is opt-in rather than the default.
  */
 export function InlineNameForm({
   idPrefix,
@@ -27,6 +32,7 @@ export function InlineNameForm({
   error,
   onSubmit,
   onCancel,
+  resetOnSuccess = false,
 }: {
   /** testid prefix, e.g. `project-create` or `project-rename-<id>` */
   idPrefix: string
@@ -35,8 +41,14 @@ export function InlineNameForm({
   placeholder?: string
   pending: boolean
   error: string | null
-  onSubmit: (name: string) => void
+  /**
+   * Return a promise (e.g. TanStack's `mutateAsync`) to opt into
+   * `resetOnSuccess`; a rejected promise leaves the text in place so the user
+   * can retry without retyping.
+   */
+  onSubmit: (name: string) => void | Promise<unknown>
   onCancel?: () => void
+  resetOnSuccess?: boolean
 }) {
   const [value, setValue] = useState(initialValue)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -57,7 +69,18 @@ export function InlineNameForm({
         }
 
         setLocalError(null)
-        onSubmit(parsed.data)
+
+        const result = onSubmit(parsed.data)
+
+        if (resetOnSuccess && result instanceof Promise) {
+          // Clear only once the write has actually landed. The rejection path
+          // is deliberately swallowed: the parent already renders the failure
+          // through `error`, and keeping the text lets the user retry.
+          result.then(
+            () => setValue(""),
+            () => {}
+          )
+        }
       }}
     >
       <div className="flex items-center gap-2">

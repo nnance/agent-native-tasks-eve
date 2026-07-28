@@ -43,9 +43,10 @@ export function PrioritiesPanel({ projectId }: { projectId: string | null }) {
         pending={createPriority.isPending}
         error={createPriority.error?.message ?? null}
         onSubmit={(name) => {
-          if (!projectId) return
-          createPriority.mutate({ projectId, name })
+          if (!projectId) return undefined
+          return createPriority.mutateAsync({ projectId, name })
         }}
+        resetOnSuccess
       />
 
       <QueryState
