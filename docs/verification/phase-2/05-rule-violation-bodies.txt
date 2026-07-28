@@ -3,47 +3,47 @@ Live transcript of every error branch, against a real server.
 Nothing below is quoted from source; it is what the wire said.
 
 [1] 409 RuleViolation — delete a project that still has tasks (§7.3)
-    DELETE /api/projects/af980f96-ca08-4679-9fe7-aee048b4faaa
+    DELETE /api/projects/b8e1c78b-037d-4a8c-a129-e01bd4a4aa98
     -> 409
-    {"error":"Project 'Design d5911c53' still has 1 task. Delete or move those tasks first, then delete the project."}
+    {"error":"Project 'Design 1dad5158' still has 1 task. Delete or move those tasks first, then delete the project."}
 
 [2] 409 RuleViolation — delete a status a task still uses (§7.3)
-    DELETE /api/projects/63bf9e32-cb42-4362-b4c9-9a9c0bcc692c/statuses/6e11482e-f839-495e-be92-60323a4c366d
+    DELETE /api/projects/2f66ca5e-1757-4036-8d3a-d20c021578cd/statuses/2241e1f5-40d8-46b9-b95b-0f357d876cc5
     -> 409
     {"error":"Status 'To Do' is used by 1 task. Move those tasks to another status (or delete them) first, then delete the status."}
 
 [3] 409 RuleViolation — delete the last remaining status (§7.5)
-    DELETE /api/projects/f50e935a-d1bf-491d-a2ff-7a7319294445/statuses/7bb6a2c4-9530-4d0c-8aab-91738307011a
+    DELETE /api/projects/bc711446-98ce-4fa4-a4b8-a0e2342a32ca/statuses/363d59e7-3606-469a-b909-dfb5b8a54ed3
     -> 409
-    {"error":"'To Do' is the only status in 'Solo 62ca8688'. Every project must keep at least one status, so it cannot be deleted. Create another status first."}
+    {"error":"'To Do' is the only status in 'Solo 83019390'. Every project must keep at least one status, so it cannot be deleted. Create another status first."}
 
 [4] 409 RuleViolation — delete the last remaining priority (§7.5)
-    DELETE /api/projects/5c566f94-1d30-42db-ab3b-58d5b4849640/priorities/dc4fc31b-71d1-4a6e-a6a8-e911c926d167
+    DELETE /api/projects/f42fad09-c374-46c7-8274-7f76f5f0d2c0/priorities/6f3fa52f-21b8-4caa-a9d4-00d935a29a7e
     -> 409
-    {"error":"'Low' is the only priority in 'Alone d8b42bb4'. Every project must keep at least one priority, so it cannot be deleted. Create another priority first."}
+    {"error":"'Low' is the only priority in 'Alone a02de21b'. Every project must keep at least one priority, so it cannot be deleted. Create another priority first."}
 
 [5] 409 RuleViolation — a task using another project's status (§7 rule 2)
     POST /api/tasks
-    body: {"projectId":"0d8f0391-d2b2-435d-9572-61019037f653","title":"Cross-project","statusId":"9b6c18e2-d16a-4d10-a381-a73ad7c10981"}
+    body: {"projectId":"8d1d55b0-f039-40a5-995c-cc1560e4c5cc","title":"Cross-project","statusId":"1565d76e-301b-4eb5-880f-68b417f207a9"}
     -> 409
-    {"error":"Status 'To Do' belongs to a different project. A task in 'Website 556c2a3e' can only use that project's own statuses."}
+    {"error":"Status 'To Do' belongs to a different project. A task in 'Website 6f29089c' can only use that project's own statuses."}
 
 [6] 404 NotFoundError — unknown project
-    PATCH /api/projects/8cf95926-b924-4d61-9b83-8aa67f174594
+    PATCH /api/projects/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
     body: {"name":"Nope"}
     -> 404
-    {"error":"No project with id 8cf95926-b924-4d61-9b83-8aa67f174594."}
+    {"error":"No project with id b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c."}
 
 [7] 404 NotFoundError — unknown task
-    GET /api/tasks/8cf95926-b924-4d61-9b83-8aa67f174594
+    GET /api/tasks/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
     -> 404
-    {"error":"No task with id 8cf95926-b924-4d61-9b83-8aa67f174594."}
+    {"error":"No task with id b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c."}
 
 [8] 404 — a real status addressed under the wrong project (scope guard)
-    PATCH /api/projects/bc91faec-0506-413f-9212-d6a5d0bd1383/statuses/ae3a0915-29c2-4929-b4e7-920869bca142
+    PATCH /api/projects/1980f4c0-d3a9-4b19-8ae9-fa23ec40749e/statuses/3c73fe11-01d2-443d-b360-af8a1e9e6486
     body: {"name":"Hijacked"}
     -> 404
-    {"error":"No status with id ae3a0915-29c2-4929-b4e7-920869bca142 in project bc91faec-0506-413f-9212-d6a5d0bd1383."}
+    {"error":"No status with id 3c73fe11-01d2-443d-b360-af8a1e9e6486 in project 1980f4c0-d3a9-4b19-8ae9-fa23ec40749e."}
 
 [9] 400 ZodError — missing required field
     POST /api/projects
@@ -58,8 +58,8 @@ Nothing below is quoted from source; it is what the wire said.
     {"error":"Invalid request.","issues":[{"code":"unrecognized_keys","keys":["colour"],"path":[],"message":"Unrecognized key: \"colour\""}]}
 
 [11] 400 ZodError — projectId on a task update (immutability, §7 rule 1)
-    PATCH /api/tasks/8cf95926-b924-4d61-9b83-8aa67f174594
-    body: {"title":"Moved","projectId":"e50ea1ae-3151-4c23-9292-67790a3a5138"}
+    PATCH /api/tasks/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
+    body: {"title":"Moved","projectId":"7b0e3dd8-24a4-42e5-ae29-daac0e4d7d7e"}
     -> 400
     {"error":"Invalid request.","issues":[{"code":"unrecognized_keys","keys":["projectId"],"path":[],"message":"Unrecognized key: \"projectId\""}]}
 

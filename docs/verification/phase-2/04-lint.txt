@@ -12,3 +12,4 @@ $ pnpm lint
 
 ✖ 2 problems (0 errors, 2 warnings)
 
+exit=0

@@ -3,4 +3,4 @@ $ pnpm typecheck
 > agent-native-tasks-eve@0.0.1 typecheck /Users/nicknance/Developer/genai/agent-native-tasks-eve
 > tsc --noEmit
 
-(exit 0)
+exit=0

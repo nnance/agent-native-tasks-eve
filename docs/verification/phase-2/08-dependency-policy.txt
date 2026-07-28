@@ -1,12 +1,17 @@
 Dependency policy §1.1: zero change. Phase 2 baseline is 174bc1e
 ('docs: redact Neon endpoint IDs…', the commit immediately before this phase).
+Regenerated live for this packet.
 
 === 1. package.json and pnpm-lock.yaml diff across the whole phase ===
 $ git diff 174bc1e..HEAD -- package.json pnpm-lock.yaml | wc -l
 0
 (0 = not one line of either file changed)
 
+$ git log --oneline 174bc1e..HEAD | wc -l    # commits in the phase
+11
+
 === 2. No rejected library appears anywhere in the source ===
+$ for lib in ...; do grep -rE "(from|require\()[ (]*[\"']$lib" app lib tests scripts agent; done
   vitest       not imported anywhere
   jest         not imported anywhere
   playwright   not imported anywhere
@@ -36,8 +41,8 @@ import { fileURLToPath } from "node:url"
 import { spawn, type ChildProcess } from "node:child_process"
 import assert from "node:assert/strict"
 
-  node:test, node:assert/strict, node:child_process, node:net, node:url,
-  and drizzle-orm (already a dependency) for the teardown deletes.
+  node:test, node:assert/strict, node:child_process, node:net, node:url, and
+  drizzle-orm (already a dependency) for the teardown deletes.
   HTTP is the built-in global fetch — no client library (§1.1).
 
 === 4. Dependency lists, unchanged, for the record ===

@@ -1,14 +1,15 @@
 Layer boundaries: app/api/** decides nothing and touches no database.
+Regenerated live for this packet; every block below is real command output.
 
 === 1. Database imports under app/api/ (expected: health only) ===
-$ grep -rn "drizzle-orm|@/lib/db|lib/db" app/api/
+$ grep -rnE "drizzle-orm|@/lib/db" app/api/
 app/api/health/route.ts:1:import { sql } from "drizzle-orm"
 app/api/health/route.ts:3:import { db } from "@/lib/db"
 app/api/health/route.ts:7:} from "@/lib/db/migration-status"
 
-  app/api/health/route.ts is the sole exception and predates this phase:
-  it is a readiness probe whose entire job is to execute 'select 1'.
-  Every other handler reaches the database only through lib/actions/.
+  app/api/health/route.ts is the sole exception and predates this phase: it is
+  a readiness probe whose entire job is to execute 'select 1'. Every other
+  handler reaches the database only through lib/actions/.
 
 === 2. RuleViolation / NotFoundError CONSTRUCTION under app/api/ ===
 $ grep -rnE "new RuleViolation|new NotFoundError" app/api/
@@ -16,17 +17,17 @@ $ grep -rnE "new RuleViolation|new NotFoundError" app/api/
 
 === 3. ...and where they ARE constructed, across lib/ ===
 $ grep -rnE "new RuleViolation|new NotFoundError" lib/
-lib/actions/statuses.ts:43:    throw new NotFoundError(`No status with id ${statusId}.`)
-lib/actions/statuses.ts:96:      throw new NotFoundError(`No project with id ${parsed.projectId}.`)
-lib/actions/statuses.ts:194:      throw new RuleViolation(
-lib/actions/statuses.ts:216:      throw new RuleViolation(
+lib/actions/projects.ts:118:    throw new NotFoundError(`No project with id ${parsed.projectId}.`)
+lib/actions/projects.ts:146:      throw new NotFoundError(`No project with id ${parsed.projectId}.`)
+lib/actions/projects.ts:157:      throw new RuleViolation(
 lib/actions/priorities.ts:47:    throw new NotFoundError(`No priority with id ${priorityId}.`)
 lib/actions/priorities.ts:106:      throw new NotFoundError(`No project with id ${parsed.projectId}.`)
 lib/actions/priorities.ts:214:      throw new RuleViolation(
 lib/actions/priorities.ts:236:      throw new RuleViolation(
-lib/actions/projects.ts:118:    throw new NotFoundError(`No project with id ${parsed.projectId}.`)
-lib/actions/projects.ts:146:      throw new NotFoundError(`No project with id ${parsed.projectId}.`)
-lib/actions/projects.ts:157:      throw new RuleViolation(
+lib/actions/statuses.ts:43:    throw new NotFoundError(`No status with id ${statusId}.`)
+lib/actions/statuses.ts:96:      throw new NotFoundError(`No project with id ${parsed.projectId}.`)
+lib/actions/statuses.ts:194:      throw new RuleViolation(
+lib/actions/statuses.ts:216:      throw new RuleViolation(
 lib/actions/tasks.ts:119:    throw new NotFoundError(`No task with id ${taskId}.`)
 lib/actions/tasks.ts:139:    throw new NotFoundError(`No status with id ${statusId}.`)
 lib/actions/tasks.ts:143:    throw new RuleViolation(
@@ -42,18 +43,24 @@ lib/actions/tasks.ts:512:      throw new NotFoundError(`No task with id ${missin
 lib/api/scope.ts:37:    throw new NotFoundError(
 lib/api/scope.ts:50:    throw new NotFoundError(
 
-  The only non-action site is lib/api/scope.ts, which answers
-  'is this id reachable at this address' — resolved through the existing
-  listStatuses/listPriorities ACTIONS, not SQL. No product rule is decided
-  there; see docs/decisions/phase-2-decisions.md.
+  The only non-action site is lib/api/scope.ts, which answers 'is this id
+  reachable at this address' — resolved through the existing listStatuses /
+  listPriorities ACTIONS, not SQL. No product rule is decided there; see
+  docs/decisions/phase-2-decisions.md.
 
-=== 4. No schema is declared under app/api/ (they come from lib/schemas) ===
+=== 4. No input schema is declared under app/api/ ===
 $ grep -rnE "z\.object|z\.strictObject" app/api/
-(no matches)
+(no matches — every input schema comes from lib/schemas)
 
-$ grep -rn "z\." app/api/     # the only zod under app/api is transport coercion
+$ grep -rn "z\." app/api/     # every remaining zod mention under app/api
 app/api/tasks/route.ts:26:const includeCompletedSchema = z.stringbool()
 app/api/projects/[projectId]/priorities/[priorityId]/route.ts:11: * set-default. `isDefault` is `z.literal(true)` in the shared schema, so
+
+  One real zod expression under app/api/: z.stringbool() in the tasks
+  collection handler. It is a URL-string coercion, not an input contract — a
+  URL carries strings, an EVE tool emits a real boolean, and keeping the
+  coercion in the transport layer is what stops URL handling from leaking into
+  the model-facing parity contract. The priorities line is prose in a comment.
 
 === 5. Who imports lib/api/ ===
 $ grep -rl "lib/api/" app components lib tests scripts agent
@@ -71,8 +78,8 @@ lib/api/respond.ts
 tests/api/suites/statuses.ts
 tests/unit/api/respond.test.ts
 
-  The nine Phase 2 handlers, the lib/api/ modules themselves (request.ts and
-  respond.ts), and two test files -- tests/unit/api/respond.test.ts, which is
-  the unit test for the helpers, and tests/api/suites/statuses.ts, where the
-  match is a prose reference to lib/api/scope.ts inside a comment, not an
-  import. Nothing in components/, scripts/ or agent/ touches lib/api/.
+  The nine Phase 2 handlers, the lib/api/ modules themselves, and two test
+  files: tests/unit/api/respond.test.ts (the unit test for the helpers) and
+  tests/api/suites/statuses.ts, where the match is a prose reference to
+  lib/api/scope.ts inside a comment, not an import. Nothing in components/,
+  scripts/ or agent/ touches lib/api/.

@@ -12,7 +12,7 @@ this line already proves they are different projects.
     back through the test-database handle.
 
 [2] POST /api/projects -> 201
-    wrote id 83916d15-80b0-412a-8c6e-2725df583d19
+    wrote id d5a09aff-2204-48a2-8d3e-52be549e1171
 
 [3] the same id, seen from two independent connections
     rows in TEST (ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb): 1
@@ -24,5 +24,5 @@ this line already proves they are different projects.
 [4] probe row removed from the test database.
 
 --- and the guard itself, when the two URLs are made identical ---
-$ DATABASE_URL_TEST=$DATABASE_URL node -e 'import("./tests/api/support/db.ts")'
-Refusing to run tests: the test database URL is identical to DATABASE_URL. The test database must be a separate Neon project.
+$ DATABASE_URL_TEST=$DATABASE_URL node --env-file=.env.local -e 'await import("./tests/api/support/db.ts")'
+Error: Refusing to run tests: the test database URL is identical to DATABASE_URL. The test database must be a separate Neon project.
