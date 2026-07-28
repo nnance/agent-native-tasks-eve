@@ -111,6 +111,37 @@ export function createBrowser(session: string) {
       (await json<{ count: number }>(["get", "count", selector])).count,
 
     /**
+     * The trimmed text of **every** match, in DOM order.
+     *
+     * `get text` returns the first match only, so ordering assertions (which
+     * are most of what §8.1 is about) need this. `eval` is the only command
+     * that can map over a NodeList, and it stays inside the page.
+     */
+    texts: async (selector: string) =>
+      (
+        await json<{ result: string[] }>([
+          "eval",
+          `Array.from(document.querySelectorAll(${JSON.stringify(selector)})).map((node) => node.textContent.trim())`,
+        ])
+      ).result,
+
+    /** Polls in the page until `selector` matches exactly `expected` nodes. */
+    waitCount: (selector: string, expected: number) =>
+      call(
+        "wait",
+        "--fn",
+        `document.querySelectorAll(${JSON.stringify(selector)}).length === ${expected}`
+      ),
+
+    /** Polls in the page until `selector`'s trimmed text equals `expected`. */
+    waitTextIn: (selector: string, expected: string) =>
+      call(
+        "wait",
+        "--fn",
+        `document.querySelector(${JSON.stringify(selector)})?.textContent.trim() === ${JSON.stringify(expected)}`
+      ),
+
+    /**
      * `false` rather than a throw when the element is absent — "is this gone?"
      * is a question the suite asks constantly, and an exception is the wrong
      * answer to it.
