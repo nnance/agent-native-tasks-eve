@@ -5,7 +5,8 @@ import {
   ProjectChip,
   StatusChip,
 } from "@/components/tasks/entity-chips"
-import { Item, ItemContent, ItemTitle } from "@/components/ui/item"
+import { Button } from "@/components/ui/button"
+import { Item, ItemActions, ItemContent, ItemTitle } from "@/components/ui/item"
 import { cn } from "@/lib/utils"
 import type { TaskDto } from "@/lib/queries"
 
@@ -16,7 +17,13 @@ import type { TaskDto } from "@/lib/queries"
  * requirement of US-B2.4 is assertable as an attribute rather than as a
  * colour, and the muted + struck-through treatment hangs off the same fact.
  */
-export function TaskRow({ task }: { task: TaskDto }) {
+export function TaskRow({
+  task,
+  onEdit,
+}: {
+  task: TaskDto
+  onEdit: (task: TaskDto) => void
+}) {
   const completed = task.status.isCompleted
 
   return (
@@ -43,6 +50,17 @@ export function TaskRow({ task }: { task: TaskDto }) {
           <PriorityChip task={task} />
         </div>
       </ItemContent>
+      <ItemActions className="flex-wrap justify-end gap-1.5">
+        <Button
+          type="button"
+          size="xs"
+          variant="outline"
+          data-testid={`task-edit-${task.id}`}
+          onClick={() => onEdit(task)}
+        >
+          Edit
+        </Button>
+      </ItemActions>
     </Item>
   )
 }

@@ -23,10 +23,12 @@ export function TaskList({
   query,
   hasActiveFilters,
   onClearFilters,
+  onEdit,
 }: {
   query: UseQueryResult<TaskDto[], ApiError>
   hasActiveFilters: boolean
   onClearFilters: () => void
+  onEdit: (task: TaskDto) => void
 }) {
   const tasks = query.data ?? []
 
@@ -59,7 +61,7 @@ export function TaskList({
     >
       <ul className="flex flex-col gap-2">
         {tasks.map((task) => (
-          <TaskRow key={task.id} task={task} />
+          <TaskRow key={task.id} task={task} onEdit={onEdit} />
         ))}
       </ul>
     </QueryState>
