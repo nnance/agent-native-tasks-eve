@@ -1,0 +1,21 @@
+$ NO_COLOR=1 pnpm dev   # second boot ("reopening the app")
+
+
+> agent-native-tasks-eve@0.0.1 dev /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.10.176:3000
+- Environments: .env.local
+✓ Ready in 153ms
+[eve:dev] server listening at http://127.0.0.1:60168/
+
+ GET / 200 in 205ms (next.js: 65ms, application-code: 140ms)
+
+$ curl -s localhost:3000/eve/v1/health
+{"ok":true,"status":"ready","workflowId":"workflow//eve//workflowEntry"}
+
+$ grep -c "\[seed\]" (the boot log above)
+0
+(0 = the boot hook found the workspace already seeded and created nothing)

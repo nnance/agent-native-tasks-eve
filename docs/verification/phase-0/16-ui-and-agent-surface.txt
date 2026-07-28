@@ -1,0 +1,18 @@
+$ ls app/ ; ls app/api 2>&1 ; ls agent/ agent/tools 2>&1
+
+favicon.ico
+globals.css
+layout.tsx
+page.tsx
+
+ls: app/api: No such file or directory
+
+agent.ts
+channels
+instructions.md
+
+ls: agent/tools: No such file or directory
+
+$ grep -rniE "task" --include="*.tsx" --include="*.ts" app/ components/ | grep -v node_modules
+
+(no matches above = no task UI exists in Phase 0)

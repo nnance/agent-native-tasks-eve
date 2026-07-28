@@ -1,0 +1,373 @@
+{
+  "agent": {
+    "agentRoot": "/Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/dev-runtime/snapshots/ms4sf4wv-cf1b0483-cfca-4363-8a4d-c729f9e20250/source/agent",
+    "appRoot": "/Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/dev-runtime/snapshots/ms4sf4wv-cf1b0483-cfca-4363-8a4d-c729f9e20250/source",
+    "configSource": {
+      "logicalPath": "agent.ts",
+      "sourceId": "agent.ts",
+      "sourceKind": "module"
+    },
+    "model": {
+      "contextWindowTokens": 1000000,
+      "id": "anthropic/claude-sonnet-5",
+      "routing": {
+        "kind": "gateway",
+        "target": "anthropic"
+      },
+      "endpoint": {
+        "kind": "gateway",
+        "connected": true,
+        "credential": "api-key"
+      }
+    },
+    "name": "agent-native-tasks-eve"
+  },
+  "capabilities": {
+    "devRoutes": true
+  },
+  "channels": {
+    "authored": [
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/info"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/reset"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId/cancel"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId/stream"
+      }
+    ],
+    "available": [
+      {
+        "logicalPath": "framework://channels/eve/v1/connections/callback/get",
+        "sourceId": "eve:framework:connection-callback-get",
+        "sourceKind": "module",
+        "method": "GET",
+        "name": "eve/v1/connections/callback/get",
+        "origin": "framework",
+        "urlPath": "/eve/v1/connections/:name/callback/:token"
+      },
+      {
+        "logicalPath": "framework://channels/eve/v1/connections/callback/post",
+        "sourceId": "eve:framework:connection-callback-post",
+        "sourceKind": "module",
+        "method": "POST",
+        "name": "eve/v1/connections/callback/post",
+        "origin": "framework",
+        "urlPath": "/eve/v1/connections/:name/callback/:token"
+      },
+      {
+        "logicalPath": "framework://channels/eve/v1/callback/post",
+        "sourceId": "eve:framework:session-callback-post",
+        "sourceKind": "module",
+        "method": "POST",
+        "name": "eve/v1/callback/post",
+        "origin": "framework",
+        "urlPath": "/eve/v1/callback/:token"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/info"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/reset"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId/cancel"
+      },
+      {
+        "logicalPath": "channels/eve.ts",
+        "sourceId": "channels/eve.ts",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "authored",
+        "urlPath": "/eve/v1/session/:sessionId/stream"
+      }
+    ],
+    "disabledFramework": [],
+    "framework": [
+      {
+        "logicalPath": "framework://channels//eve/v1/info",
+        "sourceId": "eve:framework:get-/eve/v1/info",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/info",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels//eve/v1/session",
+        "sourceId": "eve:framework:post-/eve/v1/session",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/session",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels//eve/v1/session/reset",
+        "sourceId": "eve:framework:post-/eve/v1/session/reset",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/session/reset",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels//eve/v1/session/:sessionId",
+        "sourceId": "eve:framework:post-/eve/v1/session/:sessionId",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/session/:sessionId",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels//eve/v1/session/:sessionId/cancel",
+        "sourceId": "eve:framework:post-/eve/v1/session/:sessionId/cancel",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "POST",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/session/:sessionId/cancel",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels//eve/v1/session/:sessionId/stream",
+        "sourceId": "eve:framework:get-/eve/v1/session/:sessionId/stream",
+        "sourceKind": "module",
+        "adapterKind": "http",
+        "method": "GET",
+        "name": "eve",
+        "origin": "framework",
+        "urlPath": "/eve/v1/session/:sessionId/stream",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": true,
+        "status": "replaced"
+      },
+      {
+        "logicalPath": "framework://channels/eve/v1/connections/callback/get",
+        "sourceId": "eve:framework:connection-callback-get",
+        "sourceKind": "module",
+        "method": "GET",
+        "name": "eve/v1/connections/callback/get",
+        "origin": "framework",
+        "urlPath": "/eve/v1/connections/:name/callback/:token",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": false,
+        "status": "active"
+      },
+      {
+        "logicalPath": "framework://channels/eve/v1/connections/callback/post",
+        "sourceId": "eve:framework:connection-callback-post",
+        "sourceKind": "module",
+        "method": "POST",
+        "name": "eve/v1/connections/callback/post",
+        "origin": "framework",
+        "urlPath": "/eve/v1/connections/:name/callback/:token",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": false,
+        "status": "active"
+      },
+      {
+        "logicalPath": "framework://channels/eve/v1/callback/post",
+        "sourceId": "eve:framework:session-callback-post",
+        "sourceKind": "module",
+        "method": "POST",
+        "name": "eve/v1/callback/post",
+        "origin": "framework",
+        "urlPath": "/eve/v1/callback/:token",
+        "disabledByAuthor": false,
+        "replacedByAuthoredChannel": false,
+        "status": "active"
+      }
+    ]
+  },
+  "connections": [],
+  "diagnostics": {
+    "discoveryErrors": 0,
+    "discoveryWarnings": 0
+  },
+  "hooks": [],
+  "instructions": {
+    "dynamic": [],
+    "static": {
+      "logicalPath": "instructions.md",
+      "sourceId": "instructions.md",
+      "sourceKind": "markdown",
+      "markdown": "# Identity\n\nYou are the task assistant for an agent-native task manager. The user works in\na split screen: the task UI on the left, this conversation on the right. Both\nhalves act on the same data through the same action layer, so anything the UI\ncan do, you can do — and the user watches your changes land in their list\nimmediately.\n\nYou are a peer of the UI, not a chat wrapper around it. Be concise, direct, and\nconcrete.\n\n> **Phase 0 draft.** No tools are registered yet — they arrive in Phase 4, once\n> the shared action layer exists. Until then, say plainly that you cannot read\n> or change task data yet rather than improvising an answer. The behavioral\n> rules below are the contract those tools will be written against; keep this\n> file and the tool inventory in sync as they land.\n\n## Ground your answers in real data\n\nNever answer a question about the user's tasks, projects, statuses, or\npriorities from memory or inference. Read the current data with a tool first,\nevery time — including for follow-ups, because the user may have changed things\nthrough the UI between your turns.\n\nFind tasks the user describes loosely (\"the task about the header bug\") by\nsearching, not by guessing at a title. If something the user refers to does not\nexist, say so directly. Never invent a task, project, status, or priority, and\nnever present a plausible guess as a fact.\n\n## Confirm before destructive or bulk changes\n\nNon-destructive changes to a single task — creating it, editing its title or\ndescription, moving its status, changing its priority — execute immediately. Do\nnot ask permission for those.\n\nAsk for explicit confirmation first, and wait for it, when:\n\n- **Deleting anything** — a task, project, status, or priority.\n- **Any change affecting more than one task** — for example \"move everything in\n  To Do to In Progress\" or \"delete all completed tasks\".\n\nWhen you ask, state exactly what you are about to do before you do it: which\nitems, what change, and how many. On approval, apply everything you stated. On\na decline, change nothing and say so.\n\nWhenever more than one task is affected, use the `bulk_*` tools rather than\nlooping over single-item tools. One bulk call is atomic, reports accurately,\nand shows up as a single action in the user's history.\n\n## Explain blocks, and offer a way forward\n\nSome actions are refused by the rules the app enforces:\n\n- A task cannot move between projects. Projects are immutable on a task.\n- A status or priority still in use by a task cannot be deleted.\n- A project's last remaining status or priority cannot be deleted.\n- A project that still has tasks cannot be deleted.\n\nWhen an action is blocked, never retry it and never work around it. Say what\nblocked it, in plain language, and offer a concrete alternative the user can\naccept in one reply — for example, recreating the task in the target project,\nor reassigning the affected tasks to another status first.\n\n## Report what actually changed\n\nAfter you act, summarize in plain language what changed and where — the task\ntitle, the project, the old and new values. The user sees a structured entry\nfor each action alongside your reply, so do not restate it mechanically or\nenumerate raw ids and fields. Give them the sentence they would have written\nthemselves.\n\nIf some parts of a request succeeded and others were blocked, say exactly which\nwere which. Never imply an action succeeded when it did not.\n\n## Defaults\n\nWhen the user omits fields on creation, take the same defaults the UI takes: a\nnew task lands in the project's first status and gets the project's default\npriority. A new project is seeded with the standard statuses and priorities.\nDo not ask the user to fill in fields that have defaults.\n",
+      "name": "instructions"
+    }
+  },
+  "kind": "eve-agent-info",
+  "mode": "development",
+  "sandbox": null,
+  "schedules": [],
+  "skills": {
+    "static": [],
+    "dynamic": []
+  },
+  "subagents": {
+    "local": [],
+    "total": 0
+  },
+  "tools": [
+    [
+      "eve:framework/ask-question",
+      "eve:framework/bash",
+      "eve:framework/glob",
+      "eve:framework/grep",
+      "eve:framework/read-file",
+      "eve:framework/write-file",
+      "eve:framework/todo",
+      "eve:framework/web-fetch",
+      "eve:framework/web-search",
+      "eve:framework/load-skill",
+      "eve:framework/agent"
+    ],
+    [],
+    [],
+    [],
+    [
+      "eve:framework/ask-question",
+      "eve:framework/bash",
+      "eve:framework/glob",
+      "eve:framework/grep",
+      "eve:framework/read-file",
+      "eve:framework/write-file",
+      "eve:framework/todo",
+      "eve:framework/web-fetch",
+      "eve:framework/web-search",
+      "eve:framework/load-skill",
+      "eve:framework/agent"
+    ],
+    [
+      "Workflow",
+      "load_skill"
+    ]
+  ],
+  "version": 1,
+  "workflow": {
+    "enabled": false,
+    "toolName": "Workflow"
+  },
+  "workspace": {
+    "resourceRoot": {
+      "logicalPath": "workspace-resources/__root__",
+      "rootEntries": []
+    },
+    "rootEntries": []
+  }
+}

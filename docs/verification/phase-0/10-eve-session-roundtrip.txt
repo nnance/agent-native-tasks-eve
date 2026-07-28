@@ -1,0 +1,35 @@
+$ SID=$(curl -s -X POST localhost:3000/eve/v1/session -H "Content-Type: application/json" -d "{\"message\":\"Reply with exactly: Phase 0 verified.\"}" | jq -r .sessionId); curl -sN "localhost:3000/eve/v1/session/$SID/stream"
+
+sessionId: wrun_01KYMMAW95W87ZXHFKXRTQE999
+
+{"data":{"runtime":{"agentId":"agent-native-tasks-eve","agentName":"agent-native-tasks-eve","eveVersion":"0.27.8","modelId":"anthropic/claude-sonnet-5"}},"type":"session.started","meta":{"at":"2026-07-28T15:08:48.357Z"}}
+{"data":{"sequence":0,"turnId":"turn_0"},"type":"turn.started","meta":{"at":"2026-07-28T15:08:48.357Z"}}
+{"data":{"message":"Reply with exactly: Phase 0 verified.","parts":[{"text":"Reply with exactly: Phase 0 verified.","type":"text"}],"sequence":0,"turnId":"turn_0"},"type":"message.received","meta":{"at":"2026-07-28T15:08:48.357Z"}}
+{"data":{"sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"step.started","meta":{"at":"2026-07-28T15:08:48.357Z"}}
+{"data":{"messageDelta":"Phase 0 verified.","messageSoFar":"Phase 0 verified.","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:08:50.213Z"}}
+{"data":{"finishReason":"stop","message":"Phase 0 verified.","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.completed","meta":{"at":"2026-07-28T15:08:50.248Z"}}
+{"data":{"finishReason":"stop","sequence":0,"stepIndex":0,"turnId":"turn_0","usage":{"costUsd":0.0014372,"inputTokens":6618,"outputTokens":11,"cacheReadTokens":6616,"cacheWriteTokens":0},"providerMetadata":{"gateway":{"generationId":"gen_01KYMMAWFYKNG541YFDMGF15G4"}}},"type":"step.completed","meta":{"at":"2026-07-28T15:08:50.251Z"}}
+{"data":{"sequence":0,"turnId":"turn_0"},"type":"turn.completed","meta":{"at":"2026-07-28T15:08:50.264Z"}}
+{"data":{"continuationToken":"eve:aa960c33-825b-434b-a3c4-32b4b977ebb8","wait":"next-user-message"},"type":"session.waiting","meta":{"at":"2026-07-28T15:08:50.265Z"}}
+
+=== second session: can the agent create a task today? (US-A1.4, agent path) ===
+
+$ SID2=$(curl ... -d "{\"message\":\"Create a task titled Buy milk in the Personal project.\"}" ...); curl -sN ".../session/$SID2/stream"
+
+sessionId: wrun_01KYMMDM78WSE4T226GV1PQ4J1
+
+{"data":{"runtime":{"agentId":"agent-native-tasks-eve","agentName":"agent-native-tasks-eve","eveVersion":"0.27.8","modelId":"anthropic/claude-sonnet-5"}},"type":"session.started","meta":{"at":"2026-07-28T15:10:18.411Z"}}
+{"data":{"sequence":0,"turnId":"turn_0"},"type":"turn.started","meta":{"at":"2026-07-28T15:10:18.411Z"}}
+{"data":{"message":"Create a task titled \"Buy milk\" in the Personal project.","parts":[{"text":"Create a task titled \"Buy milk\" in the Personal project.","type":"text"}],"sequence":0,"turnId":"turn_0"},"type":"message.received","meta":{"at":"2026-07-28T15:10:18.411Z"}}
+{"data":{"sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"step.started","meta":{"at":"2026-07-28T15:10:18.411Z"}}
+{"data":{"reasoningDelta":"","reasoningSoFar":"","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"reasoning.appended","meta":{"at":"2026-07-28T15:10:20.659Z"}}
+{"data":{"messageDelta":"I can't create that task yet — no","messageSoFar":"I can't create that task yet — no","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:10:20.663Z"}}
+{"data":{"messageDelta":" tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase).","messageSoFar":"I can't create that task yet — no tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase).","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:10:21.009Z"}}
+{"data":{"messageDelta":" Right now I have no way to access your task list or make changes to it, so I can't add","messageSoFar":"I can't create that task yet — no tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase). Right now I have no way to access your task list or make changes to it, so I can't add","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:10:21.418Z"}}
+{"data":{"messageDelta":" \"Buy milk\" to the Personal project.\n\nOnce the action layer is wired up, I'll be able to create it right","messageSoFar":"I can't create that task yet — no tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase). Right now I have no way to access your task list or make changes to it, so I can't add \"Buy milk\" to the Personal project.\n\nOnce the action layer is wired up, I'll be able to create it right","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:10:21.783Z"}}
+{"data":{"messageDelta":" away. In the meantime, you'd need to add it through the task UI directly.","messageSoFar":"I can't create that task yet — no tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase). Right now I have no way to access your task list or make changes to it, so I can't add \"Buy milk\" to the Personal project.\n\nOnce the action layer is wired up, I'll be able to create it right away. In the meantime, you'd need to add it through the task UI directly.","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.appended","meta":{"at":"2026-07-28T15:10:22.045Z"}}
+{"data":{"finishReason":"stop","message":"I can't create that task yet — no tools for reading or changing task data have been registered in this environment yet (that's planned for a later phase). Right now I have no way to access your task list or make changes to it, so I can't add \"Buy milk\" to the Personal project.\n\nOnce the action layer is wired up, I'll be able to create it right away. In the meantime, you'd need to add it through the task UI directly.","sequence":0,"stepIndex":0,"turnId":"turn_0"},"type":"message.completed","meta":{"at":"2026-07-28T15:10:22.073Z"}}
+{"data":{"finishReason":"stop","sequence":0,"stepIndex":0,"turnId":"turn_0","usage":{"costUsd":0.0030694,"inputTokens":6621,"outputTokens":176,"cacheReadTokens":6527,"cacheWriteTokens":92},"providerMetadata":{"gateway":{"generationId":"gen_01KYMMDMHD4AQ59GAX2JZCSF33"}}},"type":"step.completed","meta":{"at":"2026-07-28T15:10:22.076Z"}}
+{"data":{"sequence":0,"turnId":"turn_0"},"type":"turn.completed","meta":{"at":"2026-07-28T15:10:22.088Z"}}
+{"data":{"continuationToken":"eve:4f323ecb-114f-44b0-9d36-6a5cdccc3ee6","wait":"next-user-message"},"type":"session.waiting","meta":{"at":"2026-07-28T15:10:22.089Z"}}
+

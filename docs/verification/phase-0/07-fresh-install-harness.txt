@@ -1,0 +1,179 @@
+$ pnpm exec tsx docs/verification/phase-0/harness/seed-idempotency.ts
+
+
+== live database, before the harness opens its transaction ==
+{
+  "project": {
+    "id": "55db8623-9038-40e8-bd07-fd384e434b0b",
+    "name": "Personal"
+  },
+  "statuses": [
+    {
+      "id": "88eb371a-ff51-4639-95cd-f92cc40c4e51",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "4251373e-fffa-4606-a103-4941696e03e2",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "c444236b-2817-4809-b21b-d394ed62947c",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "07142377-d617-4c49-96e5-da0fafabc6b8",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "2da202cc-11f4-4c1a-8129-0731a901269a",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "46b77d82-bcae-4c6b-bdfd-8bc5f614dd2c",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}
+
+== step 1 — simulate a fresh install (delete inside the transaction) ==
+delete from projects -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
+
+== step 2 — first seed run (US-A1.1, US-A1.2, US-A1.3) ==
+ensureSeeded() -> {"seeded":true,"projectId":"9549d3a8-c297-43b9-a139-0ebd8d0b7d6f"}
+{
+  "project": {
+    "id": "9549d3a8-c297-43b9-a139-0ebd8d0b7d6f",
+    "name": "Personal"
+  },
+  "statuses": [
+    {
+      "id": "033a9b84-7f04-4354-8f17-16a722253ec1",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "2be68a0d-a930-4634-b944-2a8f227a0ae9",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "1eac5bd6-7277-49aa-a509-a8ec5e9502c5",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "b7e6d658-73bd-4c9f-9918-816584229931",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "0e000fea-e812-46c4-ac1f-b5aef6527fee",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "8f9531dd-4582-4f17-9b56-38c13f8c9126",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+
+== step 3 — second seed run on the same data (US-A1.5) ==
+ensureSeeded() -> {"seeded":false,"projectId":"9549d3a8-c297-43b9-a139-0ebd8d0b7d6f"}
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+state identical to after the first run -> true
+same project id returned by both runs -> true
+
+== step 4 — third and fourth seed runs, for good measure ==
+ensureSeeded() -> {"seeded":false,"projectId":"9549d3a8-c297-43b9-a139-0ebd8d0b7d6f"}
+ensureSeeded() -> {"seeded":false,"projectId":"9549d3a8-c297-43b9-a139-0ebd8d0b7d6f"}
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+
+== step 5 — create a task with no setup beyond the seed (US-A1.4) ==
+resolved defaults -> {"project":"Personal","status":"To Do","priority":"Medium"}
+inserted task -> {
+  "id": "092d608a-9de3-4438-92e3-0034a612ca2c",
+  "title": "Verification task",
+  "project": "Personal",
+  "status": "To Do",
+  "priority": "Medium"
+}
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '1' }
+
+== transaction rolled back — nothing above was persisted ==
+
+== live database, after the rollback ==
+{
+  "project": {
+    "id": "55db8623-9038-40e8-bd07-fd384e434b0b",
+    "name": "Personal"
+  },
+  "statuses": [
+    {
+      "id": "88eb371a-ff51-4639-95cd-f92cc40c4e51",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "4251373e-fffa-4606-a103-4941696e03e2",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "c444236b-2817-4809-b21b-d394ed62947c",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "07142377-d617-4c49-96e5-da0fafabc6b8",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "2da202cc-11f4-4c1a-8129-0731a901269a",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "46b77d82-bcae-4c6b-bdfd-8bc5f614dd2c",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+unchanged by the harness -> true
+
+[exit status: 0]

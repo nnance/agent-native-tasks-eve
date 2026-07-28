@@ -1,0 +1,62 @@
+$ pnpm db:seed   # run 2 of 2 against the live Neon database
+
+
+> agent-native-tasks-eve@0.0.1 db:seed /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> tsx lib/db/seed.ts
+
+Skipped: the projects table is not empty; nothing was created.
+{
+  "project": {
+    "id": "55db8623-9038-40e8-bd07-fd384e434b0b",
+    "name": "Personal",
+    "createdAt": "2026-07-28T14:40:15.492Z"
+  },
+  "statuses": [
+    {
+      "id": "88eb371a-ff51-4639-95cd-f92cc40c4e51",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "4251373e-fffa-4606-a103-4941696e03e2",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "c444236b-2817-4809-b21b-d394ed62947c",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "07142377-d617-4c49-96e5-da0fafabc6b8",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "2da202cc-11f4-4c1a-8129-0731a901269a",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "46b77d82-bcae-4c6b-bdfd-8bc5f614dd2c",
+      "projectId": "55db8623-9038-40e8-bd07-fd384e434b0b",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}
+
+[exit status: 0]
