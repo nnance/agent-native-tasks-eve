@@ -616,3 +616,50 @@ severity. Nothing required fixing before merge.
 
 **Not carried forward:** every item in Phase 0's scope was completed. Nothing in
 scope was left unfinished.
+
+---
+
+## Addendum — Phase 0r remediation
+
+**Added 2026-07-28, on branch `phase-0r-remediation`. Nothing above this line
+has been altered; the history is the point.**
+
+PR #1 landed a substantially rewritten `docs/implementation-plan.md` — dependency
+policy §1.1, testability affordances §2.7, agent-browser UI validation §3, the
+E2E suite §4, renumbered phases §6 — *while* Phase 0 was executing. Phase 0 was
+therefore built, correctly, against a spec that no longer exists. Several
+decisions recorded above are now superseded by the revised plan rather than by
+any fault in the reasoning that produced them.
+
+What Phase 0r changed:
+
+- **`vitest` and `tsx` removed.** §1.1 rejects vitest in favour of `node --test`
+  with `node:test` + `node:assert/strict`, and permits no dependency outside its
+  allowed table — `tsx` is not in it. Node runs the TypeScript directly.
+- **The one test moved and rewritten.** `lib/domain/defaults.test.ts` became
+  `tests/unit/domain/defaults.test.ts` using `node:test`. §4.1's layout is
+  `tests/unit/`, `tests/api/`, `tests/e2e/`; tests are no longer colocated with
+  source.
+- **`agent-browser` pinned** as a devDependency (0.33.1, exact) and verified
+  end to end against the running app for the first time.
+- **`scripts/migrate.ts`, `scripts/seed.ts`, `scripts/reset.ts` added**, and the
+  package.json scripts set per §4.7. `db:migrate` is no longer `drizzle-kit
+  migrate`. `lib/db/seed.ts` kept its logic and lost only its CLI block, so
+  `instrumentation.ts` is unchanged.
+- **`GET /api/health` added** (§2.7) returning `{ok, db, migrations}` — the route
+  every later phase's harness polls, which did not exist.
+- **`.env.example` gained `DATABASE_URL_TEST`** and its separate-project warning.
+- **`docs/eve-framework-notes.md` §3 corrected.** The stale single-entry-point
+  claim this document flagged during Phase 0 — but did not fix — is now fixed:
+  `eveChannel`/`defaultEveAuth` come from `eve/channels/eve` and
+  `localDev`/`vercelOidc` from `eve/channels/auth`.
+
+One item recorded above is now stale rather than superseded:
+`docs/verification/phase-0/harness/seed-idempotency.ts` invokes `pnpm exec tsx`
+and uses `@/` imports, so it will not run now that `tsx` is gone. It is left
+untouched on purpose — it is the record of what was actually executed during
+Phase 0, and editing it would misrepresent that.
+
+Full reasoning, including several places where the revised plan's own stated
+environment facts turned out to be false on this machine, is in
+`docs/decisions/phase-0r-decisions.md`.
