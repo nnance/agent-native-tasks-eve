@@ -14,11 +14,19 @@ import {
   createProject,
   createStatus,
   createTask,
+  deletePriority,
+  deleteStatus,
   updateStatus,
 } from "../../../lib/actions/index.ts"
 import type { Priority, Project, Status, Task } from "../../../lib/db/schema.ts"
 
-import { priorityNamed, statusNamed, testDb } from "./db.ts"
+import {
+  listPriorityRows,
+  listStatusRows,
+  priorityNamed,
+  statusNamed,
+  testDb,
+} from "./db.ts"
 
 export async function makeProject(name: string): Promise<Project> {
   return createProject({ name }, testDb())
@@ -57,6 +65,39 @@ export async function makeTask(input: {
 }): Promise<{ id: string; title: string }> {
   const created = await createTask(input, testDb())
   return { id: created.id, title: created.title }
+}
+
+/**
+ * A project pared down to a single status and a single priority, for the
+ * last-remaining delete guards (US-D2.3, US-E2.3). Built by deleting from a
+ * normally-seeded project, so the survivors are the real first-by-order rows
+ * rather than something hand-inserted.
+ */
+export async function makeMinimalProject(name: string): Promise<{
+  project: Project
+  status: Status
+  priority: Priority
+}> {
+  const project = await createProject({ name }, testDb())
+
+  const statusRows = await listStatusRows(project.id)
+  for (const status of statusRows.slice(1).reverse()) {
+    await deleteStatus({ statusId: status.id }, testDb())
+  }
+
+  const priorityRows = await listPriorityRows(project.id)
+  for (const priority of priorityRows.slice(1).reverse()) {
+    await deletePriority({ priorityId: priority.id }, testDb())
+  }
+
+  const [status] = await listStatusRows(project.id)
+  const [priority] = await listPriorityRows(project.id)
+
+  if (!status || !priority) {
+    throw new Error(`makeMinimalProject('${name}') left no status/priority.`)
+  }
+
+  return { project, status, priority }
 }
 
 /** Moves a status to a 0-based position, for ordering fixtures. */

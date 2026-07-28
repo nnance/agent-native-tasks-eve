@@ -142,6 +142,28 @@ export function createBrowser(session: string) {
       ),
 
     /**
+     * Polls until every match's trimmed text, in DOM order, equals `expected`.
+     *
+     * The settle point for anything that reorders a list: a mutation plus its
+     * invalidation and refetch is several round trips, and `agent-browser
+     * click` returns as soon as the click dispatches.
+     */
+    waitTexts: (selector: string, expected: string[]) =>
+      call(
+        "wait",
+        "--fn",
+        `JSON.stringify(Array.from(document.querySelectorAll(${JSON.stringify(selector)})).map((node) => node.textContent.trim())) === ${JSON.stringify(JSON.stringify(expected))}`
+      ),
+
+    /** Polls until `selector`'s attribute equals `expected`. */
+    waitAttr: (selector: string, name: string, expected: string) =>
+      call(
+        "wait",
+        "--fn",
+        `document.querySelector(${JSON.stringify(selector)})?.getAttribute(${JSON.stringify(name)}) === ${JSON.stringify(expected)}`
+      ),
+
+    /**
      * `false` rather than a throw when the element is absent — "is this gone?"
      * is a question the suite asks constantly, and an exception is the wrong
      * answer to it.
