@@ -69,6 +69,37 @@ test("US-C1.1/1.2: a new project is seeded with the default statuses and priorit
   )
 })
 
+/**
+ * Regression: the create field used to keep its text after a successful
+ * create, so a second click on Add submitted the same name again and produced
+ * a duplicate project. Asserting the cleared field alone would not catch a
+ * re-introduction that clears late, so this also clicks a second time and
+ * asserts the project count did not move.
+ */
+test("US-C1: the create field clears after a successful create, so Add cannot duplicate", async () => {
+  const { browser } = suite
+  await openLists()
+
+  await browser.fill(tid("project-create-input"), "Website")
+  await browser.click(tid("project-create-submit"))
+  await browser.waitText("Website")
+
+  assert.equal(
+    await browser.value(tid("project-create-input")),
+    "",
+    "create field kept its text after a successful create"
+  )
+
+  const afterFirst = await countProjects()
+  await browser.click(tid("project-create-submit"))
+
+  assert.equal(
+    await countProjects(),
+    afterFirst,
+    "clicking Add again re-submitted the previous name"
+  )
+})
+
 test("US-C1.3: a task can be created in a brand-new project immediately", async () => {
   const { browser } = suite
   await openLists()

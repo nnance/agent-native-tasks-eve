@@ -46,12 +46,13 @@ export function StatusesPanel({ projectId }: { projectId: string | null }) {
           pending={createStatus.isPending}
           error={createStatus.error?.message ?? null}
           onSubmit={(name) => {
-            if (!projectId) return
-            createStatus.mutate(
+            if (!projectId) return undefined
+            return createStatus.mutateAsync(
               { projectId, name, isCompleted: createCompleted },
               { onSuccess: () => setCreateCompleted(false) }
             )
           }}
+          resetOnSuccess
         />
         <Label
           htmlFor={createCompletedId}

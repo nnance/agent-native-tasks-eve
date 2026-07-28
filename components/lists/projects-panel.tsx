@@ -30,7 +30,8 @@ export function ProjectsPanel() {
         placeholder="New project name"
         pending={createProject.isPending}
         error={createProject.error?.message ?? null}
-        onSubmit={(name) => createProject.mutate({ name })}
+        onSubmit={(name) => createProject.mutateAsync({ name })}
+        resetOnSuccess
       />
 
       <QueryState
