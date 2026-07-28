@@ -1,0 +1,170 @@
+Route surface: exactly implementation-plan §2.3, mechanically checked.
+
+=== 1. Every route.ts under app/api/, with its exported verbs ===
+
+app/api/chat-state/route.ts                                    GET,PUT
+app/api/health/route.ts                                        GET
+app/api/projects/[projectId]/priorities/[priorityId]/route.ts  PATCH,DELETE
+app/api/projects/[projectId]/priorities/route.ts               GET,POST
+app/api/projects/[projectId]/route.ts                          PATCH,DELETE
+app/api/projects/[projectId]/statuses/[statusId]/route.ts      PATCH,DELETE
+app/api/projects/[projectId]/statuses/route.ts                 GET,POST
+app/api/projects/route.ts                                      GET,POST
+app/api/tasks/[taskId]/route.ts                                GET,PATCH,DELETE
+app/api/tasks/route.ts                                         GET,POST
+
+=== 2. Count check ===
+route.ts files under app/api/:        10
+  of which pre-existing (health):     1
+  added by Phase 2:                   9
+paths listed in implementation-plan §2.3: 9
+
+=== 3. No route-segment config anywhere (dynamic by default in Next 16) ===
+(no matches — as intended)
+
+=== 4. No bulk-task route (§2.3 lists none; bulk stays Phase 4 tool surface) ===
+(no matches — as intended)
+
+=== 5. Route + verb -> handler -> action -> schema -> covering test ===
+
+Compare column 1 against implementation-plan §2.3's own list; the verb sets in
+section 1 above are the same, path for path.
+
+  GET  /api/projects
+    handler  app/api/projects/route.ts
+    action   listProjects
+    schema   listProjectsSchema
+    test     tests/api/suites/projects.ts "returns a bare array containing the fixture"
+
+  POST /api/projects
+    handler  app/api/projects/route.ts                                 (201)
+    action   createProject
+    schema   createProjectSchema
+    test     tests/api/suites/projects.ts "creates a project and answers 201 with it"
+
+  PATCH  /api/projects/[projectId]
+    handler  app/api/projects/[projectId]/route.ts
+    action   renameProject
+    schema   renameProjectSchema
+    test     tests/api/suites/projects.ts "renames a project", "lets the URL win…"
+
+  DELETE /api/projects/[projectId]
+    handler  app/api/projects/[projectId]/route.ts
+    action   deleteProject
+    schema   deleteProjectSchema
+    test     tests/api/suites/projects.ts "answers 409 with the verbatim block message…"
+
+  GET  /api/projects/[projectId]/statuses
+    handler  app/api/projects/[projectId]/statuses/route.ts
+    action   listStatuses
+    schema   listStatusesSchema
+    test     tests/api/suites/statuses.ts "returns the seeded defaults in order"
+
+  POST /api/projects/[projectId]/statuses
+    handler  app/api/projects/[projectId]/statuses/route.ts             (201)
+    action   createStatus
+    schema   createStatusSchema
+    test     tests/api/suites/statuses.ts "appends the new status at the end of the list"
+
+  PATCH  /api/projects/[projectId]/statuses/[statusId]   (rename/reorder/toggle-completed)
+    handler  app/api/projects/[projectId]/statuses/[statusId]/route.ts
+    action   updateStatus  (+ lib/api/scope.ts requireStatusInProject)
+    schema   updateStatusSchema
+    test     tests/api/suites/statuses.ts "renames a status", "reorders…", "toggles…",
+             "answers 404 when the status belongs to a different project"
+
+  DELETE /api/projects/[projectId]/statuses/[statusId]
+    handler  app/api/projects/[projectId]/statuses/[statusId]/route.ts
+    action   deleteStatus  (+ requireStatusInProject)
+    schema   deleteStatusSchema
+    test     tests/api/suites/statuses.ts "answers 409 while a task still uses the status",
+             "answers 409 for the last remaining status"
+
+  GET  /api/projects/[projectId]/priorities
+    handler  app/api/projects/[projectId]/priorities/route.ts
+    action   listPriorities
+    schema   listPrioritiesSchema
+    test     tests/api/suites/priorities.ts "returns the seeded defaults in order…"
+
+  POST /api/projects/[projectId]/priorities
+    handler  app/api/projects/[projectId]/priorities/route.ts           (201)
+    action   createPriority
+    schema   createPrioritySchema
+    test     tests/api/suites/priorities.ts "appends the new priority and never makes it the default"
+
+  PATCH  /api/projects/[projectId]/priorities/[priorityId]  (rename/reorder/set-default)
+    handler  app/api/projects/[projectId]/priorities/[priorityId]/route.ts
+    action   updatePriority  (+ requirePriorityInProject)
+    schema   updatePrioritySchema
+    test     tests/api/suites/priorities.ts "moves the default flag so exactly one remains",
+             "rejects isDefault: false with a 400", "answers 404 when… different project"
+
+  DELETE /api/projects/[projectId]/priorities/[priorityId]
+    handler  app/api/projects/[projectId]/priorities/[priorityId]/route.ts
+    action   deletePriority  (+ requirePriorityInProject)
+    schema   deletePrioritySchema
+    test     tests/api/suites/priorities.ts "reassigns the default when the default itself is
+             deleted", "answers 409 while a task still uses the priority", "…last remaining"
+
+  GET  /api/tasks   (?project=&status=&priority=&q=&includeCompleted=)
+    handler  app/api/tasks/route.ts
+    action   listTasks
+    schema   listTasksSchema   (+ z.stringbool() for includeCompleted, transport-only)
+    test     tests/api/suites/tasks.ts "filters by project", "combines project, status,
+             priority and q", "searches descriptions as well as titles", "hides completed
+             tasks by default and reveals them on request", "treats empty filter values
+             as absent", "answers 400 for an uncoercible includeCompleted"
+
+  POST /api/tasks
+    handler  app/api/tasks/route.ts                                     (201)
+    action   createTask
+    schema   createTaskSchema
+    test     tests/api/suites/tasks.ts "applies the project's first status and default priority",
+             "answers 409 for a status belonging to another project"
+
+  GET    /api/tasks/[taskId]
+    handler  app/api/tasks/[taskId]/route.ts
+    action   getTask
+    schema   getTaskSchema
+    test     tests/api/suites/tasks.ts "returns the nested project/status/priority view"
+
+  PATCH  /api/tasks/[taskId]
+    handler  app/api/tasks/[taskId]/route.ts
+    action   updateTask
+    schema   updateTaskSchema
+    test     tests/api/suites/tasks.ts "edits a title and moves a status",
+             "answers 400 for a projectId in the body — immutability"
+
+  DELETE /api/tasks/[taskId]
+    handler  app/api/tasks/[taskId]/route.ts
+    action   deleteTask
+    schema   deleteTaskSchema
+    test     tests/api/suites/tasks.ts "returns the deleted task's id and title"
+
+  GET  /api/chat-state
+    handler  app/api/chat-state/route.ts
+    action   getChatState        (lib/actions/chat-state.ts, NOT in the barrel)
+    schema   getChatStateSchema  (lib/schemas/chat-state.ts, NOT in the barrel)
+    test     tests/api/suites/chat-state.ts "reads an empty snapshot… never 404"
+
+  PUT  /api/chat-state
+    handler  app/api/chat-state/route.ts
+    action   putChatState
+    schema   putChatStateSchema
+    test     tests/api/suites/chat-state.ts "round-trips events and session",
+             "overwrites the previous snapshot on a second PUT"
+
+  GET  /api/health   — PRE-EXISTING (Phase 0r). Untouched by Phase 2.
+    test     tests/api/index.test.ts "serves GET /api/health against a migrated database"
+
+=== 6. Phase 1's capability parity is unchanged ===
+lib/actions/index.ts re-exports: ./priorities.ts ./projects.ts ./statuses.ts ./tasks.ts
+lib/schemas/index.ts re-exports: ./common.ts ./priorities.ts ./projects.ts ./statuses.ts ./tasks.ts
+chat-state present in either barrel? false
+capability action functions in the barrel: 19
+capability input schemas in the barrel:    19  (common.ts field schemas excluded, as in Phase 1)
+names in 1:1 correspondence:               19
+
+Phase 1 published 19 <-> 19. Phase 2 added lib/actions/chat-state.ts and
+lib/schemas/chat-state.ts deliberately OUTSIDE these barrels, so the count
+is unchanged and docs/verification/phase-1/07-capability-parity.txt still holds.

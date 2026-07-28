@@ -1,0 +1,28 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-2/harness/db-isolation.ts
+Databases in play (host/database only — never a credential):
+  dev  DATABASE_URL      -> ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb
+  test resolveTestDbUrl() -> ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb
+  identical? false
+
+resolveTestDbUrl() throws outright when those two are equal, so reaching
+this line already proves they are different projects.
+
+[1] assertServerUsesTestDatabase() — the suite's own interlock
+    passed: a project written through the API was readable
+    back through the test-database handle.
+
+[2] POST /api/projects -> 201
+    wrote id 83916d15-80b0-412a-8c6e-2725df583d19
+
+[3] the same id, seen from two independent connections
+    rows in TEST (ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb): 1
+    rows in DEV  (ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb): 0
+
+    verdict: PASS — the spawned server's DATABASE_URL override
+    survived .env.local; the dev database was never touched.
+
+[4] probe row removed from the test database.
+
+--- and the guard itself, when the two URLs are made identical ---
+$ DATABASE_URL_TEST=$DATABASE_URL node -e 'import("./tests/api/support/db.ts")'
+Refusing to run tests: the test database URL is identical to DATABASE_URL. The test database must be a separate Neon project.
