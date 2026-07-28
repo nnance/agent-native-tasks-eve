@@ -371,6 +371,36 @@ full equality means a change to them has to be a deliberate, visible edit in
 both the action and the test. If one of these assertions fails, the fix is to
 re-read the action and update the assertion — never to loosen the match.
 
+### The parity re-count excludes `common.ts` field schemas — build time
+
+**Phase 1 published "19 schemas", but `lib/schemas/index.ts` also re-exports
+five field schemas from `common.ts`, which counts naively to 24. Which number
+does the Phase 2 evidence print?** 19, with the exclusion stated inline in
+`docs/verification/phase-2/06-route-capability-map.txt` rather than applied
+silently.
+
+The published claim is about *capability* schemas standing in 1:1
+correspondence with *capability* actions. Counting `idSchema`, `nameSchema` and
+their siblings would make the Phase 2 number disagree with Phase 1's for a
+reason that has nothing to do with Phase 2, obscuring the only thing the
+re-count exists to show: that chat state stayed out of both barrels and the
+correspondence is still 19 ↔ 19. A count whose method is invisible is not
+evidence, so the harness prints what it excluded.
+
+### Neon endpoint hostnames are redacted in the evidence — build time
+
+**`09-test-db-isolation.txt` proves the dev and test databases differ by naming
+them. Are the real endpoint IDs committed?** No — they are substituted for
+`ep-DEV-ENDPOINT-REDACTED` / `ep-TEST-ENDPOINT-REDACTED` as the file is
+written, following the convention commit `174bc1e` established.
+
+That commit exists precisely because this repository is public and earlier
+packets leaked live endpoint identifiers. Redaction costs the evidence nothing:
+what it depends on is that the two targets are demonstrably *different* and that
+the guard fires when they are made identical, both of which survive
+substitution. No connection string, password or API key appears anywhere in the
+packet — every database-identifying line goes through `describeDbUrl()`.
+
 ---
 
 ## Assumptions
@@ -456,7 +486,23 @@ dependency and neither of which moves a rule out of `lib/actions/`.**
 `app/api/projects/route.ts` landed in the harness commit rather than the
 projects commit, because `assertServerUsesTestDatabase()` writes its sentinel
 *through the API* and therefore needs a create endpoint to exist. Landing the
-harness with no route at all would have meant committing a red suite.
+harness with no route at all would have meant committing a red suite. The
+harness's first run then failed exactly as designed — server booted, health poll
+passed, `fetch` worked, teardown was clean, and the only error was a 404 on
+`POST /api/projects` — which isolated the risky part unambiguously, the whole
+point of landing the harness on its own.
+
+**`pnpm format` was run and then reverted everywhere outside this phase.** The
+build sequence calls for a repo-wide format, but the current Prettier version
+rewrites twelve pre-existing files Phase 2 never touched — mostly a missing
+trailing newline and changed line wrapping — including four *published* Phase 1
+verification-evidence harnesses under `docs/verification/phase-1/harness/`.
+Rewriting those would edit the artifacts backing an already-published verdict,
+and the churn would bury this phase's real diff in unrelated noise. Only Phase
+2's own files are formatted; `prettier --check` on them is clean. The behaviour
+is recorded as caveat 8 in the Phase 2 packet README so the next phase is not
+surprised by it. A repo-wide reformat remains available as a deliberate,
+standalone commit whenever someone wants to pay for it.
 
 **No deviation on the route surface.** The ten `route.ts` files under
 `app/api/` are exactly `/api/health` (pre-existing, untouched) plus the nine
@@ -464,7 +510,51 @@ paths §2.3 lists — no more, no fewer.
 
 ---
 
-## Known gaps
+## Known gaps and what the next phase inherits
+
+Everything in Phase 2's own scope was finished: `pnpm test:api` is 77/77 and
+both exit criteria pass. The one item that must not be lost is inherited rather
+than produced here.
+
+### Carried forward: `pnpm test:unit` is not reliably green
+
+Phase 2's handoff asserted `pnpm test:unit` at 130/130 and used Phase 1's suite
+as its regression gate. Verification checked that claim and it **did not hold** —
+128/130 on the first run of the verification session, 130/130 on the next five.
+This is the sole failing criterion (G4) in
+`docs/verification/phase-2/README.md`, and it is deliberately recorded as a fail
+rather than a footnote: a suite that is green by luck cannot serve as a
+regression gate.
+
+The root cause is proved, not guessed. `tasks.created_at` is `DEFAULT now()`,
+and Postgres `now()` is `transaction_timestamp()` — constant for an entire
+transaction. Every fixture row built inside one `withRollback()` therefore
+carries a byte-identical `created_at`, and `TASK_ORDER`'s final key,
+`asc(tasks.createdAt)`, has no tie to break. The resulting row order is the
+planner's choice, which the evidence demonstrates by flipping it with planner
+settings alone on identical rows and an identical `ORDER BY`.
+
+Two things follow, and they should not be conflated:
+
+1. **The test-hygiene half.** Two Phase 1 tests in
+   `tests/unit/actions/tasks.test.ts` assert a total order over a tied sort key.
+   `tests/api/` does not share the defect — every HTTP request is its own
+   transaction, so `created_at` values are genuinely distinct — which is
+   verified in the packet rather than assumed.
+2. **The product half, which is the more important one.** `TASK_ORDER` has *no*
+   final deterministic tie-break such as `asc(tasks.id)`. Any two tasks that
+   share a `created_at` will therefore sort arbitrarily in **both** interfaces,
+   which makes this a parity risk under product-spec §5/§6 — the UI and the
+   agent could legitimately disagree about list order — and not merely a flaky
+   test.
+
+Phase 2 deliberately did not fix it. It is Phase 1 code, the fix belongs in
+`lib/actions/tasks.ts` rather than in a route, and a verification packet that
+edits the code it is verifying stops being a verification packet. The
+recommended remedy for whoever picks it up is to add a stable final tie-break to
+`TASK_ORDER` and to keep the Phase 1 assertions strict once ordering is total.
+
+### Other gaps
 
 - **`app/page.tsx` is still the shadcn chat demo.** Nothing in the app calls
   these routes yet; rewiring is §2.5/§2.6 in Phase 3. The API is exercised only
