@@ -4,12 +4,16 @@ import { describe, it } from "node:test"
 import { asc, eq } from "drizzle-orm"
 import { z } from "zod"
 
+import { listPriorities } from "../../../lib/actions/priorities.ts"
 import {
   createProject,
   deleteProject,
   listProjects,
   renameProject,
 } from "../../../lib/actions/projects.ts"
+import { listStatuses } from "../../../lib/actions/statuses.ts"
+import { createTask } from "../../../lib/actions/tasks.ts"
+import type { Database } from "../../../lib/db/connect.ts"
 import {
   priorities,
   projects,
@@ -22,7 +26,6 @@ import {
 } from "../../../lib/domain/defaults.ts"
 import { NotFoundError, RuleViolation } from "../../../lib/domain/errors.ts"
 import { withRollback } from "../../support/db.ts"
-import type { Database } from "../../../lib/db/connect.ts"
 
 /** Inserts one task directly, so this file does not depend on lib/actions/tasks.ts. */
 async function seedTask(tx: Database, projectId: string, title: string) {
@@ -57,11 +60,7 @@ describe("createProject", () => {
     await withRollback(async (tx) => {
       const project = await createProject({ name: "Website" }, tx)
 
-      const seeded = await tx
-        .select()
-        .from(statuses)
-        .where(eq(statuses.projectId, project.id))
-        .orderBy(asc(statuses.order))
+      const seeded = await listStatuses({ projectId: project.id }, tx)
 
       assert.deepStrictEqual(
         seeded.map((s) => ({ name: s.name, isCompleted: s.isCompleted })),
@@ -81,11 +80,7 @@ describe("createProject", () => {
     await withRollback(async (tx) => {
       const project = await createProject({ name: "Website" }, tx)
 
-      const seeded = await tx
-        .select()
-        .from(priorities)
-        .where(eq(priorities.projectId, project.id))
-        .orderBy(asc(priorities.order))
+      const seeded = await listPriorities({ projectId: project.id }, tx)
 
       assert.deepStrictEqual(
         seeded.map((p) => ({ name: p.name, isDefault: p.isDefault })),
@@ -105,6 +100,23 @@ describe("createProject", () => {
 
       // US-C1.1: a project needs a name; whitespace is not one.
       await assert.rejects(() => createProject({ name: "   " }, tx), z.ZodError)
+    })
+  })
+
+  // US-C1.3 / US-A1.4: a task can be created in a brand-new project with no
+  // additional setup — which is the whole point of seeding it on creation.
+  it("leaves the project immediately usable for task creation", async () => {
+    await withRollback(async (tx) => {
+      const project = await createProject({ name: "Fresh" }, tx)
+
+      const task = await createTask(
+        { projectId: project.id, title: "First thing" },
+        tx
+      )
+
+      assert.strictEqual(task.project.name, "Fresh")
+      assert.strictEqual(task.status.name, "To Do")
+      assert.strictEqual(task.priority.name, "Medium")
     })
   })
 
