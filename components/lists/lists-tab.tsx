@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react"
 
+import { PrioritiesPanel } from "@/components/lists/priorities-panel"
 import { ProjectsPanel } from "@/components/lists/projects-panel"
 import { StatusesPanel } from "@/components/lists/statuses-panel"
 import { Label } from "@/components/ui/label"
@@ -64,6 +65,8 @@ export function ListsTab() {
       </div>
 
       <StatusesPanel projectId={managedId} />
+
+      <PrioritiesPanel projectId={managedId} />
     </div>
   )
 }
