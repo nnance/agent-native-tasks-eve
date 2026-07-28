@@ -1,0 +1,65 @@
+$ node -e "..." (package.json dependency dump, plan 1.1)
+{
+  "deps": [
+    "@ai-sdk/react",
+    "@base-ui/react",
+    "@shadcn/helpers",
+    "@shadcn/react",
+    "@tanstack/react-query",
+    "@vercel/connect",
+    "ai",
+    "class-variance-authority",
+    "clsx",
+    "drizzle-orm",
+    "eve",
+    "lucide-react",
+    "motion",
+    "next",
+    "next-themes",
+    "postgres",
+    "react",
+    "react-dom",
+    "shadcn",
+    "tailwind-merge",
+    "tw-animate-css",
+    "zod"
+  ],
+  "dev": [
+    "@tailwindcss/postcss",
+    "@types/node",
+    "@types/react",
+    "@types/react-dom",
+    "agent-browser",
+    "drizzle-kit",
+    "eslint",
+    "eslint-config-next",
+    "prettier",
+    "prettier-plugin-tailwindcss",
+    "tailwindcss",
+    "typescript"
+  ]
+}
+
+$ node -e "..." (scripts)
+{
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint",
+  "format": "prettier --write \"**/*.{ts,tsx}\"",
+  "typecheck": "tsc --noEmit",
+  "test": "node --test \"tests/unit/**/*.test.ts\" \"tests/api/**/*.test.ts\"",
+  "test:unit": "node --test \"tests/unit/**/*.test.ts\"",
+  "test:api": "node --test \"tests/api/**/*.test.ts\"",
+  "test:e2e": "node --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
+  "test:all": "pnpm test && pnpm test:e2e",
+  "db:generate": "drizzle-kit generate",
+  "db:migrate": "node --env-file=.env.local scripts/migrate.ts",
+  "db:studio": "drizzle-kit studio",
+  "db:seed": "node --env-file=.env.local scripts/seed.ts",
+  "db:reset": "node --env-file=.env.local scripts/reset.ts",
+  "db:reset:test": "node --env-file=.env.local --env-file-if-exists=.env.test scripts/reset.ts --target=test"
+}
+
+$ node --version
+v24.10.0
