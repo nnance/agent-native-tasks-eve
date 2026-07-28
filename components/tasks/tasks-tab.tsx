@@ -1,10 +1,17 @@
 "use client"
 
-/** Placeholder — the task list lands in the next step of the build. */
+import { TaskList } from "@/components/tasks/task-list"
+import { useTasks } from "@/lib/queries"
+
+/**
+ * The Tasks tab: filters plus the list (product spec §8.1).
+ */
 export function TasksTab() {
+  const query = useTasks({})
+
   return (
-    <p className="text-sm text-muted-foreground">
-      The task list lands here next.
-    </p>
+    <div className="flex min-h-0 flex-col gap-4">
+      <TaskList query={query} hasActiveFilters={false} />
+    </div>
   )
 }
