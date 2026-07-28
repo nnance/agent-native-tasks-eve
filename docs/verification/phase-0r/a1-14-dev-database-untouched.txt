@@ -1,0 +1,11 @@
+=== the dev database was never touched by this verification run ===
+
+$ pnpm db:seed   # dev target, non-destructive
+
+> agent-native-tasks-eve@0.0.1 db:seed /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --env-file=.env.local scripts/seed.ts
+
+Seeding ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb (dev).
+Skipped: the projects table is not empty; nothing was created.
+{
+  "project": {

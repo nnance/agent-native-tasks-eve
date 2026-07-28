@@ -1,0 +1,63 @@
+$ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "after the app was opened in the browser"
+== after the app was opened in the browser — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
+every project row -> Result(1) [
+  {
+    id: '0d973913-c1e3-4430-bcfa-81e8709dfefd',
+    name: 'Personal',
+    created_at: '2026-07-28 16:27:14.490815+00'
+  }
+]
+{
+  "project": {
+    "id": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+    "name": "Personal",
+    "createdAt": "2026-07-28T16:27:14.490Z"
+  },
+  "statuses": [
+    {
+      "id": "e94ba27d-1bf1-4372-a7eb-1cd076b253ce",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "To Do",
+      "order": 0,
+      "isCompleted": false
+    },
+    {
+      "id": "c72be018-239c-40fd-8273-f42dc59c493d",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "In Progress",
+      "order": 1,
+      "isCompleted": false
+    },
+    {
+      "id": "fef186df-04cb-4114-a093-2d955c33937a",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "Done",
+      "order": 2,
+      "isCompleted": true
+    }
+  ],
+  "priorities": [
+    {
+      "id": "c402a6f6-a9f3-4da3-9ad9-dc4cb1235ccf",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "Low",
+      "order": 0,
+      "isDefault": false
+    },
+    {
+      "id": "0a58bbab-63c0-4163-be18-c2edb3f79eb8",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "Medium",
+      "order": 1,
+      "isDefault": true
+    },
+    {
+      "id": "cea785ab-b9a0-432c-bfa4-7defddda18be",
+      "projectId": "0d973913-c1e3-4430-bcfa-81e8709dfefd",
+      "name": "High",
+      "order": 2,
+      "isDefault": false
+    }
+  ]
+}

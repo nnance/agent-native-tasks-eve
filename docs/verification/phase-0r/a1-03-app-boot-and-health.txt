@@ -1,0 +1,26 @@
+$ node --env-file=.env.local docs/verification/phase-0r/harness/dev-on-test.mjs   # first boot, port 3100, TEST database
+--- server log ---
+[harness] next dev :3100 -> ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test)
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3100
+- Network:       http://192.168.10.176:3100
+- Environments: .env.local
+✓ Ready in 154ms
+[eve:dev] server listening at http://127.0.0.1:61340/
+[seed] created the default project and its lists
+
+ GET /api/health 200 in 165ms (next.js: 68ms, application-code: 97ms)
+ GET / 200 in 199ms (next.js: 34ms, application-code: 165ms)
+ GET /api/health 200 in 163ms (next.js: 1203µs, application-code: 162ms)
+--- end server log ---
+
+$ curl -i -s http://localhost:3100/api/health
+HTTP/1.1 200 OK
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-type: application/json
+Date: Tue, 28 Jul 2026 16:28:13 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"ok":true,"db":true,"migrations":"current"}
