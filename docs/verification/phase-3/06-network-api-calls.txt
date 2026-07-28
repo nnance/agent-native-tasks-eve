@@ -1,0 +1,9 @@
+# agent-browser network requests --filter /api/
+
+## Initial page load (Tasks tab)
+GET /api/projects
+GET /api/tasks
+GET /api/projects/55db8623-9038-40e8-bd07-fd384e434b0b/statuses
+
+## Nine rapid keystrokes in task-search-input (250ms debounce)
+GET /api/tasks?q=fixheader

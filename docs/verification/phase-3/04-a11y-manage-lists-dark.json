@@ -1,0 +1,83 @@
+{
+  "axeVersion": "4.12.1",
+  "counts": {
+    "inapplicable": 33,
+    "incomplete": 1,
+    "passes": 27,
+    "violations": 0
+  },
+  "incomplete": [
+    {
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=axeAPI",
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodeCount": 7,
+      "nodes": [
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<div data-slot=\"item-title\" class=\"line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4\" data-testid=\"priority-name-2da202cc-11f4-4c1a-8129-0731a901269a\">Medium</div>",
+          "target": [
+            "li[data-default=\"false\"]:nth-child(2) > .group-data-\\[size\\=xs\\]\\/item\\:gap-0\\.5.\\[\\&\\+\\[data-slot\\=item-content\\]\\]\\:flex-none[data-slot=\"item-content\"] > .line-clamp-1.leading-snug.underline-offset-4"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" data-testid=\"priority-set-default...\" class=\"group/button inline-...\">",
+          "target": [
+            "li[data-default=\"false\"]:nth-child(2) > .flex-wrap.gap-1\\.5[data-slot=\"item-actions\"] > .h-6.px-2\\.5.has-data-\\[icon\\=inline-end\\]\\:pr-2:nth-child(1)"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" data-testid=\"priority-rename-2da2...\" class=\"group/button inline-...\">",
+          "target": [
+            "li[data-default=\"false\"]:nth-child(2) > .flex-wrap.gap-1\\.5[data-slot=\"item-actions\"] > .h-6.px-2\\.5.has-data-\\[icon\\=inline-end\\]\\:pr-2:nth-child(4)"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" data-testid=\"priority-delete-2da2...\" class=\"group/button inline-...\">",
+          "target": [
+            "li[data-default=\"false\"]:nth-child(2) > .flex-wrap.gap-1\\.5[data-slot=\"item-actions\"] > .bg-destructive\\/10.text-destructive.hover\\:bg-destructive\\/20"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<div data-slot=\"item-title\" class=\"line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4\" data-testid=\"priority-name-46b77d82-bcae-4c6b-bdfd-8bc5f614dd2c\">High</div>",
+          "target": [
+            "li[data-default=\"true\"] > .group-data-\\[size\\=xs\\]\\/item\\:gap-0\\.5.\\[\\&\\+\\[data-slot\\=item-content\\]\\]\\:flex-none[data-slot=\"item-content\"] > .line-clamp-1.leading-snug.underline-offset-4"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" data-testid=\"priority-rename-46b7...\" class=\"group/button inline-...\">",
+          "target": [
+            "li[data-default=\"true\"] > .flex-wrap.gap-1\\.5[data-slot=\"item-actions\"] > .h-6.px-2\\.5.has-data-\\[icon\\=inline-end\\]\\:pr-2:nth-child(4)"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+          "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" data-testid=\"priority-delete-46b7...\" class=\"group/button inline-...\">",
+          "target": [
+            "li[data-default=\"true\"] > .flex-wrap.gap-1\\.5[data-slot=\"item-actions\"] > .bg-destructive\\/10.text-destructive.hover\\:bg-destructive\\/20"
+          ]
+        }
+      ],
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ]
+    }
+  ],
+  "url": "http://localhost:3000/",
+  "violations": []
+}

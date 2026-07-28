@@ -1,0 +1,187 @@
+# Render Profile - 5.91s recording
+# 5229 renders (2087 mounts + 3142 re-renders) across 104 components
+# FPS: avg 120, min 57, max 159, drops (<30fps): 0
+
+## Components by total render time
+| Component                         | Insts | Mounts | Re-renders | Total    | Self     | DOM   | Top change reason          |
+| --------------------------------- | ----- | ------ | ---------- | -------- | -------- | ----- | -------------------------- |
+| QueryState                        |     7 |     19 |         23 |   87.3ms |    0.2ms | 30/42 | mount                      |
+| CompositeList                     |     4 |      0 |         48 |   79.1ms |    2.3ms |  0/48 | state (hook #12)           |
+| SegmentViewNode                   |     4 |     48 |         24 |   74.4ms |        - | 48/72 | mount                      |
+| Router                            |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (ErrorBoundaryHandler) |
+| HotReload                         |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (LayoutRouterContext) |
+| DevRootHTTPAccessFallbackBoundary |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (AppDevOverlayErrorBoundary) |
+| __next_root_layout_boundary__     |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (RedirectErrorBoundary) |
+| V                                 |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (J)                 |
+| QueryProvider                     |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (V)                 |
+| QueryClientProvider               |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (QueryProvider)     |
+| FloatingDelayGroup                |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (TooltipProviderContext) |
+| SegmentStateProvider              |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (OuterLayoutRouter) |
+| RenderFromTemplateContext         |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (TemplateContext)   |
+| InnerScrollAndFocusHandlerOld     |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (ScrollAndMaybeFocusHandler) |
+| ErrorBoundary                     |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (InnerScrollAndFocusHandlerOld) |
+| InnerLayoutRouter                 |     2 |      0 |         24 |   74.4ms |        - |  0/24 | parent (RedirectErrorBoundary) |
+| Tabs                              |     2 |      0 |         24 |   74.3ms |        - |  0/24 | parent (TaskWorkspace)     |
+| TabsRoot                          |     2 |      0 |         24 |   74.3ms |    0.8ms |  0/24 | parent (Tabs)              |
+| TabsPanel                         |     4 |      0 |         48 |   73.9ms |    1.9ms | 11/48 | context (TabsRootContext)  |
+| TabsContent                       |     4 |      0 |         48 |   71.1ms |        - |  0/48 | parent (CompositeListContext) |
+| TasksTab                          |     4 |      1 |         20 |   62.7ms |    2.6ms | 17/21 | state (hook #3)            |
+| Item                              |    20 |     54 |         44 |   61.6ms |    0.2ms | 98/98 | props.render               |
+| TaskRow                           |    12 |     16 |         44 |   55.2ms |   15.2ms | 16/60 | state (hook #1)            |
+| Button                            |   162 |    578 |        334 |   52.3ms |   22.9ms | 727/912 | props.onClick              |
+| TaskList                          |     4 |      1 |         20 |   47.2ms |      1ms |  1/21 | props.onClearFilters       |
+| ItemActions                       |    23 |     54 |         62 |   29.7ms |    1.1ms | 98/116 | parent (Item)              |
+| ConfirmDeleteDialog               |    23 |     54 |         62 |   22.8ms |   11.1ms | 54/116 | props.onConfirm            |
+| PriorityRow                       |     3 |     21 |          0 |   16.1ms |    2.8ms | 21/21 | mount                      |
+| TaskFilterBar                     |     4 |      1 |         20 |   15.7ms |      5ms | 18/21 | state (hook #12)           |
+| AlertDialog                       |    20 |     72 |         44 |   14.1ms |    0.4ms | 72/116 | parent (ConfirmDeleteDialog) |
+| AlertDialogRoot                   |    20 |     72 |         44 |   13.7ms |    5.8ms | 72/116 | state (hook #22)           |
+| InputGroup                        |     1 |     24 |          0 |     12ms |        - | 24/24 | mount                      |
+| NativeSelect                      |    13 |     23 |         44 |   11.7ms |    2.8ms | 67/67 | props.onChange             |
+| ItemContent                       |    23 |     54 |         62 |   10.7ms |    1.4ms | 98/116 | parent (Item)              |
+| TabsList                          |     4 |      0 |         48 |    9.9ms |    1.9ms |  0/48 | context (TabsRootContext)  |
+| InputGroupAddon                   |     1 |     24 |          0 |    9.6ms |    2.4ms | 24/24 | mount                      |
+| ListsTab                          |     2 |      1 |          6 |    9.2ms |    0.3ms |   1/7 | parent (TabsPanel)         |
+| Input                             |    12 |     50 |         34 |    8.5ms |    0.5ms | 50/84 | props.onChange             |
+| Label                             |    16 |     16 |         61 |    8.5ms |    0.3ms | 50/77 | parent (TaskFilterBar)     |
+| ProjectRow                        |     2 |     14 |          0 |    8.4ms |    2.8ms | 14/14 | mount                      |
+| AlertDialogContent                |    20 |     72 |         44 |    7.8ms |    5.7ms | 72/116 | parent (DialogRootContext) |
+| Checkbox                          |    12 |      5 |         44 |    7.8ms |    0.6ms |  5/49 | parent (Label)             |
+| CheckboxRoot                      |    12 |      5 |         44 |    7.2ms |    5.9ms |  5/49 | props.onCheckedChange      |
+| InputGroupButton                  |     1 |     24 |          0 |    7.2ms |    2.4ms | 24/24 | mount                      |
+| StatusesPanel                     |     2 |      1 |          6 |      7ms |    0.3ms |   1/7 | parent (ListsTab)          |
+| ReorderButtons                    |     9 |     24 |         18 |    6.5ms |    1.5ms | 24/42 | mount                      |
+| ChevronDown                       |    19 |     65 |         44 |    6.3ms |      2ms | 65/109 | parent (NativeSelect)      |
+| CompositeRoot                     |     2 |      0 |         24 |      6ms |    0.4ms |  0/24 | props.state                |
+| Badge                             |    37 |     55 |        132 |    5.1ms |      5ms | 187/187 | parent (StatusChip)        |
+| FilterChip                        |    15 |     14 |         40 |      5ms |    0.2ms | 14/54 | props.onToggle             |
+... and 54 more
+
+## Change details (prev -> next)
+  QueryState
+    props.emptyTitle: "No tasks yet" -> "No matching tasks"
+    props.emptyDescription: "Create a task to get started." -> "Nothing matches the current filters and search."
+    props.emptyAction: undefined -> {$$typeof, type, key, ...}
+    props.isEmpty: false -> true
+  CompositeList
+    props.onMapChange: fn() -> fn()
+    state (hook #1): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #8): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #10): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #12): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #13): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #14): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #15): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #17): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #18): {tag, create, deps, ...} -> {tag, create, deps, ...}
+  TabsRoot
+    state (hook #3): "tasks" -> "lists"
+    state (hook #4): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #6): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #12): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #14): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #16): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #18): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #20): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #23): Array(2) -> Array(2)
+    state (hook #24): Array(2) -> Array(2)
+    state (hook #30): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #1): {} -> {}
+    state (hook #11): {previousValue, tabActivationDirection} -> {previousValue, tabActivationDirection}
+    state (hook #21): Array(2) -> Array(2)
+  TabsPanel
+    state (hook #6): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #7): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #10): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #11): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #12): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #16): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #18): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #20): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #21): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #22): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    context (TabsRootContext): {getTabElementBySelectedValue, getTabIdByPanelValue, getTabPanelIdByValue, ...} -> {getTabElementBySelectedValue, getTabIdByPanelValue, getTabPanelIdByValue, ...}
+  TasksTab
+    state (hook #0): {projectId, statusId, priorityId, ...} -> {projectId, statusId, priorityId, ...}
+    state (hook #3): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #4): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #8): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #9): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #2): "" -> "fix head"
+    state (hook #7): {status, fetchStatus, isPending, ...} -> {status, fetchStatus, isPending, ...}
+  Item
+    props.render: {$$typeof, type, key, ...} -> {$$typeof, type, key, ...}
+  TaskRow
+    props.onEdit: fn() -> fn()
+    state (hook #1): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #5): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #6): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #8): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #11): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #14): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #17): {tag, create, deps, ...} -> {tag, create, deps, ...}
+  Button
+    props.onClick: fn() -> fn()
+    state (hook #2): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #4): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #7): {tag, create, deps, ...} -> {tag, create, deps, ...}
+  TaskList
+    props.query: {status, fetchStatus, isPending, ...} -> {status, fetchStatus, isPending, ...}
+    props.hasActiveFilters: false -> true
+    props.onClearFilters: fn() -> fn()
+    props.onEdit: fn() -> fn()
+  ConfirmDeleteDialog
+    props.onConfirm: fn() -> fn()
+  TaskFilterBar
+    props.value: {projectId, statusId, priorityId, ...} -> {projectId, statusId, priorityId, ...}
+    state (hook #2): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #6): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #7): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #8): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #12): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #13): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #14): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #18): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #19): {tag, create, deps, ...} -> {tag, create, deps, ...}
+  AlertDialogRoot
+    state (hook #4): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #7): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #10): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #12): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #13): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #15): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #16): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #18): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #20): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #22): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #25): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #28): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #31): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #34): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #35): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #36): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #39): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #42): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #43): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #46): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #47): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #48): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #51): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #53): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #55): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #57): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #59): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #61): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #62): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #64): {tag, create, deps, ...} -> {tag, create, deps, ...}
+  NativeSelect
+    props.onChange: fn() -> fn()
+  TabsList
+    state (hook #5): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #7): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #9): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    state (hook #11): {tag, create, deps, ...} -> {tag, create, deps, ...}
+    context (TabsRootContext): {getTabElementBySelectedValue, getTabIdByPanelValue, getTabPanelIdByValue, ...} -> {getTabElementBySelectedValue, getTabIdByPanelValue, getTabPanelIdByValue, ...}
+  Input
+    props.value: "" -> "f"
+    props.onChange: fn() -> fn()

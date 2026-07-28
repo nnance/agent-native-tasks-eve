@@ -1,0 +1,12 @@
+{
+  "axeVersion": "4.12.1",
+  "counts": {
+    "inapplicable": 34,
+    "incomplete": 0,
+    "passes": 26,
+    "violations": 0
+  },
+  "incomplete": [],
+  "url": "http://localhost:3000/",
+  "violations": []
+}
