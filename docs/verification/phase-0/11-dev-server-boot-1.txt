@@ -1,0 +1,15 @@
+$ NO_COLOR=1 pnpm dev   # first boot ("opening the app")
+
+
+> agent-native-tasks-eve@0.0.1 dev /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.10.176:3000
+- Environments: .env.local
+✓ Ready in 156ms
+[eve:dev] server listening at http://127.0.0.1:59989/
+
+ GET / 200 in 218ms (next.js: 75ms, application-code: 143ms)
+ GET / 200 in 33ms (next.js: 11ms, application-code: 22ms)

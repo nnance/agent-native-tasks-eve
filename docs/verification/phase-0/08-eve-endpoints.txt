@@ -1,0 +1,44 @@
+$ curl -s -o /dev/null -w "GET / -> HTTP %{http_code}
+" localhost:3000/
+GET / -> HTTP 200
+
+$ curl -s localhost:3000/eve/v1/health
+{"ok":true,"status":"ready","workflowId":"workflow//eve//workflowEntry"}
+
+$ curl -s localhost:3000/eve/v1/info | jq "{agent: {name, model: .agent.model}, capabilities, routes: [.channels.authored[] | \"\(.method) \(.urlPath)\"]}"
+{
+  "agent": {
+    "name": "agent-native-tasks-eve",
+    "configSource": {
+      "logicalPath": "agent.ts",
+      "sourceId": "agent.ts",
+      "sourceKind": "module"
+    },
+    "model": {
+      "contextWindowTokens": 1000000,
+      "id": "anthropic/claude-sonnet-5",
+      "routing": {
+        "kind": "gateway",
+        "target": "anthropic"
+      },
+      "endpoint": {
+        "kind": "gateway",
+        "connected": true,
+        "credential": "api-key"
+      }
+    }
+  },
+  "capabilities": {
+    "devRoutes": true
+  },
+  "routes": [
+    "GET /eve/v1/info",
+    "POST /eve/v1/session",
+    "POST /eve/v1/session/reset",
+    "POST /eve/v1/session/:sessionId",
+    "POST /eve/v1/session/:sessionId/cancel",
+    "GET /eve/v1/session/:sessionId/stream"
+  ]
+}
+
+(the /eve/v1/info response saved as 09-eve-info.json)

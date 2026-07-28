@@ -1,6 +1,26 @@
 packages: []
 
-allowBuilds:
-  sharp: true
-  unrs-resolver: true
-  msw: false
+# pnpm 10 gates native postinstall scripts behind an explicit allowlist.
+# NOTE: the previous `allowBuilds:` map was silently inert under pnpm 10.18.3 —
+# `onlyBuiltDependencies` / `ignoredBuiltDependencies` are the honored keys.
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
+
+ignoredBuiltDependencies:
+  - msw
+
+# Added by `eve init`: these packages ship fast-moving prereleases that the
+# default minimum-release-age gate would otherwise hold back.
+minimumReleaseAgeExclude:
+  - "@ai-sdk/*"
+  - "@rolldown/*"
+  - "@vercel/*"
+  - "@workflow/*"
+  - ai
+  - experimental-ai-sdk-code-mode
+  - eve
+  - nitro
+  - rolldown
+  - workflow

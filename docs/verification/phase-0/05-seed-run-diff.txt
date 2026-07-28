@@ -1,0 +1,8 @@
+$ diff docs/verification/phase-0/03-db-seed-run-1.txt docs/verification/phase-0/04-db-seed-run-2.txt
+
+1c1
+< $ pnpm db:seed   # run 1 of 2 against the live Neon database
+---
+> $ pnpm db:seed   # run 2 of 2 against the live Neon database
+
+[exit status: 1]

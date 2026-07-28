@@ -1,0 +1,19 @@
+$ psql "$DATABASE_URL_UNPOOLED" -c "select * from drizzle.__drizzle_migrations" -c "\dt public.*"
+
+ id |                               hash                               |   applied_at_utc    
+----+------------------------------------------------------------------+---------------------
+  1 | 1734f195316c28d295d2a7fa06e5fbdfa8fa8c264e693d7692a07efc6a138808 | 2026-07-28 14:38:18
+(1 row)
+
+               List of tables
+ Schema |    Name    | Type  |    Owner     
+--------+------------+-------+--------------
+ public | chat_state | table | neondb_owner
+ public | priorities | table | neondb_owner
+ public | projects   | table | neondb_owner
+ public | statuses   | table | neondb_owner
+ public | tasks      | table | neondb_owner
+(5 rows)
+
+
+[exit status: 0]

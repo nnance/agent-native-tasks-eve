@@ -2,6 +2,8 @@ dist/
 node_modules/
 .next/
 .turbo/
+.eve/
+drizzle/
 coverage/
 pnpm-lock.yaml
 .pnpm-store/

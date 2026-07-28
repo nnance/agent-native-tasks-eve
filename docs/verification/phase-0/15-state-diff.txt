@@ -1,0 +1,5 @@
+$ diff <(tail -n +2 06-db-state.txt) <(tail -n +2 14-db-state-after-app-reopen.txt)
+
+
+(no differences: two dev-server boots and four seed invocations later, the workspace is byte-identical)
+[exit status: 0]

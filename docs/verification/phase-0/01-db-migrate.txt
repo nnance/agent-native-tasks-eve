@@ -1,0 +1,29 @@
+$ pnpm db:migrate
+
+
+> agent-native-tasks-eve@0.0.1 db:migrate /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> drizzle-kit migrate
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/Users/nicknance/Developer/genai/agent-native-tasks-eve/drizzle.config.ts'
+Using 'postgres' driver for database querying
+[⣷] applying migrations...[⣯] applying migrations...[⣟] applying migrations...[⡿] applying migrations...{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+[⢿] applying migrations...[⣻] applying migrations...[✓] migrations applied successfully!
+[exit status: 0]
