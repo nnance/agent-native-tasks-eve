@@ -1,5 +1,5 @@
 $ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-1/harness/db-state.ts after-test-run
-== after-test-run — DEV — ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb ==
+== after-test-run — DEV — ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb ==
 counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
 every project row -> Result(1) [
   {
@@ -62,7 +62,7 @@ every project row -> Result(1) [
   ]
 }
 
-== after-test-run — TEST — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb ==
+== after-test-run — TEST — ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb ==
 counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
 every project row -> Result(1) [
   {

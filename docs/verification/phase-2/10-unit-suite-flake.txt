@@ -1,0 +1,143 @@
+The pnpm test:unit flake, characterised.
+
+WHAT THE PHASE-2 HANDOFF CLAIMED: "pnpm test:unit is 130/130 (up from Phase 1's
+105)". That is true on most runs and false on some. It was FALSE on the first
+run of this verification session.
+
+Scope note: this is not a Phase 2 exit criterion. Phase 2's exit criteria are
+`pnpm test:api` green (77/77 — see 01-test-api.txt) and the capability set
+being exercisable end-to-end (06). It is recorded here because the packet
+checked the claim and the claim did not hold, and because a suite that is
+green by luck cannot serve as the Phase 1 regression gate it is being used as.
+
+Neither failing test is a Phase 2 test. Both live in
+tests/unit/actions/tasks.test.ts, written in Phase 1, over lib/actions/tasks.ts,
+also Phase 1. Phase 2 did not introduce the defect; Phase 2's packet is simply
+the first place it was caught.
+
+================================================================================
+1. THE FAILURE, AS NODE PRINTED IT (run A, full transcript in 02-test-unit.txt)
+================================================================================
+✖ failing tests:
+
+test at tests/unit/actions/tasks.test.ts:457:3
+✖ filters by priority, combinable with the project filter (2726.469375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'High newer',
+      'High older',
+  -   'High newer'
+    ]
+  
+      at file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/unit/actions/tasks.test.ts:466:14
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/support/db.ts:57:16
+      at async scope (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/postgres@3.4.9/node_modules/postgres/src/index.js:260:18)
+      at async sql.begin (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/postgres@3.4.9/node_modules/postgres/src/index.js:243:14)
+      at async withRollback (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/support/db.ts:56:5)
+      at async TestContext.<anonymous> (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/unit/actions/tasks.test.ts:458:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'High newer', 'High older' ],
+    expected: [ 'High older', 'High newer' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/actions/tasks.test.ts:475:3
+✖ searches title and description, case-insensitively (2929.917625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'High newer',
+      'High older',
+  -   'High newer'
+    ]
+  
+      at file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/unit/actions/tasks.test.ts:505:14
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/support/db.ts:57:16
+      at async scope (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/postgres@3.4.9/node_modules/postgres/src/index.js:260:18)
+      at async sql.begin (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/postgres@3.4.9/node_modules/postgres/src/index.js:243:14)
+      at async withRollback (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/support/db.ts:56:5)
+      at async TestContext.<anonymous> (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/unit/actions/tasks.test.ts:476:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'High newer', 'High older' ],
+    expected: [ 'High older', 'High newer' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Command failed with exit code 1.
+EXIT_CODE=1
+
+================================================================================
+2. SIX CONSECUTIVE FULL-SUITE RUNS, SAME COMMIT, NOTHING CHANGED BETWEEN THEM
+================================================================================
+
+  run 1  tests 130  pass 128  fail 2   <-- FAILED
+  run 2  tests 130  pass 130  fail 0
+  run 3  tests 130  pass 130  fail 0
+  run 4  tests 130  pass 130  fail 0
+  run 5  tests 130  pass 130  fail 0
+  run 6  tests 130  pass 130  fail 0
+
+  1 failure in 6 runs. Runs 1 and 2 are transcribed in full in
+  02-test-unit.txt; runs 3-6 are the tallies below, captured live.
+
+$ for i in 3 4 5 6; do pnpm test:unit; done   (summary lines only)
+=== pnpm test:unit — run 3 ===
+ℹ tests 130
+ℹ pass 130
+ℹ fail 0
+=== pnpm test:unit — run 4 ===
+ℹ tests 130
+ℹ pass 130
+ℹ fail 0
+=== pnpm test:unit — run 5 ===
+ℹ tests 130
+ℹ pass 130
+ℹ fail 0
+=== pnpm test:unit — run 6 ===
+ℹ tests 130
+ℹ pass 130
+ℹ fail 0
+
+================================================================================
+3. ROOT CAUSE
+================================================================================
+
+  See 11-order-tiebreak-rootcause.txt for the proof. In one sentence:
+
+    tasks.created_at is DEFAULT now(), Postgres now() is transaction_timestamp()
+    and is therefore constant for a whole transaction, so every fixture row
+    built inside one withRollback() transaction carries an IDENTICAL created_at
+    — and TASK_ORDER's final key, asc(tasks.createdAt), has no tie to break.
+
+  The two assertions demand a total order over a tied key, so the row order is
+  whatever the planner returns. 11 section 4 shows the SAME two rows coming
+  back in the OPPOSITE order when only a planner setting is changed.
+
+  Not affected: tests/api/ (11 section 5 — each HTTP request is its own
+  transaction, so created_at values are distinct and the sort is total), and
+  production (tasks are created one request at a time).
+
+  Also worth noting for a later phase: TASK_ORDER has no final deterministic
+  tie-break at all (e.g. asc(tasks.id)). Two tasks created in the same
+  transaction will always sort arbitrarily, in any interface.
+
+================================================================================
+4. WHAT THIS PACKET DOES *NOT* DO
+================================================================================
+
+  It does not fix it. A verification packet that edits the code it is
+  verifying is not a verification packet. The finding is reported, with a
+  reproduction and a root cause, for the phase that owns lib/actions/tasks.ts
+  and tests/unit/actions/tasks.test.ts to act on.

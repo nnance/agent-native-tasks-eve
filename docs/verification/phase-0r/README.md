@@ -54,7 +54,7 @@ Phase 0r's own exit criteria, separately (captured during implementation, files 
 
 ```
 Dropped the public and drizzle schemas.
-Applied migrations to ep-odd-dust-aues7u5t.c-10.us-east-1.aws.neon.tech/neondb.
+Applied migrations to ep-TEST-ENDPOINT-REDACTED.c-10.us-east-1.aws.neon.tech/neondb.
 NOT seeded — the app boot is what must create the workspace.
 counts -> { projects: '0', statuses: '0', priorities: '0', tasks: '0' }
 

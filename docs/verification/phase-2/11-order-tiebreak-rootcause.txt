@@ -1,0 +1,65 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-2/harness/order-tiebreak.ts
+==============================================================================
+Root cause of the intermittent listTasks ordering failure
+==============================================================================
+
+--- 1. The schema default, as generated into the migration ---
+
+$ grep -n 'created_at' drizzle/0000_spotty_ender_wiggin.sql
+20:	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+38:	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+
+--- 2. now() vs clock_timestamp() inside ONE transaction ---
+
+  now()             (1st call) : 2026-07-28 19:18:56.981859+00
+  now()             (2nd call) : 2026-07-28 19:18:56.981859+00
+  -> identical?               : true
+  clock_timestamp() (1st call) : 2026-07-28 19:18:57.034725+00
+  clock_timestamp() (2nd call) : 2026-07-28 19:18:57.084797+00
+  -> identical?               : false
+
+--- 3. The same two fixture rows the failing tests build ---
+
+  "High older" created_at : 2026-07-28T19:18:56.981Z
+  "High newer" created_at : 2026-07-28T19:18:56.981Z
+  -> tie on the ORDER BY key? : true
+     (100 ms of real wall-clock time separates the two inserts, yet the
+      values the sort reads are byte-identical.)
+
+--- 4. The order is the planner's choice, not the query's ---
+
+    Same two rows, same ORDER BY, only the planner knobs change. If the
+    ORDER BY determined the answer, every line below would be identical.
+
+  default settings               ["High older","High newer"]
+  enable_hashjoin = off          ["High older","High newer"]
+  + enable_mergejoin = off       ["High older","High newer"]
+  nestloop off / hashjoin on     ["High newer","High older"]
+  + enable_seqscan = off         ["High newer","High older"]
+
+    The last line is the reverse of the first. Nothing about the data or
+    the query changed between them. That is what 'undefined order' means
+    in practice, and it is why the defect presents as a flake across runs
+    rather than as a hard, always-red failure.
+
+--- 5. Does tests/api/ share the defect? No — and here is why ---
+
+    tests/api/ drives the system over HTTP, so every POST /api/tasks is a
+    SEPARATE request and therefore a separate transaction. Modelled here by
+    two createTask calls on the pooled handle instead of inside one tx:
+
+  "High older" created_at : 2026-07-28T19:18:59.847Z
+  "High newer" created_at : 2026-07-28T19:19:00.371Z
+  -> tie on the ORDER BY key? : false
+  listTasks order            : ["High older","High newer"]
+
+    Distinct keys, so the sort is total and the order is defined.
+    The 77-test API suite is therefore unaffected by this defect.
+
+    (probe rows removed from the test database.)
+
+==============================================================================
+Conclusion: tests/unit/actions/tasks.test.ts:457 and :475 assert a total
+order over a key that is tied, so they pass or fail by luck. Observed
+both ways on 2026-07-28 (see 10-unit-suite-flake.txt).
+==============================================================================

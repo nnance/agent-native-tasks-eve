@@ -1,0 +1,92 @@
+$ node --env-file=.env.local --env-file-if-exists=.env.test docs/verification/phase-2/harness/rule-bodies.ts
+Live transcript of every error branch, against a real server.
+Nothing below is quoted from source; it is what the wire said.
+
+[1] 409 RuleViolation — delete a project that still has tasks (§7.3)
+    DELETE /api/projects/b8e1c78b-037d-4a8c-a129-e01bd4a4aa98
+    -> 409
+    {"error":"Project 'Design 1dad5158' still has 1 task. Delete or move those tasks first, then delete the project."}
+
+[2] 409 RuleViolation — delete a status a task still uses (§7.3)
+    DELETE /api/projects/2f66ca5e-1757-4036-8d3a-d20c021578cd/statuses/2241e1f5-40d8-46b9-b95b-0f357d876cc5
+    -> 409
+    {"error":"Status 'To Do' is used by 1 task. Move those tasks to another status (or delete them) first, then delete the status."}
+
+[3] 409 RuleViolation — delete the last remaining status (§7.5)
+    DELETE /api/projects/bc711446-98ce-4fa4-a4b8-a0e2342a32ca/statuses/363d59e7-3606-469a-b909-dfb5b8a54ed3
+    -> 409
+    {"error":"'To Do' is the only status in 'Solo 83019390'. Every project must keep at least one status, so it cannot be deleted. Create another status first."}
+
+[4] 409 RuleViolation — delete the last remaining priority (§7.5)
+    DELETE /api/projects/f42fad09-c374-46c7-8274-7f76f5f0d2c0/priorities/6f3fa52f-21b8-4caa-a9d4-00d935a29a7e
+    -> 409
+    {"error":"'Low' is the only priority in 'Alone a02de21b'. Every project must keep at least one priority, so it cannot be deleted. Create another priority first."}
+
+[5] 409 RuleViolation — a task using another project's status (§7 rule 2)
+    POST /api/tasks
+    body: {"projectId":"8d1d55b0-f039-40a5-995c-cc1560e4c5cc","title":"Cross-project","statusId":"1565d76e-301b-4eb5-880f-68b417f207a9"}
+    -> 409
+    {"error":"Status 'To Do' belongs to a different project. A task in 'Website 6f29089c' can only use that project's own statuses."}
+
+[6] 404 NotFoundError — unknown project
+    PATCH /api/projects/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
+    body: {"name":"Nope"}
+    -> 404
+    {"error":"No project with id b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c."}
+
+[7] 404 NotFoundError — unknown task
+    GET /api/tasks/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
+    -> 404
+    {"error":"No task with id b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c."}
+
+[8] 404 — a real status addressed under the wrong project (scope guard)
+    PATCH /api/projects/1980f4c0-d3a9-4b19-8ae9-fa23ec40749e/statuses/3c73fe11-01d2-443d-b360-af8a1e9e6486
+    body: {"name":"Hijacked"}
+    -> 404
+    {"error":"No status with id 3c73fe11-01d2-443d-b360-af8a1e9e6486 in project 1980f4c0-d3a9-4b19-8ae9-fa23ec40749e."}
+
+[9] 400 ZodError — missing required field
+    POST /api/projects
+    body: {}
+    -> 400
+    {"error":"Invalid request.","issues":[{"expected":"string","code":"invalid_type","path":["name"],"message":"Invalid input: expected string, received undefined"}]}
+
+[10] 400 ZodError — unknown key (strictObject)
+    POST /api/projects
+    body: {"name":"Website","colour":"blue"}
+    -> 400
+    {"error":"Invalid request.","issues":[{"code":"unrecognized_keys","keys":["colour"],"path":[],"message":"Unrecognized key: \"colour\""}]}
+
+[11] 400 ZodError — projectId on a task update (immutability, §7 rule 1)
+    PATCH /api/tasks/b4344cd9-2224-4d3f-9a8c-4d21fbc31f7c
+    body: {"title":"Moved","projectId":"7b0e3dd8-24a4-42e5-ae29-daac0e4d7d7e"}
+    -> 400
+    {"error":"Invalid request.","issues":[{"code":"unrecognized_keys","keys":["projectId"],"path":[],"message":"Unrecognized key: \"projectId\""}]}
+
+[12] 400 ZodError — malformed id in the URL
+    PATCH /api/projects/not-a-uuid
+    body: {"name":"Nope"}
+    -> 400
+    {"error":"Invalid request.","issues":[{"origin":"string","code":"invalid_format","format":"uuid","pattern":"/^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/","path":["projectId"],"message":"Invalid UUID"}]}
+
+[13] 400 ZodError — uncoercible includeCompleted
+    GET /api/tasks?includeCompleted=maybe
+    -> 400
+    {"error":"Invalid request.","issues":[{"code":"invalid_value","expected":"stringbool","values":["true","1","yes","on","y","enabled","false","0","no","off","n","disabled"],"path":[],"message":"Invalid option: expected one of \"true\"|\"1\"|\"yes\"|\"on\"|\"y\"|\"enabled\"|\"false\"|\"0\"|\"no\"|\"off\"|\"n\"|\"disabled\""}]}
+
+[14] 400 BadRequest — malformed JSON body
+    POST /api/projects
+    body: {oops
+    -> 400
+    {"error":"Request body must be valid JSON."}
+
+[15] 400 BadRequest — a JSON array where an object is required
+    POST /api/projects
+    body: [1,2]
+    -> 400
+    {"error":"Request body must be a JSON object."}
+
+[16] 200 — all five filters empty behaves as unfiltered
+    GET /api/tasks?project=&status=&priority=&q=&includeCompleted=
+    -> 200
+    (2 tasks returned)

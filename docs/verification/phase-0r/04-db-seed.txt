@@ -1,4 +1,4 @@
-Seeding ep-morning-fog-avcf5gn5-pooler.c-11.us-east-1.aws.neon.tech/neondb (dev).
+Seeding ep-DEV-ENDPOINT-REDACTED-pooler.c-11.us-east-1.aws.neon.tech/neondb (dev).
 Skipped: the projects table is not empty; nothing was created.
 {
   "project": {

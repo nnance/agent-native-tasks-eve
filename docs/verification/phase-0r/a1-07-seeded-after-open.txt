@@ -1,5 +1,5 @@
 $ node --env-file=.env.local docs/verification/phase-0r/harness/db-state.ts "after the app was opened in the browser"
-== after the app was opened in the browser — ep-odd-dust-aues7u5t-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
+== after the app was opened in the browser — ep-TEST-ENDPOINT-REDACTED-pooler.c-10.us-east-1.aws.neon.tech/neondb (test) ==
 counts -> { projects: '1', statuses: '3', priorities: '3', tasks: '0' }
 every project row -> Result(1) [
   {

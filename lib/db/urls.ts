@@ -63,6 +63,31 @@ export function resolveDbUrls(target: DbTarget): {
 }
 
 /**
+ * Resolves the test database URL and refuses outright when it is the dev one.
+ *
+ * Lives here rather than in tests/support/ because two independent harnesses
+ * now need it — the unit suite's pooled handle and Phase 2's tests/api/ handle,
+ * which cannot import tests/support/db.ts (that module closes its pool from an
+ * import-time `after` hook, which would run before any hook a later importer
+ * registers). Resolving and guarding database targets is already this module's
+ * whole job, and scripts/reset.ts applies the same check before any
+ * destructive statement. Tests must never touch the dev database (plan §8
+ * risk 11).
+ */
+export function resolveTestDbUrl(): string {
+  const { pooled } = resolveDbUrls("test")
+
+  if (pooled === process.env.DATABASE_URL) {
+    throw new Error(
+      "Refusing to run tests: the test database URL is identical to " +
+        "DATABASE_URL. The test database must be a separate Neon project."
+    )
+  }
+
+  return pooled
+}
+
+/**
  * Renders a connection string as `host/database` and nothing else. Every log
  * line in scripts/ goes through this — a password must never reach stdout,
  * where it would end up pasted into a verification transcript.
