@@ -16,6 +16,7 @@
     "test:e2e": "next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
     "test:e2e:only": "node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
     "test:all": "pnpm test && pnpm test:e2e",
+    "verify:agent": "node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-tools.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file=.env.local scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
