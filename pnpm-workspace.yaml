@@ -10,3 +10,17 @@ onlyBuiltDependencies:
 
 ignoredBuiltDependencies:
   - msw
+
+# Added by `eve init`: these packages ship fast-moving prereleases that the
+# default minimum-release-age gate would otherwise hold back.
+minimumReleaseAgeExclude:
+  - "@ai-sdk/*"
+  - "@rolldown/*"
+  - "@vercel/*"
+  - "@workflow/*"
+  - ai
+  - experimental-ai-sdk-code-mode
+  - eve
+  - nitro
+  - rolldown
+  - workflow
