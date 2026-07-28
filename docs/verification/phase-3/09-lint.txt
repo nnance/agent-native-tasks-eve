@@ -1,0 +1,10 @@
+
+> agent-native-tasks-eve@0.0.1 lint /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> eslint
+
+
+/Users/nicknance/Developer/genai/agent-native-tasks-eve/.remember/tmp/last-ndc.ts
+  1:1  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+✖ 1 problem (0 errors, 1 warning)
+

@@ -1,0 +1,92 @@
+
+> agent-native-tasks-eve@0.0.1 test:e2e /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 "tests/e2e/**/*.test.ts"
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1378ms
+  Running TypeScript ...
+  Finished TypeScript in 1815ms ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/8) ...
+  Generating static pages using 13 workers (2/8) 
+  Generating static pages using 13 workers (4/8) 
+  Generating static pages using 13 workers (6/8) 
+✓ Generating static pages using 13 workers (8/8) in 118ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/chat-state
+├ ƒ /api/health
+├ ƒ /api/projects
+├ ƒ /api/projects/[projectId]
+├ ƒ /api/projects/[projectId]/priorities
+├ ƒ /api/projects/[projectId]/priorities/[priorityId]
+├ ƒ /api/projects/[projectId]/statuses
+├ ƒ /api/projects/[projectId]/statuses/[statusId]
+├ ƒ /api/tasks
+└ ƒ /api/tasks/[taskId]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+✔ US-A1.1: a fresh workspace has exactly one project (3983.112791ms)
+✔ US-A1.2: the seeded project has To Do / In Progress / Done, Done completed (767.209167ms)
+✔ US-A1.3: the seeded project has Low / Medium / High, Medium default (765.557541ms)
+✔ US-A1.4: a task can be created in the seeded project with no extra setup (4957.320917ms)
+✔ US-A1.5: reopening the app does not create a second starter project (5620.658209ms)
+✔ §8.0: both panes render side by side and stack on a narrow viewport (4009.338ms)
+✔ §8.0: the shell loads with no page errors and no console errors (2875.173792ms)
+✔ the app under test writes to the TEST database, not the dev one (3606.707209ms)
+✔ the task list renders the seeded workspace's empty state (2692.518791ms)
+✔ US-B1.1/1.3/1.4/1.6: a title-only task takes the project's defaults and appears at once (9095.442166ms)
+✔ US-B1.2: a task cannot be created without a title (3752.090584ms)
+✔ US-B1.5: only the selected project's statuses and priorities are offered (5506.219042ms)
+✔ US-B2.1/2.2: rows show title + chips, sorted priority-desc then oldest-first (4838.618875ms)
+✔ US-B2.3/2.4: completed tasks are hidden, then shown last and marked (4253.749791ms)
+✔ US-B2.5: opening a task shows every field including the full description (3276.0685ms)
+✔ US-B3.1/3.2: project, status and priority chips filter individually and together (6580.801791ms)
+✔ US-B3.3/3.4: search narrows the list and combines with the chips (5553.511833ms)
+✔ US-B3.5: an empty result offers a way to clear filters and search (3800.119041ms)
+✔ US-B4.1/4.3/4.5: editing title, description, status and priority persists and shows at once (5122.594584ms)
+✔ US-B4.2: the title cannot be cleared (3546.270708ms)
+✔ US-B4.4: there is no way in the UI to move a task to another project (3500.579375ms)
+✔ US-B5.1/5.2/5.4: the row's status select moves a task, in the project's order (4037.343333ms)
+✔ US-B5.3: moving into a completed status applies the completed display rules (4095.592833ms)
+✔ US-B6.1/6.2: deleting asks for confirmation, and declining changes nothing (3370.727833ms)
+✔ US-B6.3: confirming removes the task from the list and the database (3651.68475ms)
+✔ the seeded project's status list is what the row select offers (807.715084ms)
+✔ US-C1.1/1.2: a new project is seeded with the default statuses and priorities (7932.172958ms)
+✔ US-C1.3: a task can be created in a brand-new project immediately (5811.391083ms)
+✔ US-C2.1/2.2: renaming updates the task chips without a reload and leaves the contents alone (4543.775541ms)
+✔ US-C3.1: an empty project deletes after confirmation, taking its lists with it (4293.775208ms)
+✔ US-C3.2/3.3: deleting a project with tasks is blocked, with the reason and the remedy (4715.113917ms)
+✔ every project appears in the management list (3711.8105ms)
+✔ US-D1.1: statuses are managed per project and each project's are independent (8405.6305ms)
+✔ US-D1.2: a status can be created, renamed and reordered, and the order is respected (7330.295875ms)
+✔ US-D1.3: toggling a status's completed flag applies the completed display rules at once (5011.467208ms)
+✔ US-D1.4: renaming a status shows on existing task chips without a reload (4599.352625ms)
+✔ US-D2.1: deleting an unused status succeeds (4410.262791ms)
+✔ US-D2.2: deleting a status that tasks use is blocked, with the reason and the remedy (4831.953959ms)
+✔ US-D2.3: deleting the project's last remaining status is blocked even when unused (6865.32925ms)
+✔ US-E1.1: priorities are managed per project and each project's are independent (8604.853292ms)
+✔ US-E1.2: a priority can be created, renamed and reordered, and reordering re-sorts the task list (8936.240834ms)
+✔ US-E1.3: exactly one default exists, and a new task takes it (6159.209125ms)
+✔ US-E1.4: renaming a priority shows on existing task chips without a reload (4740.963334ms)
+✔ US-E2.1: deleting an unused priority succeeds (4399.625042ms)
+✔ US-E2.2: deleting a priority that tasks use is blocked, with the reason and the remedy (4404.896458ms)
+✔ US-E2.3: deleting the project's last remaining priority is blocked even when unused (6863.739792ms)
+✔ US-E2.4: deleting the default reassigns it to the first priority by order (4917.075666ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 280613.422833

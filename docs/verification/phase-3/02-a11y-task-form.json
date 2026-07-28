@@ -1,0 +1,54 @@
+{
+  "axeVersion": "4.12.1",
+  "counts": {
+    "inapplicable": 39,
+    "incomplete": 1,
+    "passes": 21,
+    "violations": 0
+  },
+  "incomplete": [
+    {
+      "help": "ARIA hidden element must not be focusable or contain focusable elements",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/aria-hidden-focus?application=axeAPI",
+      "id": "aria-hidden-focus",
+      "impact": "serious",
+      "nodeCount": 3,
+      "nodes": [
+        {
+          "failureSummary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+          "html": "<div data-testid=\"app-shell\" class=\"flex min-h-dvh flex-col lg:h-dvh lg:min-h-0 lg:flex-row\" aria-hidden=\"true\" data-base-ui-inert=\"\">",
+          "target": [
+            ".min-h-dvh"
+          ]
+        },
+        {
+          "failureSummary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+          "html": "<span data-type=\"inside\" aria-hidden=\"true\" tabindex=\"0\" data-base-ui-focus-guard=\"\" data-base-ui-inert=\"\" style=\"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;\"></span>",
+          "target": [
+            "span[data-type=\"inside\"][data-base-ui-focus-guard=\"\"][data-base-ui-inert=\"\"]:nth-child(3)"
+          ]
+        },
+        {
+          "failureSummary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+          "html": "<span data-type=\"inside\" aria-hidden=\"true\" tabindex=\"0\" data-base-ui-focus-guard=\"\" data-base-ui-inert=\"\" style=\"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;\"></span>",
+          "target": [
+            "span[data-type=\"inside\"][data-base-ui-focus-guard=\"\"][data-base-ui-inert=\"\"]:nth-child(5)"
+          ]
+        }
+      ],
+      "tags": [
+        "cat.name-role-value",
+        "wcag2a",
+        "wcag412",
+        "TTv5",
+        "TT6.a",
+        "EN-301-549",
+        "EN-9.4.1.2",
+        "RGAAv4",
+        "RGAA-10.8.1"
+      ]
+    }
+  ],
+  "url": "http://localhost:3000/",
+  "violations": []
+}

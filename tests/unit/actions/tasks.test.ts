@@ -434,11 +434,17 @@ describe("listTasks", () => {
 
       const titles = ["First", "Second", "Third", "Fourth", "Fifth"]
       for (const title of titles) {
-        await createTask({ projectId: built.project.id, title, priorityId: high }, tx)
+        await createTask(
+          { projectId: built.project.id, title, priorityId: high },
+          tx
+        )
       }
 
       const listed = await listTasks({ projectId: built.project.id }, tx)
-      assert.deepStrictEqual(listed.map((t) => t.title), titles)
+      assert.deepStrictEqual(
+        listed.map((t) => t.title),
+        titles
+      )
 
       // The timestamps must actually differ — if they tie, the assertion above
       // only passed by luck of the planner.

@@ -1,0 +1,183 @@
+
+> agent-native-tasks-eve@0.0.1 test:e2e /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 "tests/e2e/**/*.test.ts"
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1384ms
+  Running TypeScript ...
+  Finished TypeScript in 2.4s ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/8) ...
+  Generating static pages using 13 workers (2/8) 
+  Generating static pages using 13 workers (4/8) 
+  Generating static pages using 13 workers (6/8) 
+✓ Generating static pages using 13 workers (8/8) in 139ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/chat-state
+├ ƒ /api/health
+├ ƒ /api/projects
+├ ƒ /api/projects/[projectId]
+├ ƒ /api/projects/[projectId]/priorities
+├ ƒ /api/projects/[projectId]/priorities/[priorityId]
+├ ƒ /api/projects/[projectId]/statuses
+├ ƒ /api/projects/[projectId]/statuses/[statusId]
+├ ƒ /api/tasks
+└ ƒ /api/tasks/[taskId]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-A1.1: a fresh workspace has exactly one project (4737.358042ms)
+✔ US-A1.2: the seeded project has To Do / In Progress / Done, Done completed (759.746125ms)
+✔ US-A1.3: the seeded project has Low / Medium / High, Medium default (753.730083ms)
+✔ US-A1.4: a task can be created in the seeded project with no extra setup (5925.235584ms)
+✔ US-A1.5: reopening the app does not create a second starter project (5868.187583ms)
+✔ §8.0: both panes render side by side and stack on a narrow viewport (4513.403292ms)
+✔ §8.0: the shell loads with no page errors and no console errors (3124.579333ms)
+✔ the app under test writes to the TEST database, not the dev one (4166.601708ms)
+✔ the task list renders the seeded workspace's empty state (3021.82425ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-B1.1/1.3/1.4/1.6: a title-only task takes the project's defaults and appears at once (10194.78375ms)
+✔ US-B1.2: a task cannot be created without a title (4114.671625ms)
+✔ US-B1.5: only the selected project's statuses and priorities are offered (6312.111291ms)
+✔ US-B2.1/2.2: rows show title + chips, sorted priority-desc then oldest-first (5978.662584ms)
+✔ US-B2.3/2.4: completed tasks are hidden, then shown last and marked (5292.657208ms)
+✔ US-B2.5: opening a task shows every field including the full description (3631.644084ms)
+✔ US-B3.1/3.2: project, status and priority chips filter individually and together (7406.856125ms)
+✔ US-B3.3/3.4: search narrows the list and combines with the chips (6914.823208ms)
+✔ US-B3.5: an empty result offers a way to clear filters and search (4176.17175ms)
+✔ US-B4.1/4.3/4.5: editing title, description, status and priority persists and shows at once (6137.690042ms)
+✔ US-B4.2: the title cannot be cleared (4460.315ms)
+✔ US-B4.4: there is no way in the UI to move a task to another project (3885.377834ms)
+✔ US-B5.1/5.2/5.4: the row's status select moves a task, in the project's order (5070.768917ms)
+✔ US-B5.3: moving into a completed status applies the completed display rules (4570.76225ms)
+✔ US-B6.1/6.2: deleting asks for confirmation, and declining changes nothing (3663.219667ms)
+✔ US-B6.3: confirming removes the task from the list and the database (3996.115ms)
+✔ the seeded project's status list is what the row select offers (902.659208ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-C1.1/1.2: a new project is seeded with the default statuses and priorities (9116.619375ms)
+✔ US-C1.3: a task can be created in a brand-new project immediately (6250.455791ms)
+✔ US-C2.1/2.2: renaming updates the task chips without a reload and leaves the contents alone (5357.676167ms)
+✔ US-C3.1: an empty project deletes after confirmation, taking its lists with it (4454.707375ms)
+✔ US-C3.2/3.3: deleting a project with tasks is blocked, with the reason and the remedy (5646.401708ms)
+✔ every project appears in the management list (3936.946625ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-D1.1: statuses are managed per project and each project's are independent (9052.46625ms)
+✔ US-D1.2: a status can be created, renamed and reordered, and the order is respected (8165.925541ms)
+✔ US-D1.3: toggling a status's completed flag applies the completed display rules at once (5959.194125ms)
+✔ US-D1.4: renaming a status shows on existing task chips without a reload (4824.946042ms)
+✔ US-D2.1: deleting an unused status succeeds (4571.398292ms)
+✔ US-D2.2: deleting a status that tasks use is blocked, with the reason and the remedy (5676.568583ms)
+✔ US-D2.3: deleting the project's last remaining status is blocked even when unused (7063.442833ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-E1.1: priorities are managed per project and each project's are independent (9978.69525ms)
+✔ US-E1.2: a priority can be created, renamed and reordered, and reordering re-sorts the task list (9882.439625ms)
+✔ US-E1.3: exactly one default exists, and a new task takes it (6578.258625ms)
+✔ US-E1.4: renaming a priority shows on existing task chips without a reload (5549.868708ms)
+✔ US-E2.1: deleting an unused priority succeeds (4672.693292ms)
+✔ US-E2.2: deleting a priority that tasks use is blocked, with the reason and the remedy (5071.07425ms)
+✔ US-E2.3: deleting the project's last remaining priority is blocked even when unused (7176.998542ms)
+✔ US-E2.4: deleting the default reassigns it to the first priority by order (4965.7165ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 309226.15225
+exit=0

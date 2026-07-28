@@ -40,3 +40,6 @@ next-env.d.ts
 
 # eve dev runtime artifacts
 .eve
+
+# e2e failure artifacts (console dumps, screenshots)
+/tests/e2e/artifacts/
