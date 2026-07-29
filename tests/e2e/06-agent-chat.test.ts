@@ -38,9 +38,19 @@ import { setupSuite } from "./harness/setup.ts"
 
 const suite = setupSuite("06-agent-chat", { eve: true })
 
-/** One agent turn. Generous, because a real model really does take this long. */
-const TURN_MS = 90_000
-const TEST_TIMEOUT = { timeout: 180_000 }
+/**
+ * One agent turn.
+ *
+ * Plan §4.5 suggests 90s, and a warm turn in this suite settles in 15–20s. The
+ * budget is 120s because the **first** turn after the harness boots pays costs
+ * the rest do not — a cold eve workflow and a cold model connection — and a
+ * stabilisation run timed out on exactly that turn at 90s while every other
+ * turn in the same run finished comfortably. Raising a synchronisation budget
+ * to match measured reality is not the same as retrying flake away: no
+ * assertion moved.
+ */
+const TURN_MS = 120_000
+const TEST_TIMEOUT = { timeout: 240_000 }
 
 function waits() {
   return slowWaits(suite.browser)
@@ -107,8 +117,19 @@ test(
 
     await ask(`What tasks are in the ${project.name} project?`)
 
-    await waits().waitForSlow(settledEntry("list_tasks"), TURN_MS)
     await turnSettled()
+
+    // The claim is "answered from current data", so the effect asserted is a
+    // settled *read* — not one particular tool. Which read tool the model
+    // reaches for is a quality question that Phase 6's evals own, and pinning
+    // this test to `list_tasks` would make it fail on a correct answer reached
+    // a slightly different way.
+    assert.ok(
+      (await browser.count(
+        `[data-testid="action-entry"][data-tool^="list_"][data-outcome="ok"]`
+      )) > 0,
+      "the agent read the workspace before answering"
+    )
 
     // The answer is grounded: both fixture titles are on the page because the
     // agent read them, not because it guessed. The phrasing is not asserted.

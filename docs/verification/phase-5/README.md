@@ -21,10 +21,14 @@ the code, and all three are fixed in this branch:
 3. A restored conversation **opened on an old question**, with autoscroll
    disengaged for everything streaming in afterwards.
 
-A fourth was found by the first full E2E run: the harness's `TRUNCATE`-based
-per-test reset **deadlocked** against the eve agent server's connection pool
-(`40P01`), which no earlier suite could have hit because no earlier suite ran a
-second process against the test database.
+Three more were found by measuring the running app rather than looking at it:
+a live approval card rendered **entirely below the fold** behind a
+scroll-to-bottom button; a reload replayed **already-answered** requests as
+live Approve buttons, because the event that resolved them is reducer-facing
+and deliberately absent from the persisted stream; and the harness's
+`TRUNCATE`-based per-test reset **deadlocked** (`40P01`) against the eve agent
+server's connection pool, which no earlier suite could have hit because no
+earlier suite ran a second process against the test database.
 
 ---
 
@@ -60,7 +64,10 @@ appeared on any command line.
 | [`10-typecheck.txt`](./10-typecheck.txt) | `pnpm typecheck` — clean. |
 | [`11-lint.txt`](./11-lint.txt) | `pnpm lint` — 0 errors. (The one warning is in `.remember/tmp/`, a tool scratch file outside the project's source.) |
 | [`12-test.txt`](./12-test.txt) | `pnpm test` — 349/349 unit + API tests, including the new `tests/unit/chat/describe-tool-call.test.ts`. |
-| [`13-test-e2e-run.txt`](./13-test-e2e-run.txt) | The full `pnpm test:e2e` — all six suites. |
+| [`13-test-e2e-run-1.txt`](./13-test-e2e-run-1.txt), [`14`](./14-test-e2e-run-2.txt), [`15`](./15-test-e2e-run-3.txt) | Three consecutive full `pnpm test:e2e` runs on the final code, each from a clean `pnpm db:reset:test` — **55/55 every time**. |
+| [`07-ask-question-card.png`](./07-ask-question-card.png) | `ask_question` through the same component: the model's real prompt rendered verbatim, neutral severity, and its own three options as buttons (`approval-option-<id>`). |
+| [`08-a11y-chat-with-approval.json`](./08-a11y-chat-with-approval.json) | `agent-browser a11y --tags wcag2a,wcag2aa` with a live conversation and an approval card on screen — zero violations. |
+| [`09-question-then-bulk-delete.png`](./09-question-then-bulk-delete.png) | The answered question as a structured entry (`Question → Which task should I delete?`), on the way to the `bulk_delete_tasks` card it produced. |
 
 ---
 

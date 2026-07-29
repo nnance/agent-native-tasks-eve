@@ -1,0 +1,243 @@
+
+> agent-native-tasks-eve@0.0.1 test:e2e /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> pnpm exec eve build && next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 "tests/e2e/**/*.test.ts"
+
+[nitro] ✔ Generated public .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/public
+[nitro] ℹ Building server (builder: rolldown, preset: node-server, compatibility date: 2026-07-23)
+ℹ Generated .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/nitro.json
+[nitro] ✔ Server built in 367ms
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_.mjs (287 B) (183 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_10.mjs (525 B) (301 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_11.mjs (286 B) (190 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_12.mjs (387 B) (242 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_13.mjs (275 B) (167 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_14.mjs (285 B) (171 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_15.mjs (283 B) (170 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_16.mjs (241 B) (161 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_17.mjs (264 B) (164 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_2.mjs (267 B) (166 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_3.mjs (230 B) (149 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_4.mjs (228 B) (149 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_5.mjs (227 B) (148 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_6.mjs (268 B) (168 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_7.mjs (237 B) (157 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_8.mjs (234 B) (154 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/_9.mjs (234 B) (154 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/@ai-sdk/gateway+[...].mjs (433 kB) (84.9 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/ai.mjs (275 kB) (49.8 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/drizzle-orm+postgres.mjs (246 kB) (52.1 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/eve+ms+workflow__utils.mjs (3.24 kB) (1.23 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/eve+zod.mjs (5.69 MB) (1.31 MB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/h3+rou3+srvx.mjs (45.5 kB) (12.1 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/hookable.mjs (1.37 kB) (602 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/ufo.mjs (2.39 kB) (794 B gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_libs/vercel__oidc.mjs (2.88 kB) (1.08 kB gzip)
+  ├─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/_runtime.mjs (1.71 kB) (777 B gzip)
+  └─ .eve/builds/ms5h86ow-14a8bbc5-5ed7-4a0b-9230-c0e9e7d27056/output/server/index.mjs (333 kB) (96.5 kB gzip)
+Σ Total size: 7.04 MB (1.61 MB gzip)
+[nitro] ✔ You can preview this build using npx nitro preview
+[BUILD] built output at /Users/nicknance/Developer/genai/agent-native-tasks-eve/.output
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.1s
+  Running TypeScript ...
+  Finished TypeScript in 1936ms ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/8) ...
+  Generating static pages using 13 workers (2/8) 
+  Generating static pages using 13 workers (4/8) 
+  Generating static pages using 13 workers (6/8) 
+✓ Generating static pages using 13 workers (8/8) in 92ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/chat-state
+├ ƒ /api/health
+├ ƒ /api/projects
+├ ƒ /api/projects/[projectId]
+├ ƒ /api/projects/[projectId]/priorities
+├ ƒ /api/projects/[projectId]/priorities/[priorityId]
+├ ƒ /api/projects/[projectId]/statuses
+├ ƒ /api/projects/[projectId]/statuses/[statusId]
+├ ƒ /api/tasks
+└ ƒ /api/tasks/[taskId]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-A1.1: a fresh workspace has exactly one project (4236.109667ms)
+✔ US-A1.2: the seeded project has To Do / In Progress / Done, Done completed (927.283833ms)
+✔ US-A1.3: the seeded project has Low / Medium / High, Medium default (920.899042ms)
+✔ US-A1.4: a task can be created in the seeded project with no extra setup (5665.051875ms)
+✔ US-A1.5: reopening the app does not create a second starter project (6028.641958ms)
+✔ §8.0: both panes render side by side and stack on a narrow viewport (4414.335834ms)
+✔ §8.0: the shell loads with no page errors and no console errors (3089.669875ms)
+✔ the app under test writes to the TEST database, not the dev one (3840.216334ms)
+✔ the task list renders the seeded workspace's empty state (2937.258667ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-B1.1/1.3/1.4/1.6: a title-only task takes the project's defaults and appears at once (10272.761958ms)
+✔ US-B1.2: a task cannot be created without a title (4001.134125ms)
+✔ US-B1.5: only the selected project's statuses and priorities are offered (5784.301625ms)
+✔ US-B2.1/2.2: rows show title + chips, sorted priority-desc then oldest-first (5062.349458ms)
+✔ US-B2.3/2.4: completed tasks are hidden, then shown last and marked (4511.96575ms)
+✔ US-B2.5: opening a task shows every field including the full description (3527.287958ms)
+✔ US-B3.1/3.2: project, status and priority chips filter individually and together (6779.026833ms)
+✔ US-B3.3/3.4: search narrows the list and combines with the chips (5756.511458ms)
+✔ US-B3.5: an empty result offers a way to clear filters and search (4009.896458ms)
+✔ US-B4.1/4.3/4.5: editing title, description, status and priority persists and shows at once (5328.995792ms)
+✔ US-B4.2: the title cannot be cleared (3801.428334ms)
+✔ US-B4.4: there is no way in the UI to move a task to another project (3736.737417ms)
+✔ US-B5.1/5.2/5.4: the row's status select moves a task, in the project's order (4415.809667ms)
+✔ US-B5.3: moving into a completed status applies the completed display rules (4408.089083ms)
+✔ US-B6.1/6.2: deleting asks for confirmation, and declining changes nothing (3593.323959ms)
+✔ US-B6.3: confirming removes the task from the list and the database (3839.716417ms)
+✔ the seeded project's status list is what the row select offers (959.768917ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-C1.1/1.2: a new project is seeded with the default statuses and priorities (8856.413166ms)
+✔ US-C1: the create field clears after a successful create, so Add cannot duplicate (4214.285542ms)
+✔ US-C1.3: a task can be created in a brand-new project immediately (6399.310459ms)
+✔ US-C2.1/2.2: renaming updates the task chips without a reload and leaves the contents alone (4779.687584ms)
+✔ US-C3.1: an empty project deletes after confirmation, taking its lists with it (4574.381958ms)
+✔ US-C3.2/3.3: deleting a project with tasks is blocked, with the reason and the remedy (5187.197875ms)
+✔ every project appears in the management list (4025.825167ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-D1.1: statuses are managed per project and each project's are independent (9484.944167ms)
+✔ US-D1.2: a status can be created, renamed and reordered, and the order is respected (8285.880958ms)
+✔ US-D1.3: toggling a status's completed flag applies the completed display rules at once (5359.536917ms)
+✔ US-D1.4: renaming a status shows on existing task chips without a reload (4811.489875ms)
+✔ US-D2.1: deleting an unused status succeeds (4636.244334ms)
+✔ US-D2.2: deleting a status that tasks use is blocked, with the reason and the remedy (5030.846ms)
+✔ US-D2.3: deleting the project's last remaining status is blocked even when unused (7046.317125ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-E1.1: priorities are managed per project and each project's are independent (9617.079458ms)
+✔ US-E1.2: a priority can be created, renamed and reordered, and reordering re-sorts the task list (9438.195875ms)
+✔ US-E1.3: exactly one default exists, and a new task takes it (6301.417875ms)
+✔ US-E1.4: renaming a priority shows on existing task chips without a reload (5503.569208ms)
+✔ US-E2.1: deleting an unused priority succeeds (4705.90725ms)
+✔ US-E2.2: deleting a priority that tasks use is blocked, with the reason and the remedy (4561.245042ms)
+✔ US-E2.3: deleting the project's last remaining priority is blocked even when unused (7217.500333ms)
+✔ US-E2.4: deleting the default reassigns it to the first priority by order (5184.705125ms)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-F1.1/1.2 + US-F2: the pane is a live agent that answers from real data (18308.874833ms)
+✔ US-F3.2/3.5 + US-F6.1: a single-task status move runs with no approval gate (16111.007416ms)
+✔ US-F3.3 + US-F5.1/5.2: deleting a task gates, and denying leaves it alone (16534.263666ms)
+✔ US-F4.3: deleting a project gates too — the card is not task-specific (18568.0095ms)
+✔ US-F5.2/5.3: a bulk card states how many and names every task (23859.867125ms)
+✔ US-F1.3/1.4 + US-F6.3: the conversation survives a reload, pronoun and all (17601.333625ms)
+✔ US-F3.4: moving a task to another project is refused, and nothing changes (10773.330667ms)
+ℹ tests 55
+ℹ suites 0
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 434903.201292
