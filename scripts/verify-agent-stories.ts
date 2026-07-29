@@ -87,8 +87,25 @@ type Turn = {
   events: HandleMessageStreamEvent[]
   toolCalls: ToolCall[]
   approvalRequests: InputRequest[]
+  /** Every assistant message of the turn, in order. */
+  messages: string[]
+  /** The last assistant message. Use `transcript()` for content assertions. */
   finalMessage: string
   failed: { code: string; message: string } | undefined
+}
+
+/**
+ * Every assistant message of the given turns as one string.
+ *
+ * Content assertions must use this rather than `finalMessage`: a model may
+ * state a grounded fact mid-turn and close with a short acknowledgement, which
+ * is a phrasing choice rather than a defect (plan §4.5).
+ */
+function transcript(...turns: (Turn | undefined)[]): string {
+  return turns
+    .filter((turn): turn is Turn => turn !== undefined)
+    .flatMap((turn) => turn.messages)
+    .join("\n")
 }
 
 async function runTurn(
@@ -99,6 +116,7 @@ async function runTurn(
     events: [],
     toolCalls: [],
     approvalRequests: [],
+    messages: [],
     finalMessage: "",
     failed: undefined,
   }
@@ -127,7 +145,10 @@ async function runTurn(
         break
 
       case "message.completed":
-        if (event.data.message) turn.finalMessage = event.data.message
+        if (event.data.message) {
+          turn.messages.push(event.data.message)
+          turn.finalMessage = event.data.message
+        }
         break
 
       case "turn.failed":
@@ -485,9 +506,9 @@ async function searchAndFreshness(
   check(
     assertions,
     "the reply names the real task and its real status",
-    found.finalMessage.includes(header.title) &&
-      /to ?do/i.test(found.finalMessage),
-    found.finalMessage.slice(0, 400)
+    transcript(found).includes(header.title) &&
+      /to ?do/i.test(transcript(found)),
+    transcript(found).slice(0, 400)
   )
 
   // --- an out-of-band write between the two turns ---------------------------
@@ -520,20 +541,20 @@ async function searchAndFreshness(
   check(
     assertions,
     "the reply includes the task created after the first read",
-    refreshed.finalMessage.includes(late.title),
-    refreshed.finalMessage.slice(0, 600)
+    transcript(refreshed).includes(late.title),
+    transcript(refreshed).slice(0, 600)
   )
   check(
     assertions,
     "the reply names all four committed tasks",
-    committed.every((row) => refreshed.finalMessage.includes(row.title)),
+    committed.every((row) => transcript(refreshed).includes(row.title)),
     JSON.stringify(committed.map((row) => row.title))
   )
   check(
     assertions,
     "the header task is reported in its new status, not the one just read",
-    /in progress/i.test(refreshed.finalMessage),
-    refreshed.finalMessage.slice(0, 600)
+    /in progress/i.test(transcript(refreshed)),
+    transcript(refreshed).slice(0, 600)
   )
 
   await writeTranscript("12-search-and-freshness.json", {
@@ -798,14 +819,14 @@ async function deleteGatesAndBlocks(
   check(
     assertions,
     "the block is explained in terms of the tasks it still has",
-    /task/i.test(projectResumed?.finalMessage ?? ""),
-    projectResumed?.finalMessage.slice(0, 600)
+    /task/i.test(transcript(projectResumed)),
+    transcript(projectResumed).slice(0, 600)
   )
   check(
     assertions,
     "a concrete way forward is offered",
-    /(delete|move|remove|first|then)/i.test(projectResumed?.finalMessage ?? ""),
-    projectResumed?.finalMessage.slice(0, 600)
+    /(delete|move|remove|first|then)/i.test(transcript(projectResumed)),
+    transcript(projectResumed).slice(0, 600)
   )
 
   // --- a priority still in use ---------------------------------------------
@@ -837,11 +858,11 @@ async function deleteGatesAndBlocks(
   check(
     assertions,
     "the block names the rule and offers a way forward",
-    /(in use|used by|still|task)/i.test(priorityResumed?.finalMessage ?? "") &&
+    /(in use|used by|still|task)/i.test(transcript(priorityResumed)) &&
       /(move|reassign|another|different|change|first)/i.test(
-        priorityResumed?.finalMessage ?? ""
+        transcript(priorityResumed)
       ),
-    priorityResumed?.finalMessage.slice(0, 600)
+    transcript(priorityResumed).slice(0, 600)
   )
 
   // --- a project's last remaining status ------------------------------------
@@ -886,9 +907,9 @@ async function deleteGatesAndBlocks(
     assertions,
     "the block is explained as the last-remaining rule, with a way forward",
     /(last|only|at least one|remaining)/i.test(
-      lastResumed?.finalMessage ?? ""
-    ) && /(create|add|another|new)/i.test(lastResumed?.finalMessage ?? ""),
-    lastResumed?.finalMessage.slice(0, 600)
+      transcript(lastResumed)
+    ) && /(create|add|another|new)/i.test(transcript(lastResumed)),
+    transcript(lastResumed).slice(0, 600)
   )
 
   await writeTranscript("14-delete-gates-and-blocks.json", {
