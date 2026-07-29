@@ -377,7 +377,7 @@ The suite is complete when every row of the user-stories parity matrix and every
 
 ## 5. Live sync design (US-G1/G2/G3)
 
-1. **Agent → UI:** every agent action streams to the browser through the chat connection. `useEveAgent({ onEvent })` watches for action/tool-result events and invalidates the relevant queries → left pane refetches within the same second. No extra infra.
+1. **Agent → UI:** every agent action streams to the browser through the chat connection. `useEveAgent({ onEvent })` watches for **`action.result`** events with `status: "completed"` and invalidates the relevant queries → left pane refetches within the same second. No extra infra. (This sentence originally read "action/tool-result events". No such event name exists on the eve 0.27.8 wire: `dist/src/protocol/message.d.ts` declares `actions.requested`, which fires *before* execution, and `action.result`. Corrected in Phase 6; `lib/chat/tool-invalidation.ts` owns the mapping and states the reasoning.)
 2. **UI → agent:** automatic — tools read Postgres at execution time.
 3. **Backstop:** refetch-on-window-focus + modest polling interval (e.g. 30s) covers edge cases (a second tab, missed events).
 4. **Convergence (US-G3):** last-write-wins is the natural behavior of unconditioned row updates; no locking added. Verify with the G3 scenario during validation.
