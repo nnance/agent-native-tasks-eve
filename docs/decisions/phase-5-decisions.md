@@ -1,7 +1,7 @@
 # Phase 5 — Chat UI rewire (Epic F frontend half): decisions and assumptions
 
 **Phase:** 5 — Chat UI rewire, Epic F frontend half
-**Date:** 2026-07-28
+**Date:** 2026-07-28 (closed out 2026-07-29)
 **Branch:** `phase-5-chat-ui-rewire-epic-f-frontend-half`
 **Governing documents:** `docs/product-spec.md`, `docs/user-stories.md`, `docs/implementation-plan.md`
 
@@ -253,7 +253,63 @@ stays free of agent-runtime knowledge.
 It was the fake-transport demo's only consumer, grep confirms zero remaining
 imports anywhere in `app/`, `components/`, `lib/`, `agent/`, `tests/` or
 `scripts/`, and it is not on §1.1's allowed list. Phase 5 is precisely the
-phase where its last justification disappears.
+phase where its last justification disappears. The alternative — leaving it
+until a later phase — would park an unjustified dependency in a repo whose
+dependency policy is a closed list, and §1.1 asks that its table stay true.
+
+### `ask_question` reuses `ApprovalCard`, distinguished by data not by type
+
+Phase 4 recorded `ask_question` as live but never exercised, and asked Phase 5
+to confirm it renders sanely. It does, through the same component and the same
+`approval-card` testid: eve's own docs state that approvals and questions
+"share one protocol" and produce the same `input.requested` pause, so the
+component branches on `request.display`, `request.options` and
+`request.allowFreeform` rather than on tool name. A separate `QuestionCard`
+would have duplicated the layout and the two would have drifted; doing nothing
+would have left Phase 4's handoff item open. Reusing the component closed the
+gap with zero new code, and it was then driven live in the browser — an
+ambiguous "delete the launch plan task" produced a card carrying the model's
+real prompt verbatim, neutral severity and three `approval-option-<id>`
+buttons, and answering it produced the follow-up `bulk_delete_tasks`
+confirmation.
+
+### `delete_project` is the E2E suite's second gated tool
+
+The approval renderer claims to be generic across all seven gates, and one
+task-shaped test proves nothing about that. `06` therefore exercises a second,
+**non-task** gate against a small dedicated empty-project fixture.
+`delete_project` was chosen because it needs the simplest fixture of the four
+non-`update_task` gates and because its input shape — a bare `projectId` — is
+different enough from `taskId` / `taskIds[]` to be real generality evidence for
+both the `state` dispatcher and the label resolver.
+`delete_status` / `delete_priority` would additionally have exercised the
+tier-2 resolver fan-out, but they need a fixture where the list is genuinely
+unused, which is more setup for no extra generality; `bulk_delete_tasks` is
+still task-shaped and proves nothing new.
+
+### The reload-and-continue test uses the exit criterion's literal pronoun
+
+`06` sends "move that one to Done" verbatim after a page refresh, rather than
+naming the task explicitly. It is the graded exit criterion word for word, and
+it is the only assertion that actually proves the owned-`ClientSession` /
+`preserveCompletedSessions` decision above works — an explicit title would pass
+just as happily against a freshly-opened server-side conversation, testing
+nothing. The flake risk is managed by constraining the fixture instead of the
+prompt: the workspace is built so that exactly one task was just discussed,
+which removes most of the pronoun's ambiguity without weakening the claim.
+Asserting on an explicit title and demonstrating the pronoun only in the manual
+packet remains the documented fallback if the pronoun version ever proves
+genuinely flaky; it has not.
+
+### No Stop button ships
+
+`agent.stop()` only detaches the client stream — the server turn keeps running,
+and keeps billing — so a control labelled "Stop" would tell the user something
+untrue. A real cancel needs `session.cancel({ turnId })` guarded on an observed
+`turn.started` event, which is unrequested complexity in a phase whose whole
+risk budget belongs to the approval card. Nothing in US-F1–F6 asks for it, and
+because the pane already owns its `ClientSession` it stays cheap to add later.
+Carried forward below.
 
 ---
 
@@ -469,7 +525,51 @@ name would fail a correct answer reached a slightly different way.
 | `ask_question` renders sanely through `ApprovalCard`. | eve's docs state approvals and questions share one protocol and produce the same `input.requested` pause; the component branches on `request.display`, `options` and `allowFreeform` rather than on tool name. | A question renders with the wrong control. Phase 4 recorded `ask_question` as live but unexercised; this phase closes the gap by construction rather than by test, since forcing model ambiguity deterministically is outside its control. |
 | Two requests resolve every id a typical approval card references. | `TaskView` denormalises project, status and priority names onto every row, so `useProjects()` + `useTasks({includeCompleted:true})` cover every task and every list in use. | The tier-2 fan-out fires more often than expected — O(projects) extra cached requests. Bounded and invisible at this product's scale. |
 | With an explicit "using a single bulk update" instruction, the model calls `bulk_update_tasks` once. | `instructions.md` and `update_task`'s own description both push toward the bulk tool, and the edit gate makes the looping path visibly worse. | The bulk test sees separate `update_task` cards and fails. The fix is a tighter prompt, never a loosened legibility assertion — tool-choice quality is Phase 6's evals. |
-| ~~The composer may stay open while an approval is pending.~~ **Reversed in review** — see "The composer closes while a request is pending" below. | — | — |
+| ~~The composer may stay open while an approval is pending.~~ **Reversed in review** — see "The composer closes while a request is pending" above. | — | — |
+
+---
+
+## Deviations from `docs/implementation-plan.md`
+
+The plan is authoritative on architecture, so every departure is listed here
+rather than left to be discovered in a diff. Six, none of them a redesign.
+
+1. **§2.5's three part types became one renderer over one part type.** The
+   largest deviation, and the one with the most consequence: the plan's prose
+   describes `tool-call` / `tool-result` and `dynamic-tool` as separate cases,
+   but the installed runtime has only `dynamic-tool`. Implemented literally the
+   code would have compiled, looked right, and dropped every tool call in the
+   app from the transcript. Reasoned through in full under "One renderer over
+   one part type" above.
+2. **"No route-segment config" needed `await connection()`.** The rule was
+   written on the strength of route handlers being dynamic by default in Next
+   16, which is true of handlers but not of pages: `/` prerendered as static the
+   moment `app/page.tsx` began reading the chat snapshot. `connection()` is a
+   function call rather than config, so the spirit of the rule survives intact —
+   `next.config.ts` and route-segment exports are still untouched.
+3. **`use-entity-labels.ts` does not memoize its tier-2 merge**, where the
+   plan's sketch did. `useQueries` returns a fresh array on every render, so a
+   memo would need a hand-rolled signature key costing more than the merge it
+   guards. The merge is a spread over a few dozen rows consumed only by pure
+   functions. The reason is repeated in the file so nobody "fixes" it.
+4. **`extractEntityRefs` returns every entity a call references, not only its
+   targets**, with `describeToolCall` narrowing to the target kind. Both are
+   needed: targets become the card's manifest, while change values — "Status →
+   Done" — need the same resolution and are not targets.
+5. **The approval card's target manifest renders only when `count > 1`.** The
+   plan kept it unconditionally. For a single target the headline already names
+   the thing, so the manifest was a duplicated line; the `approval-target-<id>`
+   hook moved onto the headline and the testid contract is unchanged.
+6. **`waitForSlow` / `waitGoneSlow` / `waitTextSlow` are a separate
+   `slowWaits(browser)` helper** rather than methods on the browser object, so
+   suites 01–05 keep their existing surface untouched and only the agent suite
+   opts in.
+
+One further harness change the plan did not anticipate: **`resetTestDatabase`
+switched from `TRUNCATE` to `DELETE` for every suite**, not just `06`. It is a
+shared-harness change forced by a real deadlock that only became possible in
+this phase, and it is reasoned through under "The E2E reset uses `DELETE`"
+above.
 
 ---
 
@@ -490,3 +590,15 @@ name would fail a correct answer reached a slightly different way.
   `update_task` calls in one turn surface as one free write plus N−1 separate
   approval cards, not one card covering N. The UI renders each correctly; the
   consolidation is a backend concern.
+- **`06-agent-chat` is sensitive to model latency.** Five consecutive full runs
+  on the development machine gave 8/8, 7/8, 5/8, 6/8, 7/8. Every failure is the
+  120s per-turn budget expiring while waiting for the **first** streamed token,
+  on a *different* test each time, and each failing test passes on its own
+  against the identical build (15s, 26s, 27s — see
+  `docs/verification/phase-5/18-06-bulk-test-isolated.txt`). The two gate tests
+  — `US-F3.3` and `US-F5.1` — passed in every run. `TURN_MS` was deliberately
+  **not** raised again: no slow-but-successful turn was ever observed, so
+  raising it would be chasing a degraded gateway rather than matching measured
+  behaviour, and it would only convert a fast failure into a slow one. If this
+  becomes chronic, the honest fixes are a retry policy at the *suite* level or
+  a cheaper/faster model for the E2E path — not a looser assertion.
