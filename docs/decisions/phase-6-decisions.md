@@ -520,7 +520,56 @@ should be checked against `ETIMEDOUT` before anything else is suspected.
 
 ---
 
-## What Phase 7 inherits
+## Known issue Phase 7 must plan around: the full E2E run is not reliably green
+
+Stated plainly, because it is the least comfortable fact in this record and
+Phase 7's completion gate depends on it.
+
+**Run in isolation, everything passes, repeatedly.** `pnpm test:unit` +
+`pnpm test:api` 368/368. `06` 8/8. `07` 6/6, twice, captured in
+`docs/verification/phase-6/07-live-sync.txt`. `pnpm eval` and
+`pnpm eval --strict` 4/4 with all 25 gates.
+
+**Run as one `pnpm test:e2e`, the suite intermittently loses one or two tests.**
+Across five full runs this phase: 58/62, 60/62, 51/62 (the Neon outage),
+60/62, and the run this record closes on. Every failure fell into three
+classes, and two of them are now fixed:
+
+1. **Missing settle points** (`02`, `04`, `05`) — real bugs, fixed, described
+   above. These were the majority.
+2. **Neon unreachable** — an outage, loud and self-identifying, described above.
+3. **One agent turn exceeding its budget** — `06`'s US-F3.2/3.5 once, `07`'s
+   fetch-storm turn once, `07`'s US-G3.1 once. Never the same test twice, never
+   in an isolated run, and never with an error — the turn is simply still in
+   flight when the budget expires.
+
+**Class 3 is very probably class 2.** The final run of the phase makes the
+correlation hard to miss: it carried 35 `ETIMEDOUT`s, `07` collapsed outright
+because `migrateTestDatabase()` could not connect, `03` and `04` failed with
+connection errors — and in that same window `06`'s US-F3.2/3.5 and US-F1.3/1.4
+each sat past 180 seconds waiting for an ordinary turn (a single status move, a
+pronoun follow-up) that takes 15–30s in a healthy run. The run before it, also
+`ETIMEDOUT`-ridden, behaved the same way.
+
+The mechanism that fits: every tool the agent calls reaches Postgres through
+`lib/actions`. When the database is refusing connections, a tool call stalls
+inside `postgres.js`'s connect timeout rather than erroring, so the turn simply
+never settles and nothing surfaces in the browser at all — precisely the
+observed symptom. The two agent-turn failures carry no `ETIMEDOUT` of their own
+because the timeout is swallowed by a retry inside the driver, not because the
+database was healthy for them.
+
+This is a strong correlation across four runs, not a proof. What would make it
+a proof is instrumentation the harness does not currently have: per-turn
+timings from the eve server and per-query timings from the pool, so the next
+occurrence names the slow layer instead of leaving it to inference. That is the
+right Phase 7 task, and it is worth doing *before* US-G4's capstone leans on a
+full green run.
+
+What was deliberately not done: raise the budget a fourth time. Three raises in
+one phase is where inflating a timeout stops being synchronisation and starts
+being concealment — and if the cause is a database that is refusing
+connections, no budget is large enough to be honest.
 
 - `tests/e2e/README.md`'s coverage table now lists US-G1.1 through US-G3.2. The
   one remaining Epic G gap is **US-G4**, the parity capstone, which Phase 7
