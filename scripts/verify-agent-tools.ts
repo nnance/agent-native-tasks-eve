@@ -83,8 +83,34 @@ type Turn = {
   events: HandleMessageStreamEvent[]
   toolCalls: ToolCall[]
   approvalRequests: InputRequest[]
+  /** Every assistant message of the turn, in order. */
+  messages: string[]
+  /**
+   * The last assistant message. Keep using this only where the assertion is
+   * genuinely about how the turn *closes*. For "did the agent say X", prefer
+   * `transcript()` — a model is free to state a grounded fact mid-turn and
+   * close with a shorter line, which is not a defect.
+   */
   finalMessage: string
   failed: { code: string; message: string } | undefined
+}
+
+/**
+ * Every assistant message of the given turns as one string.
+ *
+ * Content assertions ("did the agent say the count", "did it explain the
+ * refusal") must use this rather than `finalMessage`. A model is free to state
+ * a grounded fact mid-turn and close with a short acknowledgement; that is a
+ * phrasing choice, not a defect, and plan §4.5 is explicit that these checks
+ * are about grounded facts rather than wording or placement.
+ *
+ * Tolerates `undefined` so the resumed-after-approval turns read cleanly.
+ */
+function transcript(...turns: (Turn | undefined)[]): string {
+  return turns
+    .filter((turn): turn is Turn => turn !== undefined)
+    .flatMap((turn) => turn.messages)
+    .join("\n")
 }
 
 /**
@@ -103,6 +129,7 @@ async function runTurn(
     events: [],
     toolCalls: [],
     approvalRequests: [],
+    messages: [],
     finalMessage: "",
     failed: undefined,
   }
@@ -131,7 +158,10 @@ async function runTurn(
         break
 
       case "message.completed":
-        if (event.data.message) turn.finalMessage = event.data.message
+        if (event.data.message) {
+          turn.messages.push(event.data.message)
+          turn.finalMessage = event.data.message
+        }
         break
 
       case "turn.failed":
@@ -291,25 +321,30 @@ async function grounded(client: Client, model: string): Promise<void> {
     toolNames(first).some((name) => name.startsWith("list_")),
     JSON.stringify(toolNames(first))
   )
+  // These scan the whole turn, not just its closing message. US-F2 is about
+  // the answer being *grounded*, not about which message carries it — an agent
+  // that reports the count and then closes with "Anything else?" has satisfied
+  // the criterion, and asserting on `finalMessage` alone failed it.
+  const firstText = transcript(first)
+  const secondText = transcript(second)
+
   check(
     assertions,
     "the reply states the real count of 4",
-    /\b4\b|\bfour\b/i.test(first.finalMessage),
-    first.finalMessage.slice(0, 400)
+    /\b4\b|\bfour\b/i.test(firstText),
+    firstText.slice(0, 400)
   )
   check(
     assertions,
     "every committed task title appears in the reply",
-    committed.every((task) => first.finalMessage.includes(task.title)),
+    committed.every((task) => firstText.includes(task.title)),
     `${committed.length} committed tasks`
   )
   check(
     assertions,
     "the nonexistent project is reported as not existing",
-    /(no|not|does ?n[o']t|couldn't find|cannot find)/i.test(
-      second.finalMessage
-    ),
-    second.finalMessage.slice(0, 400)
+    /(no|not|does ?n[o']t|couldn't find|cannot find)/i.test(secondText),
+    secondText.slice(0, 400)
   )
   check(
     assertions,
@@ -368,17 +403,17 @@ async function projectMoveRefused(
   check(
     assertions,
     "the refusal names the rule",
-    /project/i.test(turn.finalMessage) &&
+    /project/i.test(transcript(turn)) &&
       /(can(no|')t|cannot|unable|not possible|immutable|fixed)/i.test(
-        turn.finalMessage
+        transcript(turn)
       ),
-    turn.finalMessage.slice(0, 600)
+    transcript(turn).slice(0, 600)
   )
   check(
     assertions,
     "an alternative is offered",
-    /(recreat|create|delete|instead|copy|new task)/i.test(turn.finalMessage),
-    turn.finalMessage.slice(0, 600)
+    /(recreat|create|delete|instead|copy|new task)/i.test(transcript(turn)),
+    transcript(turn).slice(0, 600)
   )
   check(
     assertions,
@@ -454,16 +489,16 @@ async function blockedStatusDelete(
   check(
     assertions,
     "the blocking rule is relayed to the user",
-    /(still (in )?use|used by|task)/i.test(resumed?.finalMessage ?? ""),
-    resumed?.finalMessage.slice(0, 600)
+    /(still (in )?use|used by|task)/i.test(transcript(resumed)),
+    transcript(resumed).slice(0, 600)
   )
   check(
     assertions,
     "a concrete way forward is offered",
     /(move|reassign|another status|different status|delete (them|those)|first)/i.test(
-      resumed?.finalMessage ?? ""
+      transcript(resumed)
     ),
-    resumed?.finalMessage.slice(0, 600)
+    transcript(resumed).slice(0, 600)
   )
 
   await writeTranscript("03-blocked-status-delete.json", {
@@ -538,9 +573,9 @@ async function deleteDenied(client: Client, model: string): Promise<void> {
     assertions,
     "the agent says nothing changed",
     /(not|n't|nothing|cancel|left|kept|still)/i.test(
-      resumed?.finalMessage ?? ""
+      transcript(resumed)
     ),
-    resumed?.finalMessage.slice(0, 600)
+    transcript(resumed).slice(0, 600)
   )
 
   await writeTranscript("04-delete-approval-denied.json", {
@@ -595,9 +630,9 @@ async function bulkApproved(client: Client, model: string): Promise<void> {
   check(
     assertions,
     "the message states the count and the titles before the call",
-    /\b3\b|\bthree\b/i.test(asked.finalMessage) &&
-      seeded.every((task) => asked.finalMessage.includes(task.title)),
-    asked.finalMessage.slice(0, 600)
+    /\b3\b|\bthree\b/i.test(transcript(asked)) &&
+      seeded.every((task) => transcript(asked).includes(task.title)),
+    transcript(asked).slice(0, 600)
   )
   check(
     assertions,
@@ -632,8 +667,8 @@ async function bulkApproved(client: Client, model: string): Promise<void> {
   check(
     assertions,
     "the summary reports the move",
-    /in progress/i.test(resumed?.finalMessage ?? ""),
-    resumed?.finalMessage.slice(0, 600)
+    /in progress/i.test(transcript(resumed)),
+    transcript(resumed).slice(0, 600)
   )
 
   await writeTranscript("05-bulk-approval-approved.json", {
