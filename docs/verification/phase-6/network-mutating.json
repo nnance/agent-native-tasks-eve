@@ -1,7 +1,7 @@
 [
   {
     "headers": {
-      "Referer": "http://127.0.0.1:52402/",
+      "Referer": "http://127.0.0.1:59888/",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "content-type": "application/json",
       "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
@@ -10,23 +10,23 @@
     },
     "method": "GET",
     "mimeType": "application/json",
-    "requestId": "80095.324",
+    "requestId": "9164.338",
     "resourceType": "Fetch",
     "responseHeaders": {
       "Connection": "keep-alive",
-      "Date": "Wed, 29 Jul 2026 07:54:04 GMT",
+      "Date": "Wed, 29 Jul 2026 08:26:18 GMT",
       "Keep-Alive": "timeout=5",
       "Transfer-Encoding": "chunked",
       "content-type": "application/json",
       "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
     },
     "status": 200,
-    "timestamp": 1785311644613,
-    "url": "http://127.0.0.1:52402/api/projects/9ab2d934-734c-49bc-b28c-b1b7420e10d2/statuses"
+    "timestamp": 1785313578922,
+    "url": "http://127.0.0.1:59888/api/projects/480c1341-8a0e-485e-b05d-e80e04caa7ed/statuses"
   },
   {
     "headers": {
-      "Referer": "http://127.0.0.1:52402/",
+      "Referer": "http://127.0.0.1:59888/",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "content-type": "application/json",
       "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
@@ -35,23 +35,23 @@
     },
     "method": "GET",
     "mimeType": "application/json",
-    "requestId": "80095.325",
+    "requestId": "9164.339",
     "resourceType": "Fetch",
     "responseHeaders": {
       "Connection": "keep-alive",
-      "Date": "Wed, 29 Jul 2026 07:54:04 GMT",
+      "Date": "Wed, 29 Jul 2026 08:26:18 GMT",
       "Keep-Alive": "timeout=5",
       "Transfer-Encoding": "chunked",
       "content-type": "application/json",
       "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
     },
     "status": 200,
-    "timestamp": 1785311644613,
-    "url": "http://127.0.0.1:52402/api/projects/9ab2d934-734c-49bc-b28c-b1b7420e10d2/priorities"
+    "timestamp": 1785313578922,
+    "url": "http://127.0.0.1:59888/api/projects/480c1341-8a0e-485e-b05d-e80e04caa7ed/priorities"
   },
   {
     "headers": {
-      "Referer": "http://127.0.0.1:52402/",
+      "Referer": "http://127.0.0.1:59888/",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "content-type": "application/json",
       "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
@@ -60,23 +60,23 @@
     },
     "method": "GET",
     "mimeType": "application/json",
-    "requestId": "80095.326",
+    "requestId": "9164.340",
     "resourceType": "Fetch",
     "responseHeaders": {
       "Connection": "keep-alive",
-      "Date": "Wed, 29 Jul 2026 07:54:05 GMT",
+      "Date": "Wed, 29 Jul 2026 08:26:19 GMT",
       "Keep-Alive": "timeout=5",
       "Transfer-Encoding": "chunked",
       "content-type": "application/json",
       "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
     },
     "status": 200,
-    "timestamp": 1785311645113,
-    "url": "http://127.0.0.1:52402/api/tasks"
+    "timestamp": 1785313579424,
+    "url": "http://127.0.0.1:59888/api/tasks"
   },
   {
     "headers": {
-      "Referer": "http://127.0.0.1:52402/",
+      "Referer": "http://127.0.0.1:59888/",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "content-type": "application/json",
       "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
@@ -85,23 +85,23 @@
     },
     "method": "GET",
     "mimeType": "application/json",
-    "requestId": "80095.327",
+    "requestId": "9164.341",
     "resourceType": "Fetch",
     "responseHeaders": {
       "Connection": "keep-alive",
-      "Date": "Wed, 29 Jul 2026 07:54:05 GMT",
+      "Date": "Wed, 29 Jul 2026 08:26:19 GMT",
       "Keep-Alive": "timeout=5",
       "Transfer-Encoding": "chunked",
       "content-type": "application/json",
       "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
     },
     "status": 200,
-    "timestamp": 1785311645113,
-    "url": "http://127.0.0.1:52402/api/tasks?includeCompleted=true"
+    "timestamp": 1785313579424,
+    "url": "http://127.0.0.1:59888/api/tasks?includeCompleted=true"
   },
   {
     "headers": {
-      "Referer": "http://127.0.0.1:52402/",
+      "Referer": "http://127.0.0.1:59888/",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "content-type": "application/json",
       "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
@@ -109,20 +109,10 @@
       "sec-ch-ua-platform": "\"macOS\""
     },
     "method": "PUT",
-    "mimeType": "application/json",
-    "postData": "{\"events\":[{\"data\":{\"runtime\":{\"agentId\":\"agent-native-tasks-eve\",\"agentName\":\"agent-native-tasks-eve\",\"eveVersion\":\"0.27.8\",\"modelId\":\"anthropic/claude-sonnet-5\"}},\"type\":\"session.started\",\"meta\":{\"at\":\"2026-07-29T07:53:49.265Z\"}},{\"data\":{\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"turn.started\",\"meta\":{\"at\":\"2026-07-29T07:53:49.265Z\"}},{\"data\":{\"message\":\"How many tasks are in the \\\"Personal\\\" project?\",\"parts\":[{\"text\":\"How many tasks are in the \\\"Personal\\\" project?\",\"type\":\"text\"}],\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"message.received\",\"meta\":{\"at\":\"2026-07-29T07:53:49.265Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:53:49.265Z\"}},{\"data\":{\"reasoningDelta\":\"\",\"reasoningSoFar\":\"\",\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"reasoning.appended\",\"meta\":{\"at\":\"2026-07-29T07:53:53.704Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01QefRBDuHHi52ynZbUNdHvm\",\"input\":{},\"kind\":\"tool-call\",\"toolName\":\"list_projects\"}],\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T07:53:53.846Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01QefRBDuHHi52ynZbUNdHvm\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"Personal\",\"createdAt\":\"2026-07-29T07:53:46.363Z\"}]},\"toolName\":\"list_projects\"},\"sequence\":0,\"stepIndex\":0,\"status\":\"completed\",\"turnId\":\"turn_0\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T07:53:53.903Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0026208,\"inputTokens\":10636,\"outputTokens\":49,\"cacheReadTokens\":10634,\"cacheWriteTokens\":0},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDV5W6NFM85DYKMY35NK14\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:53:53.904Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:53:53.941Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01QoxHK32y8cTKvYauRKVSE2\",\"input\":{\"projectId\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"includeCompleted\":true},\"kind\":\"tool-call\",\"toolName\":\"list_tasks\"}],\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T07:53:55.565Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01QoxHK32y8cTKvYauRKVSE2\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"7ac194b4-0e0a-47db-af16-a1dbd01fabe7\",\"title\":\"Restock the pantry kalhbo\",\"description\":null,\"createdAt\":\"2026-07-29T07:53:47.064Z\",\"updatedAt\":\"2026-07-29T07:53:47.064Z\",\"project\":{\"id\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"Personal\"},\"status\":{\"id\":\"67618298-69db-4351-a580-92bfcf6cec1b\",\"name\":\"To Do\",\"order\":0,\"isCompleted\":false},\"priority\":{\"id\":\"f6e23d89-e144-41e2-a32a-60225e046cab\",\"name\":\"Medium\",\"order\":1,\"isDefault\":true}}]},\"toolName\":\"list_tasks\"},\"sequence\":0,\"stepIndex\":1,\"status\":\"completed\",\"turnId\":\"turn_0\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T07:53:55.664Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0031608,\"inputTokens\":10748,\"outputTokens\":103,\"cacheReadTokens\":10634,\"cacheWriteTokens\":112},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDV8J5XKMJDPCTQVK3GPQM\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:53:55.665Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:53:55.713Z\"}},{\"data\":{\"messageDelta\":\"The\",\"messageSoFar\":\"The\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T07:53:57.967Z\"}},{\"data\":{\"messageDelta\":\" \\\"Personal\\\" project has 1 task: \\\"Restock the pantry kalhbo\\\" (To Do, Medium priority).\",\"messageSoFar\":\"The \\\"Personal\\\" project has 1 task: \\\"Restock the pantry kalhbo\\\" (To Do, Medium priority).\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T07:53:57.977Z\"}},{\"data\":{\"finishReason\":\"stop\",\"message\":\"The \\\"Personal\\\" project has 1 task: \\\"Restock the pantry kalhbo\\\" (To Do, Medium priority).\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.completed\",\"meta\":{\"at\":\"2026-07-29T07:53:57.978Z\"}},{\"data\":{\"finishReason\":\"stop\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0025532,\"inputTokens\":10954,\"outputTokens\":40,\"cacheReadTokens\":10746,\"cacheWriteTokens\":206},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDVAADNTJ739NPDD8GKWJB\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:53:57.979Z\"}},{\"data\":{\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"turn.completed\",\"meta\":{\"at\":\"2026-07-29T07:53:57.983Z\"}},{\"data\":{\"continuationToken\":\"eve:a80f0718-2400-4b5e-a3fb-86c5bf2ed6bf\",\"wait\":\"next-user-message\"},\"type\":\"session.waiting\",\"meta\":{\"at\":\"2026-07-29T07:53:57.983Z\"}},{\"data\":{\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"turn.started\",\"meta\":{\"at\":\"2026-07-29T07:53:59.331Z\"}},{\"data\":{\"message\":\"Move the task \\\"Restock the pantry kalhbo\\\" to Done.\",\"parts\":[{\"text\":\"Move the task \\\"Restock the pantry kalhbo\\\" to Done.\",\"type\":\"text\"}],\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"message.received\",\"meta\":{\"at\":\"2026-07-29T07:53:59.331Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:53:59.331Z\"}},{\"data\":{\"reasoningDelta\":\"\",\"reasoningSoFar\":\"\",\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"reasoning.appended\",\"meta\":{\"at\":\"2026-07-29T07:54:01.961Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01MemN1tsuVMycmkjA9H9JVs\",\"input\":{\"projectId\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\"},\"kind\":\"tool-call\",\"toolName\":\"list_statuses\"}],\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T07:54:02.298Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01MemN1tsuVMycmkjA9H9JVs\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"67618298-69db-4351-a580-92bfcf6cec1b\",\"projectId\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"To Do\",\"order\":0,\"isCompleted\":false},{\"id\":\"aeab12e0-bc71-4af1-ae52-bd2560d69c62\",\"projectId\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"In Progress\",\"order\":1,\"isCompleted\":false},{\"id\":\"1df9939d-c7ca-41ed-b744-f6ac496b8b00\",\"projectId\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"Done\",\"order\":2,\"isCompleted\":true}]},\"toolName\":\"list_statuses\"},\"sequence\":1,\"stepIndex\":0,\"status\":\"completed\",\"turnId\":\"turn_1\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T07:54:02.454Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.0031744,\"inputTokens\":11018,\"outputTokens\":98,\"cacheReadTokens\":10952,\"cacheWriteTokens\":64},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDVEVV9MC0QXY95TG5XRJ4\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:54:02.455Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:54:02.497Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01PKhJYFhMBFojj6rsEafS35\",\"input\":{\"taskId\":\"7ac194b4-0e0a-47db-af16-a1dbd01fabe7\",\"statusId\":\"1df9939d-c7ca-41ed-b744-f6ac496b8b00\"},\"kind\":\"tool-call\",\"toolName\":\"update_task\"}],\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T07:54:04.518Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01PKhJYFhMBFojj6rsEafS35\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":{\"id\":\"7ac194b4-0e0a-47db-af16-a1dbd01fabe7\",\"title\":\"Restock the pantry kalhbo\",\"description\":null,\"createdAt\":\"2026-07-29T07:53:47.064Z\",\"updatedAt\":\"2026-07-29T07:54:04.835Z\",\"project\":{\"id\":\"9ab2d934-734c-49bc-b28c-b1b7420e10d2\",\"name\":\"Personal\"},\"status\":{\"id\":\"1df9939d-c7ca-41ed-b744-f6ac496b8b00\",\"name\":\"Done\",\"order\":2,\"isCompleted\":true},\"priority\":{\"id\":\"f6e23d89-e144-41e2-a32a-60225e046cab\",\"name\":\"Medium\",\"order\":1,\"isDefault\":true}}},\"toolName\":\"update_task\"},\"sequence\":1,\"stepIndex\":1,\"status\":\"completed\",\"turnId\":\"turn_1\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T07:54:05.056Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.0034572,\"inputTokens\":11293,\"outputTokens\":125,\"cacheReadTokens\":11016,\"cacheWriteTokens\":275},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDVGYP0NC3K4K6JRKZ5H5K\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:54:05.056Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T07:54:05.096Z\"}},{\"data\":{\"messageDelta\":\"Mo\",\"messageSoFar\":\"Mo\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T07:54:06.215Z\"}},{\"data\":{\"messageDelta\":\"ved \\\"Restock the pantry kalhbo\\\" from To Do to Done in the Personal project.\",\"messageSoFar\":\"Moved \\\"Restock the pantry kalhbo\\\" from To Do to Done in the Personal project.\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T07:54:06.503Z\"}},{\"data\":{\"finishReason\":\"stop\",\"message\":\"Moved \\\"Restock the pantry kalhbo\\\" from To Do to Done in the Personal project.\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.completed\",\"meta\":{\"at\":\"2026-07-29T07:54:06.546Z\"}},{\"data\":{\"finishReason\":\"stop\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.0025922,\"inputTokens\":11688,\"outputTokens\":33,\"cacheReadTokens\":11291,\"cacheWriteTokens\":395},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPDVKFMEVGH24JAZYSHTDW8\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T07:54:06.547Z\"}},{\"data\":{\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"turn.completed\",\"meta\":{\"at\":\"2026-07-29T07:54:06.550Z\"}},{\"data\":{\"continuationToken\":\"eve:a80f0718-2400-4b5e-a3fb-86c5bf2ed6bf\",\"wait\":\"next-user-message\"},\"type\":\"session.waiting\",\"meta\":{\"at\":\"2026-07-29T07:54:06.550Z\"}}],\"session\":{\"continuationToken\":\"eve:a80f0718-2400-4b5e-a3fb-86c5bf2ed6bf\",\"sessionId\":\"wrun_01KYPDV3TJ6HGXDV6CVJ6TTE37\",\"streamIndex\":37}}",
-    "requestId": "80095.328",
+    "postData": "{\"events\":[{\"data\":{\"runtime\":{\"agentId\":\"agent-native-tasks-eve\",\"agentName\":\"agent-native-tasks-eve\",\"eveVersion\":\"0.27.8\",\"modelId\":\"anthropic/claude-sonnet-5\"}},\"type\":\"session.started\",\"meta\":{\"at\":\"2026-07-29T08:26:05.510Z\"}},{\"data\":{\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"turn.started\",\"meta\":{\"at\":\"2026-07-29T08:26:05.510Z\"}},{\"data\":{\"message\":\"How many tasks are in the \\\"Personal\\\" project?\",\"parts\":[{\"text\":\"How many tasks are in the \\\"Personal\\\" project?\",\"type\":\"text\"}],\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"message.received\",\"meta\":{\"at\":\"2026-07-29T08:26:05.510Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:05.510Z\"}},{\"data\":{\"reasoningDelta\":\"\",\"reasoningSoFar\":\"\",\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"reasoning.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:07.427Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_014rFqb7RNLPUbCvso1UhTXy\",\"input\":{},\"kind\":\"tool-call\",\"toolName\":\"list_projects\"}],\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T08:26:07.429Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_014rFqb7RNLPUbCvso1UhTXy\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"Personal\",\"createdAt\":\"2026-07-29T08:26:02.595Z\"}]},\"toolName\":\"list_projects\"},\"sequence\":0,\"stepIndex\":0,\"status\":\"completed\",\"turnId\":\"turn_0\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T08:26:07.828Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":0,\"stepIndex\":0,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0025834,\"inputTokens\":10636,\"outputTokens\":47,\"cacheReadTokens\":10547,\"cacheWriteTokens\":87},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFP70E1QXA02AQB9MYEQ1T\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:07.830Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:07.872Z\"}},{\"data\":{\"reasoningDelta\":\"\",\"reasoningSoFar\":\"\",\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\"},\"type\":\"reasoning.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:09.871Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01SDGWfje1Mg4vYv4yV35eTP\",\"input\":{\"projectId\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"includeCompleted\":true},\"kind\":\"tool-call\",\"toolName\":\"list_tasks\"}],\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T08:26:10.497Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01SDGWfje1Mg4vYv4yV35eTP\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"91804805-3235-485f-932b-1567b4f788a6\",\"title\":\"Restock the pantry fmbkhe\",\"description\":null,\"createdAt\":\"2026-07-29T08:26:03.278Z\",\"updatedAt\":\"2026-07-29T08:26:03.278Z\",\"project\":{\"id\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"Personal\"},\"status\":{\"id\":\"0c43eb9f-b198-4e2c-9aee-4f429c1207a9\",\"name\":\"To Do\",\"order\":0,\"isCompleted\":false},\"priority\":{\"id\":\"40ad8f71-2204-4412-8606-0aa9d1404d1b\",\"name\":\"Medium\",\"order\":1,\"isDefault\":true}}]},\"toolName\":\"list_tasks\"},\"sequence\":0,\"stepIndex\":1,\"status\":\"completed\",\"turnId\":\"turn_0\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T08:26:11.059Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":0,\"stepIndex\":1,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0033008,\"inputTokens\":10745,\"outputTokens\":117,\"cacheReadTokens\":10634,\"cacheWriteTokens\":109},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFP96D126SWCJXFXSTE447\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:11.059Z\"}},{\"data\":{\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:11.085Z\"}},{\"data\":{\"messageDelta\":\"The\",\"messageSoFar\":\"The\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:12.329Z\"}},{\"data\":{\"messageDelta\":\" \\\"Personal\\\" project has 1 task: \\\"Restock the pantry fmbkhe\\\" (To Do, Medium priority).\",\"messageSoFar\":\"The \\\"Personal\\\" project has 1 task: \\\"Restock the pantry fmbkhe\\\" (To Do, Medium priority).\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:12.580Z\"}},{\"data\":{\"finishReason\":\"stop\",\"message\":\"The \\\"Personal\\\" project has 1 task: \\\"Restock the pantry fmbkhe\\\" (To Do, Medium priority).\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\"},\"type\":\"message.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:12.599Z\"}},{\"data\":{\"finishReason\":\"stop\",\"sequence\":0,\"stepIndex\":2,\"turnId\":\"turn_0\",\"usage\":{\"costUsd\":0.0025626,\"inputTokens\":10959,\"outputTokens\":41,\"cacheReadTokens\":10743,\"cacheWriteTokens\":214},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFPCAQ3PSCRF5N2757F4GJ\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:12.600Z\"}},{\"data\":{\"sequence\":0,\"turnId\":\"turn_0\"},\"type\":\"turn.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:12.604Z\"}},{\"data\":{\"continuationToken\":\"eve:4b091940-a7a2-43c7-a269-0e3d7d29a3c3\",\"wait\":\"next-user-message\"},\"type\":\"session.waiting\",\"meta\":{\"at\":\"2026-07-29T08:26:12.604Z\"}},{\"data\":{\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"turn.started\",\"meta\":{\"at\":\"2026-07-29T08:26:14.307Z\"}},{\"data\":{\"message\":\"Move the task \\\"Restock the pantry fmbkhe\\\" to Done.\",\"parts\":[{\"text\":\"Move the task \\\"Restock the pantry fmbkhe\\\" to Done.\",\"type\":\"text\"}],\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"message.received\",\"meta\":{\"at\":\"2026-07-29T08:26:14.307Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:14.307Z\"}},{\"data\":{\"reasoningDelta\":\"\",\"reasoningSoFar\":\"\",\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"reasoning.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:16.170Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01Ux2kvTRjZrFdLefBJM9rh5\",\"input\":{\"projectId\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\"},\"kind\":\"tool-call\",\"toolName\":\"list_statuses\"}],\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T08:26:16.434Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01Ux2kvTRjZrFdLefBJM9rh5\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":[{\"id\":\"0c43eb9f-b198-4e2c-9aee-4f429c1207a9\",\"projectId\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"To Do\",\"order\":0,\"isCompleted\":false},{\"id\":\"73d45c7f-f62c-4e30-a5d4-a2a2e5dc9ede\",\"projectId\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"In Progress\",\"order\":1,\"isCompleted\":false},{\"id\":\"c8eb32b6-197f-4f19-b922-3329d0a1827d\",\"projectId\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"Done\",\"order\":2,\"isCompleted\":true}]},\"toolName\":\"list_statuses\"},\"sequence\":1,\"stepIndex\":0,\"status\":\"completed\",\"turnId\":\"turn_1\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T08:26:16.527Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":1,\"stepIndex\":0,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.0031054,\"inputTokens\":11025,\"outputTokens\":91,\"cacheReadTokens\":10957,\"cacheWriteTokens\":66},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFPFFB30DE05PVY6FXRSJA\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:16.529Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:16.571Z\"}},{\"data\":{\"actions\":[{\"callId\":\"toolu_01KkGacqo7jLbs4kJowSGyTb\",\"input\":{\"taskId\":\"91804805-3235-485f-932b-1567b4f788a6\",\"statusId\":\"c8eb32b6-197f-4f19-b922-3329d0a1827d\"},\"kind\":\"tool-call\",\"toolName\":\"update_task\"}],\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\"},\"type\":\"actions.requested\",\"meta\":{\"at\":\"2026-07-29T08:26:18.858Z\"}},{\"data\":{\"result\":{\"callId\":\"toolu_01KkGacqo7jLbs4kJowSGyTb\",\"kind\":\"tool-result\",\"output\":{\"ok\":true,\"data\":{\"id\":\"91804805-3235-485f-932b-1567b4f788a6\",\"title\":\"Restock the pantry fmbkhe\",\"description\":null,\"createdAt\":\"2026-07-29T08:26:03.278Z\",\"updatedAt\":\"2026-07-29T08:26:19.165Z\",\"project\":{\"id\":\"480c1341-8a0e-485e-b05d-e80e04caa7ed\",\"name\":\"Personal\"},\"status\":{\"id\":\"c8eb32b6-197f-4f19-b922-3329d0a1827d\",\"name\":\"Done\",\"order\":2,\"isCompleted\":true},\"priority\":{\"id\":\"40ad8f71-2204-4412-8606-0aa9d1404d1b\",\"name\":\"Medium\",\"order\":1,\"isDefault\":true}}},\"toolName\":\"update_task\"},\"sequence\":1,\"stepIndex\":1,\"status\":\"completed\",\"turnId\":\"turn_1\"},\"type\":\"action.result\",\"meta\":{\"at\":\"2026-07-29T08:26:19.377Z\"}},{\"data\":{\"finishReason\":\"tool-calls\",\"sequence\":1,\"stepIndex\":1,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.0033786,\"inputTokens\":11302,\"outputTokens\":117,\"cacheReadTokens\":11023,\"cacheWriteTokens\":277},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFPHNNY0BNNMYQ0WN7DR4Z\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:19.380Z\"}},{\"data\":{\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"step.started\",\"meta\":{\"at\":\"2026-07-29T08:26:19.422Z\"}},{\"data\":{\"messageDelta\":\"Mo\",\"messageSoFar\":\"Mo\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:20.847Z\"}},{\"data\":{\"messageDelta\":\"ved \\\"Restock the pantry fmbkhe\\\" from To Do to Done in the Personal project.\",\"messageSoFar\":\"Moved \\\"Restock the pantry fmbkhe\\\" from To Do to Done in the Personal project.\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.appended\",\"meta\":{\"at\":\"2026-07-29T08:26:21.042Z\"}},{\"data\":{\"finishReason\":\"stop\",\"message\":\"Moved \\\"Restock the pantry fmbkhe\\\" from To Do to Done in the Personal project.\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\"},\"type\":\"message.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:21.053Z\"}},{\"data\":{\"finishReason\":\"stop\",\"sequence\":1,\"stepIndex\":2,\"turnId\":\"turn_1\",\"usage\":{\"costUsd\":0.002604,\"inputTokens\":11683,\"outputTokens\":34,\"cacheReadTokens\":11300,\"cacheWriteTokens\":381},\"providerMetadata\":{\"gateway\":{\"generationId\":\"gen_01KYPFPMFJX662C117TJY212C6\"}}},\"type\":\"step.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:21.054Z\"}},{\"data\":{\"sequence\":1,\"turnId\":\"turn_1\"},\"type\":\"turn.completed\",\"meta\":{\"at\":\"2026-07-29T08:26:21.058Z\"}},{\"data\":{\"continuationToken\":\"eve:4b091940-a7a2-43c7-a269-0e3d7d29a3c3\",\"wait\":\"next-user-message\"},\"type\":\"session.waiting\",\"meta\":{\"at\":\"2026-07-29T08:26:21.058Z\"}}],\"session\":{\"continuationToken\":\"eve:4b091940-a7a2-43c7-a269-0e3d7d29a3c3\",\"sessionId\":\"wrun_01KYPFP6PBM6CXMJSYV8TERG1F\",\"streamIndex\":38}}",
+    "requestId": "9164.342",
     "resourceType": "Fetch",
-    "responseHeaders": {
-      "Connection": "keep-alive",
-      "Date": "Wed, 29 Jul 2026 07:54:07 GMT",
-      "Keep-Alive": "timeout=5",
-      "Transfer-Encoding": "chunked",
-      "content-type": "application/json",
-      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
-    },
-    "status": 200,
-    "timestamp": 1785311646612,
-    "url": "http://127.0.0.1:52402/api/chat-state"
+    "timestamp": 1785313581122,
+    "url": "http://127.0.0.1:59888/api/chat-state"
   }
 ]
