@@ -109,6 +109,42 @@ That mechanism is consistent with the cold start now fixed. **Re-measure before 
 
 This matters because **Phase 7's exit gate is `pnpm test:all` green three consecutive times.** At ~7/8 per run that gate is unreachable.
 
+### 3.3 Agent evals — what exists
+
+Four evals ship in `evals/`, added in Phase 6 and green at 4/4 on both `pnpm eval` and `pnpm eval --strict`:
+
+| File | Behaviour it pins |
+|---|---|
+| `refuses-project-moves.eval.ts` | Refuses to move a task between projects, and explains why |
+| `never-deletes-without-approval.eval.ts` | Never deletes without the approval gate |
+| `states-plan-before-bulk-changes.eval.ts` | States what will change before a bulk operation |
+| `grounded-counts.eval.ts` | Counts come from tool reads, not invention |
+
+Run them with `pnpm eval` (config in `evals/evals.config.ts`, helpers in `evals/support/`). They make **real model calls**, so they cost money and deliberately sit outside `pnpm test`.
+
+Division of labour worth preserving: **E2E asserts effects, evals assert prose.** What changed belongs in `tests/e2e/`; how well the agent explained it belongs here.
+
+**Coverage gaps** — behaviours with no eval yet:
+
+- The **bulk-edit gate** (`agent/lib/bulk-edit-gate.ts`) is the most valuable missing one. It ships an input-dependent approval policy departing from plan §2.4, with two documented fail-open limits (parallel calls judged one at a time; process-memory counter). Phase 4 flagged that Phase 6 should own this eval; Phase 6 did not add it.
+- `ask_question` — live, but no eval and no E2E scenario exercises it.
+- Rule-violation *explanation quality* beyond project moves: blocked deletes, last-remaining-status, in-use priority. Those refusals are asserted for effect in E2E; the quality of the explanation is not.
+
+### 3.4 The deployed agent never responds
+
+The task UI works and auth passes (PR #15), but a chat request hangs with the stream request open forever. Established by inspecting the Vercel runtime and build logs — start from here rather than repeating it:
+
+- `POST /eve/v1/session/<runId>` → **200, serverless**.
+- Four `POST /.well-known/workflow/v1/flow` → **200, serverless**, after the session POST. The durable run is progressing.
+- `GET /eve/v1/session/<runId>/stream` → 200 but logged `"source":"static"`. That is the anomaly: a statically-served response cannot stream.
+
+Two hypotheses were **ruled out with evidence**, so do not re-test them:
+
+- *`eve build` missing from the Vercel build.* It runs — `withEve()` invokes it during `next build`, and the build log ends `built output at …/.eve/vercel-services/eve/.vercel/output`, nitro/vercel preset, `nodejs24.x`.
+- *Bad routing.* The generated config has exactly one, correct, rule: `^/eve/v1/(.*)$` → `{ "service": "eve", "type": "service" }`.
+
+Next steps in order: curl `/eve/v1/health` on the deployment (set `VERCEL_AUTOMATION_BYPASS_SECRET` locally first — Deployment Protection is on); run `eve dev https://<deployment>` and see whether the TUI streams where the browser does not, which separates the eve service from the browser transport; then try `eve deploy`, the documented supported path, which differs from the git-integration deploy in use now.
+
 ---
 
 ## 4. Open items
