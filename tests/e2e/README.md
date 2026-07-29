@@ -6,14 +6,34 @@ They are deliberately serialised (`--test-concurrency=1`) because they share
 one browser profile and one database.
 
 ```bash
-pnpm test:e2e        # next build, then the whole suite
-pnpm test:e2e:only   # skip the build (iterating; requires an existing .next)
+pnpm test:e2e        # eve build, next build, then the whole suite
+pnpm test:e2e:only   # skip both builds (iterating; requires existing output)
 ```
 
-`test:e2e` chains the build with `&&` rather than using a `pretest:e2e`
+`test:e2e` chains the builds with `&&` rather than using a `pretest:e2e`
 script: pnpm does not run pre/post lifecycle scripts by default, so that
 script would silently never fire. `harness/server.ts` refuses to start
-without `.next/BUILD_ID` and says how to get one.
+without `.next/BUILD_ID` — or, for the agent suite, without
+`.output/server/index.mjs` — and says how to get one.
+
+### The eve agent server (`06` only)
+
+`next start` does **not** boot the agent, and cannot. `withEve()` spawns it
+from inside `next.config.ts`'s `rewrites()`, which Next evaluates at build
+time only; `next start` reads the finished rewrite out of
+`.next/routes-manifest.json`. So `/eve/v1/:path+ →
+http://127.0.0.1:4274/eve/v1/:path+` is baked and correct while nothing
+listens on the other end — a request through the Next origin answers 500
+with `ECONNREFUSED 127.0.0.1:4274`.
+
+`setupSuite(name, { eve: true })` therefore starts `eve start --host
+127.0.0.1 --port 4274` itself, against the test database, and tears it down
+as a process group after the Next server. The port is **fixed** because the
+rewrite baked it in, so a `pnpm dev` holding 4274 will fail the suite — the
+harness says so in the error. `pnpm exec eve build` must have run first;
+`pnpm test:e2e` does it for you.
+
+Only `06-agent-chat.test.ts` opts in, so 01–05 stay fast.
 
 ## What runs against what
 
@@ -34,6 +54,7 @@ tests/e2e/
 ├── harness/
 │   ├── browser.ts    # agent-browser wrapper (execFile → JSON envelope)
 │   ├── server.ts     # next start on a free port, health-polled
+│   │                 # (+ opt-in eve agent server on the fixed 4274)
 │   ├── db.ts         # reset + seed + direct row assertions
 │   ├── fixtures.ts   # preconditions, written through lib/actions
 │   └── setup.ts      # per-file before/beforeEach/after
@@ -43,7 +64,8 @@ tests/e2e/
 ├── 02-tasks-ui.test.ts
 ├── 03-projects-ui.test.ts
 ├── 04-statuses-ui.test.ts
-└── 05-priorities-ui.test.ts
+├── 05-priorities-ui.test.ts
+└── 06-agent-chat.test.ts   # real model, real turns — `{ eve: true }`
 ```
 
 ## `data-testid` conventions (implementation plan §2.7)
@@ -52,7 +74,7 @@ Attributes only — no testid is ever read by business logic.
 
 | Surface | testids |
 | --- | --- |
-| Shell | `app-shell`, `task-pane`, `chat-pane`, `chat-placeholder`, `chat-composer-disabled` |
+| Shell | `app-shell`, `task-pane`, `chat-pane`, `chat-conversation` |
 | Tabs | `tab-tasks`, `tab-lists`, `panel-tasks`, `panel-lists` |
 | Task filters | `filter-project-<id>`, `filter-status-<id>`, `filter-priority-<id>`, `status-filter-hint`, `task-search-input`, `show-completed-toggle`, `clear-filters` |
 | Task list | `task-list-loading`, `task-list-error`, `task-list-empty`, `task-row-<id>` (+ `data-completed`), `task-title-<id>`, `task-project-chip-<id>`, `task-status-chip-<id>`, `task-priority-chip-<id>`, `task-status-select-<id>`, `task-edit-<id>`, `task-delete-<id>` |
@@ -61,10 +83,21 @@ Attributes only — no testid is ever read by business logic.
 | Projects | `projects-panel-{loading,error,empty}`, `project-row-<id>`, `project-name-<id>`, `project-rename-<id>` (+ `-input`/`-submit`/`-cancel`/`-error`), `project-delete-<id>`, `project-create-{input,submit,error}` |
 | Statuses | `manage-project-select`, `statuses-panel-{loading,error,empty}`, `status-row-<id>` (+ `data-completed`), `status-name-<id>`, `status-rename-<id>` (+ `-input`/…), `status-up-<id>`, `status-down-<id>`, `status-completed-<id>`, `status-delete-<id>`, `status-create-{input,completed,submit,error}` |
 | Priorities | `priorities-panel-{loading,error,empty}`, `priority-row-<id>` (+ `data-default`), `priority-name-<id>`, `priority-rename-<id>` (+ `-input`/…), `priority-up-<id>`, `priority-down-<id>`, `priority-set-default-<id>`, `priority-default-badge-<id>`, `priority-delete-<id>`, `priority-create-{input,submit,error}` |
+| Chat pane | `chat-conversation`, `chat-transcript`, `chat-empty`, `chat-error`, `chat-composer`, `chat-composer-input`, `chat-send`, `chat-blocked` |
+| Agent activity | `action-entry` (+ `data-tool`, `data-state`, `data-outcome`), `action-entry-details` |
+| Approvals | `approval-card` (+ `data-tool`, `data-severity`, `data-count`), `approval-approve`, `approval-deny`, `approval-option-<id>`, `approval-freeform`, `approval-freeform-submit`, `approval-target-<id>` |
 
 Rows are counted with prefix selectors: `[data-testid^="task-row-"]`,
 `[data-testid^="status-row-"]`, `[data-testid^="priority-row-"]`,
-`[data-testid^="project-row-"]`.
+`[data-testid^="project-row-"]`, `[data-testid^="approval-target-"]`.
+
+The agent surfaces are addressed by their **data attributes** rather than by
+a testid per tool: `[data-testid="action-entry"][data-tool="delete_task"]`,
+`[data-state="output-available"]`, `[data-outcome="denied"]`. That keeps the
+testid vocabulary small while letting the suite assert exactly which tool ran
+and how it ended. When an approval card has a single target the
+`approval-target-<id>` hook sits on the headline, which already names it;
+above one, on each row of the manifest.
 
 ## Coverage (implementation plan §4.6)
 
@@ -127,7 +160,31 @@ Rows are counted with prefix selectors: `[data-testid^="task-row-"]`,
 | US-E2.2 | `05-priorities-ui.test.ts › "US-E2.2: deleting a priority that tasks use is blocked, with the reason and the remedy"` |
 | US-E2.3 | `05-priorities-ui.test.ts › "US-E2.3: deleting the project's last remaining priority is blocked even when unused"` |
 | US-E2.4 | `05-priorities-ui.test.ts › "US-E2.4: deleting the default reassigns it to the first priority by order"` |
-| US-F1 – US-F6 | **Open gap** — the agent does not exist yet (Phase 4/5, `06-agent-chat.test.ts`) |
+| US-F1.1 | `06-agent-chat.test.ts › "US-F1.1/1.2 + US-F2: the pane is a live agent that answers from real data"` |
+| US-F1.2 | `06-agent-chat.test.ts › "US-F1.1/1.2 + US-F2: …"` |
+| US-F1.3 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: the conversation survives a reload, pronoun and all"` |
+| US-F1.4 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` (the literal "move that one to Done") |
+| US-F2.1 | `06-agent-chat.test.ts › "US-F1.1/1.2 + US-F2: …"` |
+| US-F2.2 | `06-agent-chat.test.ts › "US-F1.1/1.2 + US-F2: …"` (fixtures written moments before the turn) |
+| US-F2.3 | `06-agent-chat.test.ts › "US-F1.1/1.2 + US-F2: …"` (tasks found by title, via `list_tasks`) |
+| US-F2.4 | Covered by the Phase 4 story harness (`scripts/verify-agent-stories.ts`); not re-asserted here, since "says it does not exist" is prose |
+| US-F3.1 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` (create with defaults) |
+| US-F3.2 | `06-agent-chat.test.ts › "US-F3.2/3.5 + US-F6.1: a single-task status move runs with no approval gate"` |
+| US-F3.3 | `06-agent-chat.test.ts › "US-F3.3 + US-F5.1/5.2: deleting a task gates, and denying leaves it alone"` |
+| US-F3.4 | `06-agent-chat.test.ts › "US-F3.4: moving a task to another project is refused, and nothing changes"` |
+| US-F3.5 | `06-agent-chat.test.ts › "US-F3.2/3.5 + US-F6.1: …"` (asserts **no** approval card) |
+| US-F4.1 | Phase 4 story harness; `06` covers the delete half of Epic F4 |
+| US-F4.2 | Phase 4 story harness |
+| US-F4.3 | `06-agent-chat.test.ts › "US-F4.3: deleting a project gates too — the card is not task-specific"` |
+| US-F4.4 | Phase 4 story harness (blocked-delete wording is asserted verbatim there) |
+| US-F5.1 | `06-agent-chat.test.ts › "US-F3.3 + US-F5.1/5.2: …"` and `"US-F5.2/5.3: …"` |
+| US-F5.2 | `06-agent-chat.test.ts › "US-F5.2/5.3: a bulk card states how many and names every task"` |
+| US-F5.3 | `06-agent-chat.test.ts › "US-F5.2/5.3: …"` (approve applies all three) and the deny half of the delete cycle |
+| US-F5.4 | `06-agent-chat.test.ts › "US-F5.2/5.3: …"` (the settled `action-entry` reports the outcome) |
+| US-F6.1 | `06-agent-chat.test.ts › "US-F3.2/3.5 + US-F6.1: …"` (exactly one entry per action) |
+| US-F6.2 | Not asserted — plan §4.5 forbids asserting the assistant's prose |
+| US-F6.3 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` |
+| US-F6.4 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` (entries re-render after reload) |
 | US-G1 – US-G4 | **Open gap** — live sync and parity (Phase 6/7, `07-live-sync.test.ts`, `08-parity.test.ts`) |
 
 ## Baselines

@@ -15,7 +15,11 @@ import { resolveTestDbUrl } from "../../../lib/db/urls.ts"
 
 import { createBrowser, type Browser } from "./browser.ts"
 import { closeTestDb, migrateTestDatabase, resetTestDatabase } from "./db.ts"
-import { startE2eServer, type E2eServer } from "./server.ts"
+import {
+  startE2eServer,
+  type E2eServer,
+  type E2eServerOptions,
+} from "./server.ts"
 
 const artifactsRoot = fileURLToPath(new URL("../artifacts/", import.meta.url))
 
@@ -45,7 +49,15 @@ export type Suite = {
   open(path?: string): Promise<void>
 }
 
-export function setupSuite(name: string): Suite {
+/**
+ * `options.eve` additionally starts the agent server the production topology
+ * needs (see `./server.ts`). Opt-in per suite, so 01–05 stay fast: only the
+ * agent-chat suite pays the eve boot and the fixed-port constraint.
+ */
+export function setupSuite(
+  name: string,
+  options: E2eServerOptions = {}
+): Suite {
   let server: E2eServer | undefined
   let browser: Browser | undefined
 
@@ -53,7 +65,7 @@ export function setupSuite(name: string): Suite {
     assertE2eEnv()
     await migrateTestDatabase()
     await resetTestDatabase()
-    server = await startE2eServer()
+    server = await startE2eServer(options)
     browser = createBrowser(`e2e-${name}`)
   })
 

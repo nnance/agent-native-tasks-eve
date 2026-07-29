@@ -190,6 +190,45 @@ export function createBrowser(session: string) {
         `!document.querySelector(${JSON.stringify(selector)})`
       ),
 
+    /** Raw page evaluation, for predicates the CLI has no verb for. */
+    evaluate: async <T>(expression: string) =>
+      (await json<{ result: T }>(["eval", expression])).result,
+
+    /** The page's visible text, for substring polling. */
+    bodyText: async () =>
+      (await json<{ result: string }>(["eval", "document.body.innerText"]))
+        .result,
+
+    /**
+     * Node-side polling, for waits longer than the CLI can express.
+     *
+     * `agent-browser wait` has no `--timeout` flag — `--help` lists one only
+     * under `--download` — so a 90s agent-turn wait cannot be a single call,
+     * and raising the `execFile` timeout would not help because the CLI's own
+     * internal wait expires first. Each poll here is a short call well inside
+     * `CLI_TIMEOUT_MS`.
+     *
+     * On timeout it throws with the label and the elapsed time, so a hung
+     * agent turn reports as a legible failure rather than a bare assertion.
+     */
+    waitUntil: async (
+      predicate: () => Promise<boolean>,
+      options: { timeoutMs: number; intervalMs?: number; label: string }
+    ) => {
+      const started = Date.now()
+      const deadline = started + options.timeoutMs
+      const interval = options.intervalMs ?? 1_000
+
+      while (Date.now() < deadline) {
+        if (await predicate()) return
+        await new Promise((resolve) => setTimeout(resolve, interval))
+      }
+
+      throw new Error(
+        `Timed out after ${Date.now() - started}ms waiting for: ${options.label}`
+      )
+    },
+
     errors: async () =>
       (await json<{ errors: { text: string }[] }>(["errors"])).errors,
     clearErrors: () => call("errors", "--clear"),
@@ -204,5 +243,34 @@ export function createBrowser(session: string) {
     a11y: (tags: string) => json<unknown>(["a11y", "--tags", tags]),
 
     close: () => call("close"),
+  }
+}
+
+/**
+ * The long-wait helpers, built on `waitUntil`.
+ *
+ * Separate from `createBrowser` so 01–05 keep their existing defaults
+ * untouched: only the agent-chat suite, whose turns really do take tens of
+ * seconds, reaches for these.
+ */
+export function slowWaits(browser: Browser) {
+  return {
+    waitForSlow: (selector: string, timeoutMs: number) =>
+      browser.waitUntil(async () => (await browser.count(selector)) > 0, {
+        timeoutMs,
+        label: `${selector} to appear`,
+      }),
+
+    waitGoneSlow: (selector: string, timeoutMs: number) =>
+      browser.waitUntil(async () => (await browser.count(selector)) === 0, {
+        timeoutMs,
+        label: `${selector} to disappear`,
+      }),
+
+    waitTextSlow: (text: string, timeoutMs: number) =>
+      browser.waitUntil(async () => (await browser.bodyText()).includes(text), {
+        timeoutMs,
+        label: `the text ${JSON.stringify(text)} to appear`,
+      }),
   }
 }

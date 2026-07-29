@@ -41,5 +41,9 @@ next-env.d.ts
 # eve dev runtime artifacts
 .eve
 
+# eve build output — `eve build` writes the agent server that `next start`
+# proxies /eve/v1/* to on port 4274.
+/.output
+
 # e2e failure artifacts (console dumps, screenshots)
 /tests/e2e/artifacts/

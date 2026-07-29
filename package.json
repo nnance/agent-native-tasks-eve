@@ -13,7 +13,7 @@
     "test": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/unit/**/*.test.ts\" \"tests/api/**/*.test.ts\"",
     "test:unit": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/unit/**/*.test.ts\"",
     "test:api": "node --env-file=.env.local --env-file-if-exists=.env.test --test \"tests/api/**/*.test.ts\"",
-    "test:e2e": "next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
+    "test:e2e": "pnpm exec eve build && next build && node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
     "test:e2e:only": "node --env-file=.env.local --env-file-if-exists=.env.test --test --test-concurrency=1 \"tests/e2e/**/*.test.ts\"",
     "test:all": "pnpm test && pnpm test:e2e",
     "verify:agent": "node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-tools.ts",
@@ -26,7 +26,6 @@
     "db:reset:test": "node --env-file=.env.local --env-file-if-exists=.env.test scripts/reset.ts --target=test"
   },
   "dependencies": {
-    "@ai-sdk/react": "^4.0.40",
     "@base-ui/react": "^1.6.0",
     "@shadcn/helpers": "^0.1.0",
     "@shadcn/react": "^0.2.1",

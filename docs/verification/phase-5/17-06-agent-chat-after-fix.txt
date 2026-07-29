@@ -1,0 +1,45 @@
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-F1.1/1.2 + US-F2: the pane is a live agent that answers from real data (18016.135291ms)
+✔ US-F3.2/3.5 + US-F6.1: a single-task status move runs with no approval gate (14815.637666ms)
+✔ US-F3.3 + US-F5.1/5.2: deleting a task gates, and denying leaves it alone (15387.306208ms)
+✔ US-F5.1: a pending approval cannot be pushed off screen by the next message (10390.081292ms)
+✔ US-F4.3: deleting a project gates too — the card is not task-specific (16249.317875ms)
+✖ US-F5.2/5.3: a bulk card states how many and names every task (140994.75825ms)
+✔ US-F1.3/1.4 + US-F6.3: the conversation survives a reload, pronoun and all (19339.37425ms)
+✔ US-F3.4: moving a task to another project is refused, and nothing changes (8888.373417ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 255134.544625
+
+✖ failing tests:
+
+test at tests/e2e/06-agent-chat.test.ts:393:1
+✖ US-F5.2/5.3: a bulk card states how many and names every task (140994.75825ms)
+  Error: Timed out after 120148ms waiting for: the agent's turn to settle
+      at Object.waitUntil (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/e2e/harness/browser.ts:227:13)
+      at async turnSettled (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/e2e/06-agent-chat.test.ts:93:3)
+      at async TestContext.<anonymous> (file:///Users/nicknance/Developer/genai/agent-native-tasks-eve/tests/e2e/06-agent-chat.test.ts:457:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

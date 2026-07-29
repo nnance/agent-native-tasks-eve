@@ -1,0 +1,10 @@
+The 06-agent-chat tests, extracted from the third and final full pnpm test:e2e
+run (docs/verification/phase-5/15-test-e2e-run-3.txt) on the code as merged.
+
+✔ US-F1.1/1.2 + US-F2: the pane is a live agent that answers from real data (18308.874833ms)
+✔ US-F3.2/3.5 + US-F6.1: a single-task status move runs with no approval gate (16111.007416ms)
+✔ US-F3.3 + US-F5.1/5.2: deleting a task gates, and denying leaves it alone (16534.263666ms)
+✔ US-F4.3: deleting a project gates too — the card is not task-specific (18568.0095ms)
+✔ US-F5.2/5.3: a bulk card states how many and names every task (23859.867125ms)
+✔ US-F1.3/1.4 + US-F6.3: the conversation survives a reload, pronoun and all (17601.333625ms)
+✔ US-F3.4: moving a task to another project is refused, and nothing changes (10773.330667ms)
