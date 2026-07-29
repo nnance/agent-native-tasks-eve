@@ -126,6 +126,11 @@ test("US-B2.1/2.2: rows show title + chips, sorted priority-desc then oldest-fir
   })
 
   await suite.open()
+  // `open()` waits for `networkidle`, which is not the same moment the task
+  // query has resolved: TanStack fetches after hydration, so on a slow
+  // database the list is still empty when the page goes quiet. Observed as
+  // `actual: []` against this assertion on a full-suite run.
+  await browser.waitCount(tidPrefix("task-row-"), 4)
 
   assert.deepEqual(await visibleTitles(), [
     "High one",
@@ -156,6 +161,8 @@ test("US-B2.3/2.4: completed tasks are hidden, then shown last and marked", asyn
   })
 
   await suite.open()
+  // Same post-hydration race as US-B2.1/2.2 above.
+  await browser.waitCount(tidPrefix("task-row-"), 1)
 
   assert.deepEqual(await visibleTitles(), ["Still open"])
   assert.equal(await browser.visible(tid(`task-row-${finished.id}`)), false)
@@ -218,6 +225,8 @@ test("US-B3.1/3.2: project, status and priority chips filter individually and to
   await makeTask({ projectId: other.id, title: "Website work" })
 
   await suite.open()
+  // Same post-hydration race again.
+  await browser.waitCount(tidPrefix("task-row-"), 4)
   assert.equal(await browser.count(tidPrefix("task-row-")), 4)
 
   await browser.click(tid(`filter-project-${seeded.id}`))
