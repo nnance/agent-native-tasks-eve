@@ -15,6 +15,9 @@ const eslintConfig = defineConfig([
     // eve's dev server writes a full snapshot of the source tree here on
     // every boot, so linting it re-reports every warning once per snapshot.
     ".eve/**",
+    // `eve build` writes the bundled agent server here; it is generated,
+    // minified output, not source.
+    ".output/**",
     "drizzle/**",
   ]),
 ]);
