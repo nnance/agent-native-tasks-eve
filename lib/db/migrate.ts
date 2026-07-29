@@ -1,6 +1,6 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator"
 
-import { createDatabase } from "./connect.ts"
+import { createDatabase, waitForDatabase } from "./connect.ts"
 import { describeDbUrl, resolveDbUrls, type DbTarget } from "./urls.ts"
 
 /**
@@ -28,6 +28,9 @@ export async function runMigrations(
   const { database, close } = createDatabase(direct, { max: 1 })
 
   try {
+    // Neon scales idle compute to zero; the first connect after a suspend
+    // fails with ETIMEDOUT rather than waiting for the resume.
+    await waitForDatabase(database)
     await migrate(database, { migrationsFolder: MIGRATIONS_FOLDER })
     return { target, database: describeDbUrl(direct) }
   } finally {

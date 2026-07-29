@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm"
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 
@@ -34,6 +35,11 @@ export function createDatabase(
   const client = postgres(connectionString, {
     max: options.max ?? 5,
     prepare: false,
+    // Neon suspends idle compute (scale-to-zero). The first connection after a
+    // suspend has to wait for a resume, and the driver's default budget is not
+    // always enough — the observed failure is a bare `connect ETIMEDOUT` on the
+    // first attempt, with every subsequent connect succeeding in under 3s.
+    connect_timeout: 30,
   })
 
   return {
@@ -41,5 +47,50 @@ export function createDatabase(
     close: async () => {
       await client.end({ timeout: 5 })
     },
+  }
+}
+
+/** Connection errors that mean "the compute was asleep", not "the query is wrong". */
+const COLD_START_CODES = new Set([
+  "ETIMEDOUT",
+  "ECONNRESET",
+  "ECONNREFUSED",
+  "CONNECT_TIMEOUT",
+])
+
+/**
+ * Waits for a scale-to-zero database to actually be reachable.
+ *
+ * Neon's free tier suspends compute after a few minutes idle. Measured
+ * behaviour against the test project: the first connect after a suspend fails
+ * with `ETIMEDOUT`, then connects succeed in 0.8-2.6s. Left alone this reads as
+ * intermittent test failure — a different test each run, always passing in
+ * isolation, because by then something else has woken the database.
+ *
+ * This is deliberately **not** a retry around assertions, which plan §4.5
+ * forbids. It retries *establishing a connection*, before any test logic runs,
+ * and only for the error codes above; a genuine query failure still propagates
+ * on the first attempt.
+ */
+export async function waitForDatabase(
+  database: Database,
+  { attempts = 5, delayMs = 2_000 }: { attempts?: number; delayMs?: number } = {}
+): Promise<void> {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      await database.execute(sql`select 1`)
+      return
+    } catch (error) {
+      const code = (error as { code?: string }).code ?? ""
+
+      if (!COLD_START_CODES.has(code) || attempt === attempts) {
+        throw error
+      }
+
+      process.stderr.write(
+        `Database not reachable yet (${code}); resume attempt ${attempt}/${attempts - 1}.\n`
+      )
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    }
   }
 }

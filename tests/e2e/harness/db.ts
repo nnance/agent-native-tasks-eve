@@ -14,7 +14,11 @@
 
 import { asc, eq } from "drizzle-orm"
 
-import { createDatabase, type Database } from "../../../lib/db/connect.ts"
+import {
+  createDatabase,
+  waitForDatabase,
+  type Database,
+} from "../../../lib/db/connect.ts"
 import { runMigrations } from "../../../lib/db/migrate.ts"
 import {
   priorities,
@@ -44,9 +48,18 @@ export async function closeTestDb(): Promise<void> {
 
 let migrated = false
 
-/** Once per test process — the schema cannot change between tests. */
+/**
+ * Once per test process — the schema cannot change between tests.
+ *
+ * Wakes the database first. Neon's free tier scales compute to zero when idle,
+ * and the first connect after a suspend fails with `ETIMEDOUT`. Doing this once
+ * here, before migration, is what stops a cold start from being charged to
+ * whichever test happened to run first — the failure mode that looked like
+ * random flake across suites.
+ */
 export async function migrateTestDatabase(): Promise<void> {
   if (migrated) return
+  await waitForDatabase(testDb())
   await runMigrations({ target: "test" })
   migrated = true
 }
