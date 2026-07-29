@@ -517,10 +517,70 @@ should be checked against `ETIMEDOUT` before anything else is suspected.
   captured run is 229s for six tests, comparable to `06`. If it ever becomes a
   problem, US-G1.2's three prompts are the obvious thing to split — but not
   before Phase 7, which needs the full suite green as its completion gate.
+- **The intermittent full-suite failures are caused by the Neon test project,
+  not by this phase's code.** This is the one assumption in the list that is
+  *not* verified — it is a strong correlation across four runs, not a proof.
+  Basis, mechanism, and what would settle it are set out in full under
+  [Known gaps](#known-gaps-and-what-phase-7-inherits) below. If it is wrong —
+  if the slow turns have a separate cause — then the fix belongs in the harness
+  or the agent, and emphatically not in a larger timeout.
 
 ---
 
-## Known issue Phase 7 must plan around: the full E2E run is not reliably green
+## Deviations from the implementation plan
+
+Three, all recorded above with their reasoning; collected here so a reader
+comparing this branch against `docs/implementation-plan.md` can find them
+without reading the whole record.
+
+1. **Plan §5.1's event name was corrected in place.** The plan said
+   `useEveAgent({ onEvent })` watches "action/tool-result events". No such
+   event exists on the eve 0.27.8 wire, and a handler matching that string
+   would have silently never fired — a permanently stale pane with no error
+   anywhere. The implementation keys off `action.result` with
+   `status: "completed"` instead, read out of
+   `node_modules/eve/dist/src/protocol/message.d.ts`. §5.1 was edited to say
+   so, with a note on what it used to say. This is the same discipline Phase 5
+   was forced into when the plan's "tool-call/tool-result parts" turned out to
+   be a single `dynamic-tool` part type. Details:
+   [Invalidation keys off `action.result`](#invalidation-keys-off-actionresult-with-status-completed).
+
+2. **Seven missing settle points were fixed across `tests/e2e/02`, `04` and
+   `05`** — Phase 3 files this phase does not own, and scope the plan did not
+   assign to Phase 6. They are real races (`openLists()` waited on the projects
+   query rather than the panel's own; the filter chips had no settle point at
+   all), exposed rather than caused by database latency. Taken on because this
+   phase's exit evidence *is* a full-suite run, and a suite that drops four
+   tests under latency is not evidence. No assertion was weakened or removed.
+   Details:
+   [Four tests in `02` and `05`](#four-tests-in-02-and-05-were-fixed-outside-this-phases-scope).
+
+3. **`TURN_MS` raised from 120s to 180s in `06` (a Phase 5 file) and `07`, plus
+   a 300s `RACE_TURN_MS` for US-G3.2 alone.** Each raise is backed by a
+   measurement and none moved an assertion, following the precedent Phase 5 set
+   when it raised 90s to 120s. Stated plainly because three raises in one phase
+   is the point at which a reader should be suspicious rather than reassured —
+   which is why the fourth raise was deliberately refused. Details:
+   [`TURN_MS` raised](#turn_ms-raised-from-120s-to-180s-in-06-and-07).
+
+One addition the build blueprint did not call for, which is an amendment rather
+than a departure: **`evals/support/transcript.ts`**. It is required because a
+parked turn's `.message` is `undefined` in eve 0.27.8 —
+`extractCompletedMessage` drops any `message.completed` whose `finishReason` is
+`"tool-calls"`, which every pre-approval message is. Without it the two HITL
+evals grade an empty string and score 0%. Details:
+[A parked turn's `.message` is `undefined`](#a-parked-turns-message-is-undefined-and-it-cost-two-evals-a-0).
+
+Everything else follows the plan: no new dependency (§1.1's table gains no
+row), the test layout stays `tests/unit` / `tests/api` / `tests/e2e` per §4.1,
+convergence is unconditioned last-write-wins per §5.4, and the focus/poll
+backstop is §5.3's as written.
+
+---
+
+## Known gaps and what Phase 7 inherits
+
+### The full E2E run is not reliably green
 
 Stated plainly, because it is the least comfortable fact in this record and
 Phase 7's completion gate depends on it.
@@ -571,6 +631,30 @@ one phase is where inflating a timeout stops being synchronisation and starts
 being concealment — and if the cause is a database that is refusing
 connections, no budget is large enough to be honest.
 
+### Not finished: one clean full-suite run
+
+The single piece of this phase's scope that was not landed is **a single
+end-to-end `pnpm test:e2e` run with all 62 tests green**. The best result was
+60/62, and the two closing attempts were wrecked by the Neon test database (35
+and 40 `connect ETIMEDOUT` respectively, one of which took out the entire `07`
+suite at its `migrateTestDatabase()` step).
+
+Every phase deliverable is nonetheless green *in isolation*, and each is
+captured as evidence in `docs/verification/phase-6/`: `07` is 6/6 twice, `06`
+is 8/8, unit + API are 368/368, and the evals are 4/4 on both `pnpm eval` and
+`pnpm eval --strict`. The exit criteria are met; what is missing is the single
+combined run that would let Phase 7 lean on the whole suite as a gate.
+
+### Carried forward to Phase 7
+
+- **Root-cause the slow-agent-turn failures to certainty, before US-G4's
+  capstone leans on a full green run.** This is the recommended *first* Phase 7
+  task. The instrumentation that would settle it — per-turn timings from the
+  eve server and per-query timings from the `postgres` pool — is what the
+  harness currently lacks.
+- **US-G4, parity across the whole capability set, is untouched.** It is Phase
+  7's scope, and `tests/e2e/README.md`'s coverage table now marks it as the one
+  remaining Epic G gap.
 - `tests/e2e/README.md`'s coverage table now lists US-G1.1 through US-G3.2. The
   one remaining Epic G gap is **US-G4**, the parity capstone, which Phase 7
   owns as `08-parity.test.ts`.
