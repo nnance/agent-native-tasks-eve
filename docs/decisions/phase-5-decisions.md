@@ -290,6 +290,38 @@ first. `waitUntil` plus `slowWaits()` poll from Node with short calls well
 inside the existing timeout, and fail with the label and elapsed time so a hung
 turn reports legibly. Strictly additive; 01–05 keep their defaults.
 
+### The approval card owns its own visibility
+
+The message scroller implements "your question stays at the top" with a
+per-message anchor plus a viewport-height spacer under the last message.
+Measured in the browser, that put a **live approval card entirely below the
+fold** — card top 637 in a viewport ending at 454 — behind a scroll-to-bottom
+button; and scrolling to `end` then landed a full viewport *past* the last real
+content, because the spacer counts toward `scrollHeight`.
+
+A control the user has to go looking for is not a safety gate. This pane opts
+out of both halves (`scrollAnchor={false}`, `spacerClassName="h-0"`), and
+`ApprovalCard` additionally calls `scrollIntoView({ block: "nearest" })` on
+mount so the guarantee lives on the control rather than in the scroller's
+heuristics. `nearest` is a no-op when the card is already visible. Verified
+after the fix: exactly one card, fully inside the viewport, across a reload.
+
+### Only the newest message can render a live approval card
+
+After a reload, an **already-answered** `ask_question` came back as
+`approval-requested`. The cause is by design in eve: the event that resolves it
+client-side is `client.input.responded`, a reducer-facing projection event that
+the docs state is deliberately **not** exposed through `events` — the array we
+persist. So a replayed transcript grows a scrollback of live-looking Approve
+buttons for decisions the user already made, which is the worst available
+failure mode for a safety control.
+
+eve parks the whole turn on an `input.requested`, and its frontend guide places
+the pending request on "a `dynamic-tool` part of the latest message". So
+`ToolPart` takes a `live` flag, true only for the newest message; every earlier
+`approval-requested` part renders as history. Measured after the fix: one card,
+not two.
+
 ### Three prose defects the browser pass caught
 
 Each was found by driving the real agent and **looking at the screenshot**, not
@@ -330,6 +362,28 @@ string surgery on a finished sentence.
 
 The generic noun derivation turned `status` into `statu`. Words ending in `us`
 or `ss` are left alone. Caught by the unit test before it reached a screen.
+
+### The E2E reset uses `DELETE`, and the first agent turn gets 120s
+
+Two harness findings from the first full runs, both recorded rather than
+papered over.
+
+`TRUNCATE` needs an `AccessExclusiveLock` on every table. From this phase the
+agent suite runs a **second** process against the same database, so the
+truncate blocked the eve server's writer while that writer held the row locks
+the truncate was waiting for — `40P01 deadlock detected`, on two tests of the
+first full `06` run. `DELETE` takes only `RowExclusiveLock`, so the cycle
+cannot form; the identity restart is not missed, because every key is a UUID.
+
+Separately, a stabilisation run timed out on the **first** turn of the file at
+90s while every other turn in the same run settled in 15–24s: that turn pays a
+cold eve workflow and a cold model connection the rest do not. The budget is
+now 120s. Raising a synchronisation budget to match measured behaviour is not
+the same as retrying flake away — no assertion moved. In the same pass the
+grounded-read test stopped waiting on `list_tasks` by name and now waits for
+the turn to settle and asserts a settled *read* plus the two fixture titles:
+the story's claim is "answered from current data", and pinning it to one tool
+name would fail a correct answer reached a slightly different way.
 
 ---
 

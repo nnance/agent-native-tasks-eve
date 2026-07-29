@@ -60,14 +60,14 @@ appeared on any command line.
 | [`03-approval-card-delete.png`](./03-approval-card-delete.png) | The single-task delete approval card, close up. `delete_task`, severity `destructive`, the task **named** — "Delete “Draft the launch plan”" — the real tool name on the machine-record line, the consequence sentence, and a confirm button that says the verb rather than "Approve". This is the plan §8 risk 6 evidence. |
 | [`04-approval-card-bulk.png`](./04-approval-card-bulk.png) | The bulk card: "Update 3 tasks", all three tasks enumerated by name under `TASKS`, `CHANGE / Status → Done` with the status resolved to its name, `data-count="3"`. Severity `write`, so it is accented in the primary colour rather than in a delete's red. Captured **after a page reload**, which is also the proof that a turn parked at an approval survives persistence. |
 | [`05-approved-and-landed.png`](./05-approved-and-landed.png) | The same conversation after Approve: a settled `action-entry` reading "✓ Updated 3 tasks / Status → Done", and the left pane already updated — the three tasks are completed and therefore hidden. |
-| [`06-agent-chat-run.txt`](./06-agent-chat-run.txt) | The `06-agent-chat` suite against the production topology: 7/7. |
+| [`06-agent-chat-run.txt`](./06-agent-chat-run.txt) | The seven `06-agent-chat` tests, extracted from the final full run: 7/7 against the production topology, 10–24s per agent turn. |
+| [`07-ask-question-card.png`](./07-ask-question-card.png) | `ask_question` through the same component: the model's real prompt rendered verbatim, neutral severity, and its own three options as buttons (`approval-option-<id>`). |
+| [`08-a11y-chat-with-approval.json`](./08-a11y-chat-with-approval.json) | `agent-browser a11y --tags wcag2a,wcag2aa` with a live conversation and an approval card on screen — zero violations. |
+| [`09-question-then-bulk-delete.png`](./09-question-then-bulk-delete.png) | The answered question as a structured entry (`Question → Which task should I delete?`), on the way to the `bulk_delete_tasks` card it produced. |
 | [`10-typecheck.txt`](./10-typecheck.txt) | `pnpm typecheck` — clean. |
 | [`11-lint.txt`](./11-lint.txt) | `pnpm lint` — 0 errors. (The one warning is in `.remember/tmp/`, a tool scratch file outside the project's source.) |
 | [`12-test.txt`](./12-test.txt) | `pnpm test` — 349/349 unit + API tests, including the new `tests/unit/chat/describe-tool-call.test.ts`. |
 | [`13-test-e2e-run-1.txt`](./13-test-e2e-run-1.txt), [`14`](./14-test-e2e-run-2.txt), [`15`](./15-test-e2e-run-3.txt) | Three consecutive full `pnpm test:e2e` runs on the final code, each from a clean `pnpm db:reset:test` — **55/55 every time**. |
-| [`07-ask-question-card.png`](./07-ask-question-card.png) | `ask_question` through the same component: the model's real prompt rendered verbatim, neutral severity, and its own three options as buttons (`approval-option-<id>`). |
-| [`08-a11y-chat-with-approval.json`](./08-a11y-chat-with-approval.json) | `agent-browser a11y --tags wcag2a,wcag2aa` with a live conversation and an approval card on screen — zero violations. |
-| [`09-question-then-bulk-delete.png`](./09-question-then-bulk-delete.png) | The answered question as a structured entry (`Question → Which task should I delete?`), on the way to the `bulk_delete_tasks` card it produced. |
 
 ---
 
@@ -86,9 +86,9 @@ appeared on any command line.
 
 | # | Criterion | How it was verified |
 | --- | --- | --- |
-| 2.1 | Answered from current data | `06 › "US-F1.1/1.2 + US-F2"` seeds two tasks, asks what is in the project, waits for a settled `list_tasks` entry, and asserts both fixture titles are on the page. |
+| 2.1 | Answered from current data | `06 › "US-F1.1/1.2 + US-F2"` seeds two tasks, asks what is in the project, and after the turn settles asserts (a) a settled read action entry rendered — the agent looked — and (b) both fixture titles are on the page. |
 | 2.2 | No stale reads | The fixtures are written moments before the turn, in the same test. |
-| 2.3 | Finds tasks by text rather than by guessing | The `list_tasks` action entry renders the search it actually ran (`Search → "…"`), visible in the transcript. |
+| 2.3 | Finds tasks by text rather than by guessing | The `list_tasks` action entry renders the search it actually ran — `Search → "Pin down the schedule"` in `tests/e2e/artifacts/06-agent-chat/final.png`, `Search → "launch"` in `07-ask-question-card.png`. |
 | 2.4 | Says so when something does not exist | Covered by the Phase 4 story harness. Not re-asserted here: "says it does not exist" is prose, and plan §4.5 forbids asserting the assistant's wording. |
 
 ### US-F3 — Manage tasks via the agent
