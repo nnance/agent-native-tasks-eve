@@ -425,8 +425,18 @@ and the whole run's wall time was 23% longer than the run before it.
 One of the two is diagnostic: it was `07`'s fetch-storm test timing out on
 `turnSettled()` after a **read-only** question. `turnSettled()` already counts
 a park at `chat-blocked` as settled, so that turn was genuinely still in flight
-at 120 seconds. Gateway latency, not a stuck or parked turn — and the simplest
-explanation for the `06` timeout minutes earlier.
+at 120 seconds — not parked, not stuck on an approval.
+
+**What made it slow is not established, and the first version of this record
+claimed it was.** It said "gateway latency", which was a guess dressed as a
+finding. The evidence since points elsewhere: a later confirming run failed
+eleven tests outright with **forty** `connect ETIMEDOUT` errors against the
+Neon test project, and a manual probe immediately afterwards took 3.2s to
+answer `select 1` from cold. Every tool the agent calls reaches Postgres
+through `lib/actions`, so a cold or throttled test database stalls an entire
+turn — which fits both timeouts at least as well as model latency, and fits the
+four separate `ETIMEDOUT` episodes seen across this phase's runs much better.
+Model/gateway latency is not ruled out; it is simply not evidenced.
 
 Raised to 180s in both, following the precedent Phase 5's record set when it
 raised 90s to 120s for the same reason: "raising a synchronisation budget to
@@ -448,14 +458,28 @@ next person should be suspicious rather than reassured. The thing that would
 settle it is a run with the eve server's per-turn timings captured, which this
 harness does not currently keep.
 
-### The Neon test project intermittently refuses the first connection
+### The Neon test project is intermittently unreachable, and it is the phase's main source of noise
 
-Two `pnpm eval` runs failed during `scripts/reset.ts` with `ETIMEDOUT` on
-`CREATE SCHEMA IF NOT EXISTS "drizzle"`, immediately after the drop succeeded —
-a cold Neon compute that had scaled to zero. Both retried clean with no change.
-Recorded rather than papered over: the failure is loud, happens before any
-model call, and no retry loop was added, because a retry around a destructive
-reset is the kind of convenience that hides a real outage.
+Four separate episodes across this phase's runs:
+
+1. and 2. Two `pnpm eval` runs failed inside `scripts/reset.ts` with `ETIMEDOUT`
+   on `CREATE SCHEMA IF NOT EXISTS "drizzle"`, immediately after the drop
+   succeeded. Both retried clean with no change.
+3. The two 120s turn timeouts above — cause unproven, but this is the leading
+   suspect.
+4. A full `pnpm test:e2e` run failed **eleven** tests with **forty**
+   `connect ETIMEDOUT 54.92.227.85:5432`. `06` collapsed entirely because
+   `resetTestDatabase()` in `beforeEach` could not connect; `02`'s two failures
+   were the app rendering an empty list and an empty `<select>` for the same
+   reason. A probe minutes later answered `select 1` in 3.2s from cold.
+
+No retry loop was added anywhere. A retry around a destructive reset is the
+kind of convenience that hides a real outage, and a retry inside the E2E
+harness would convert an infrastructure failure into a slow pass. The failures
+are loud, they name the host and port, and that is the correct behaviour.
+
+The practical consequence for whoever runs this next: a red full-suite run
+should be checked against `ETIMEDOUT` before anything else is suspected.
 
 ---
 

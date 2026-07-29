@@ -56,8 +56,11 @@ const suite = setupSuite("07-live-sync", { eve: true })
  * 180s rather than 120s: a full-suite run 23% slower than its predecessor
  * timed out two turns at two minutes, one of them the read-only question turn
  * in the fetch-storm test below. Since `turnSettled()` counts a park as
- * settled, that turn was genuinely still in flight — gateway latency, not a
- * stuck turn. No assertion changed.
+ * settled, that turn was genuinely still in flight rather than parked.
+ *
+ * The cause is not established — see `06`'s note. The Neon test project is the
+ * leading suspect, having later failed eleven tests with forty `ETIMEDOUT`s,
+ * and every tool the agent calls goes through it. No assertion changed.
  */
 const TURN_MS = 180_000
 

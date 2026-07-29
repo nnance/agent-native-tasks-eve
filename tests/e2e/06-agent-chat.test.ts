@@ -52,7 +52,13 @@ const suite = setupSuite("06-agent-chat", { eve: true })
  * previous one timed out two turns at 120s, in two different files. One of
  * them was `07`'s **read-only** question turn — and `turnSettled()` already
  * counts a park as settled, so that turn was genuinely still in flight at two
- * minutes. Gateway latency, not a stuck turn.
+ * minutes rather than parked or stuck.
+ *
+ * What made it slow is **not** established. The strongest candidate is the
+ * Neon test project: a later run failed eleven tests outright with forty
+ * `connect ETIMEDOUT` errors against it, and every tool the agent calls
+ * reaches Postgres, so a cold or throttled database stalls a whole turn.
+ * Model/gateway latency is the other candidate and was not ruled out.
  *
  * Raising a synchronisation budget to match measured reality is not the same
  * as retrying flake away: no assertion moved, here or there.
