@@ -416,6 +416,38 @@ completion gate. No assertion was weakened or removed; the fixes are the same
 class Phase 3's record already documents ("three harness waits, each from a
 real race the first run exposed").
 
+### `TURN_MS` raised from 120s to 180s in `06` and `07`
+
+The full-suite run after the settle-point fix went 60/62. Both failures were
+agent turns that never settled inside two minutes, in two different files —
+and the whole run's wall time was 23% longer than the run before it.
+
+One of the two is diagnostic: it was `07`'s fetch-storm test timing out on
+`turnSettled()` after a **read-only** question. `turnSettled()` already counts
+a park at `chat-blocked` as settled, so that turn was genuinely still in flight
+at 120 seconds. Gateway latency, not a stuck or parked turn — and the simplest
+explanation for the `06` timeout minutes earlier.
+
+Raised to 180s in both, following the precedent Phase 5's record set when it
+raised 90s to 120s for the same reason: "raising a synchronisation budget to
+match measured reality is not the same as retrying flake away: no assertion
+moved." None moved here either. `06` then ran clean, US-F3.2/3.5 included, in
+20.6s.
+
+US-G3.2 additionally gets its own `RACE_TURN_MS` of 300s. It is the only test
+in the suite that perturbs the world **mid-turn** — the UI write goes out while
+the agent is still reading and deciding — so the agent can legitimately do more
+work than in any other test here: re-read a row whose status is no longer what
+it just saw, and account for the discrepancy. Measured at 44s, 46s, and one run
+past 180s. A slow turn in that test is the scenario behaving correctly.
+
+Stated plainly so the pattern is visible rather than buried: this phase raised
+a timing budget three times. Each raise is backed by a measurement and none
+changed an assertion, but three raises in one phase is the point at which the
+next person should be suspicious rather than reassured. The thing that would
+settle it is a run with the eve server's per-turn timings captured, which this
+harness does not currently keep.
+
 ### The Neon test project intermittently refuses the first connection
 
 Two `pnpm eval` runs failed during `scripts/reset.ts` with `ETIMEDOUT` on

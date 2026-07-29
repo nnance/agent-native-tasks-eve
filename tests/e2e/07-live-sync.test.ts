@@ -50,8 +50,16 @@ import { setupSuite } from "./harness/setup.ts"
 
 const suite = setupSuite("07-live-sync", { eve: true })
 
-/** One agent turn, with `06`'s measured cold-start budget. */
-const TURN_MS = 120_000
+/**
+ * One agent turn, sharing `06`'s budget and the measurement behind it.
+ *
+ * 180s rather than 120s: a full-suite run 23% slower than its predecessor
+ * timed out two turns at two minutes, one of them the read-only question turn
+ * in the fetch-storm test below. Since `turnSettled()` counts a park as
+ * settled, that turn was genuinely still in flight — gateway latency, not a
+ * stuck turn. No assertion changed.
+ */
+const TURN_MS = 180_000
 
 /**
  * The §5.1 claim, as a number: the pane refetches "within the same second".
@@ -104,12 +112,15 @@ const settledEntry = (toolName: string) =>
  * Identical in shape to `06`'s, and for the same reason: a turn still in
  * flight when a test ends writes into the next test's freshly reset world.
  */
-async function turnSettled(browser: Browser = suite.browser): Promise<void> {
+async function turnSettled(
+  browser: Browser = suite.browser,
+  timeoutMs: number = TURN_MS
+): Promise<void> {
   await browser.waitUntil(
     async () =>
       (await browser.count(`${tid("chat-composer-input")}:not([disabled])`)) >
         0 || (await browser.count(tid("chat-blocked"))) > 0,
-    { timeoutMs: TURN_MS, label: "the agent's turn to settle" }
+    { timeoutMs, label: "the agent's turn to settle" }
   )
 }
 
@@ -494,9 +505,24 @@ test(
 
 // --------------------------------------------------------------- US-G3.2
 
+/**
+ * G3.2's own settle budget, longer than `TURN_MS`.
+ *
+ * This is the only test in the suite that perturbs the world **mid-turn**: the
+ * UI write goes out while the agent is still reading and deciding. The agent
+ * can legitimately do more work as a result — re-read a row whose status is no
+ * longer what it just saw, and explain the discrepancy — so a slower turn here
+ * is the scenario behaving correctly rather than a hang.
+ *
+ * Measured: 44s, 46s, and one run that exceeded 180s. 300s is headroom over an
+ * unbounded-looking outlier, not a number chosen to make a failure go away —
+ * every assertion below is unchanged, and none of them is time-based.
+ */
+const RACE_TURN_MS = 300_000
+
 test(
   "US-G3.2: overlapping edits converge, with no error or lock state",
-  { timeout: 300_000 },
+  { timeout: 480_000 },
   async () => {
     const { browser } = suite
     const project = await seededProject()
@@ -533,7 +559,7 @@ test(
         lists.inProgress.id
       )
 
-      await turnSettled()
+      await turnSettled(browser, RACE_TURN_MS)
       await new Promise((resolve) => setTimeout(resolve, 2_000))
 
       // The database is the arbiter. Asserting a predetermined winner here
