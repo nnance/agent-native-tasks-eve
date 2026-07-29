@@ -87,7 +87,8 @@ test("§8.0: both panes render side by side and stack on a narrow viewport", asy
   assert.equal(await browser.visible(tid("app-shell")), true)
   assert.equal(await browser.visible(tid("task-pane")), true)
   assert.equal(await browser.visible(tid("chat-pane")), true)
-  assert.equal(await browser.visible(tid("chat-placeholder")), true)
+  assert.equal(await browser.visible(tid("chat-conversation")), true)
+  assert.equal(await browser.visible(tid("chat-composer")), true)
   assert.equal(await browser.visible(tid("tab-tasks")), true)
   assert.equal(await browser.visible(tid("tab-lists")), true)
 

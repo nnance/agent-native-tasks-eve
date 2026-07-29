@@ -141,6 +141,10 @@ function MessageAnimatedRow({
             .map((paragraph) => paragraph.trim())
             .filter(Boolean)
 
+          // A part that streamed in with no text of its own renders nothing
+          // rather than a labelled empty box.
+          if (paragraphs.length === 0) return null
+
           if (part.kind === "reasoning") {
             return (
               <div
@@ -153,12 +157,10 @@ function MessageAnimatedRow({
                 </div>
                 <div className="space-y-1.5 text-sm">
                   {paragraphs.map((paragraph, paragraphIndex) => (
-                    <p
+                    <Prose
                       key={`${part.key}-${paragraphIndex}`}
-                      className="whitespace-pre-wrap"
-                    >
-                      {paragraph}
-                    </p>
+                      text={paragraph}
+                    />
                   ))}
                 </div>
               </div>
@@ -172,12 +174,10 @@ function MessageAnimatedRow({
             >
               <BubbleContent className="space-y-2">
                 {paragraphs.map((paragraph, paragraphIndex) => (
-                  <p
+                  <Prose
                     key={`${part.key}-${paragraphIndex}`}
-                    className="whitespace-pre-wrap"
-                  >
-                    {paragraph}
-                  </p>
+                    text={paragraph}
+                  />
                 ))}
               </BubbleContent>
             </Bubble>
@@ -185,6 +185,86 @@ function MessageAnimatedRow({
         })}
       </MessageContent>
     </Message>
+  )
+}
+
+/**
+ * One paragraph of model prose.
+ *
+ * Models write light markdown whether or not you ask them to, and a browser
+ * pass over the real agent showed `**Draft the launch plan**` reaching the
+ * transcript with its asterisks intact. This renders the three constructs that
+ * actually turn up — bullet lines, `**bold**`, and `` `code` `` — and nothing
+ * else. It is deliberately not a markdown parser: §1.1 forbids adding one, and
+ * a hand-rolled parser that tried to be complete would be a far bigger
+ * liability than a few unstyled characters. Anything it does not recognise
+ * renders as the literal text the model wrote.
+ */
+function Prose({ text }: { text: string }) {
+  const lines = text.split("\n")
+  const blocks: Array<
+    { kind: "lines"; lines: string[] } | { kind: "bullets"; items: string[] }
+  > = []
+
+  for (const line of lines) {
+    const bullet = /^\s*[-*]\s+(.*)$/.exec(line)
+    const last = blocks.at(-1)
+
+    if (bullet) {
+      if (last?.kind === "bullets") last.items.push(bullet[1] ?? "")
+      else blocks.push({ kind: "bullets", items: [bullet[1] ?? ""] })
+      continue
+    }
+
+    if (last?.kind === "lines") last.lines.push(line)
+    else blocks.push({ kind: "lines", lines: [line] })
+  }
+
+  return (
+    <>
+      {blocks.map((block, index) =>
+        block.kind === "bullets" ? (
+          <ul key={index} className="list-disc space-y-0.5 pl-5">
+            {block.items.map((item, itemIndex) => (
+              <li key={itemIndex}>
+                <Inline text={item} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p key={index} className="whitespace-pre-wrap">
+            <Inline text={block.lines.join("\n")} />
+          </p>
+        )
+      )}
+    </>
+  )
+}
+
+function Inline({ text }: { text: string }) {
+  const tokens = text.split(/(\*\*[^*\n]+\*\*|`[^`\n]+`)/g)
+
+  return (
+    <>
+      {tokens.map((token, index) => {
+        if (token.startsWith("**") && token.endsWith("**")) {
+          return <strong key={index}>{token.slice(2, -2)}</strong>
+        }
+
+        if (token.startsWith("`") && token.endsWith("`") && token.length > 1) {
+          return (
+            <code
+              key={index}
+              className="rounded bg-muted px-1 py-0.5 font-mono text-[0.8125em]"
+            >
+              {token.slice(1, -1)}
+            </code>
+          )
+        }
+
+        return <React.Fragment key={index}>{token}</React.Fragment>
+      })}
+    </>
   )
 }
 

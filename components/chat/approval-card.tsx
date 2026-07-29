@@ -115,6 +115,8 @@ export function ApprovalCard({
 
   const visible = summary.targets.slice(0, VISIBLE_TARGETS)
   const overflow = summary.targets.slice(VISIBLE_TARGETS)
+  const soleTarget =
+    !isQuestion && summary.count === 1 ? summary.targets[0] : undefined
 
   return (
     <motion.section
@@ -135,7 +137,18 @@ export function ApprovalCard({
 
       <div className="flex flex-col gap-4 px-4 py-3.5">
         <header className="flex items-start justify-between gap-3">
-          <h3 className="text-sm leading-snug font-semibold text-balance">
+          {/* A single target is already named in the headline, so it carries
+              the `approval-target-` hook itself rather than repeating itself
+              in a one-row manifest below. */}
+          <h3
+            data-testid={
+              soleTarget ? `approval-target-${soleTarget.id}` : undefined
+            }
+            title={
+              soleTarget && !soleTarget.resolved ? soleTarget.id : undefined
+            }
+            className="text-sm leading-snug font-semibold text-balance"
+          >
             {isQuestion ? request.prompt : summary.headline}
           </h3>
           <span
@@ -148,7 +161,7 @@ export function ApprovalCard({
           </span>
         </header>
 
-        {summary.targets.length > 0 ? (
+        {summary.count > 1 ? (
           <TargetManifest targets={visible} overflow={overflow} />
         ) : null}
 
