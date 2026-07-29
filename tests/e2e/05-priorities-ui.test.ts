@@ -26,10 +26,23 @@ import { setupSuite } from "./harness/setup.ts"
 
 const suite = setupSuite("05-priorities-ui")
 
+/**
+ * `manage-project-select` renders as soon as the **projects** query resolves,
+ * which is not the same moment the priorities panel has rows: that is a separate
+ * query, keyed by the selected project. Under a slow database the two can be
+ * seconds apart, and every test below clicks a control inside a row — so
+ * without the second wait they intermittently fail with "Element not found"
+ * on a row the app was still fetching. Observed on a full-suite run; each of
+ * these passed on its own.
+ *
+ * Waiting for the loading state to clear, rather than for a row, covers the
+ * empty and error renderings too.
+ */
 async function openLists(): Promise<void> {
   await suite.open()
   await suite.browser.click(tid("tab-lists"))
   await suite.browser.waitFor(tid("manage-project-select"))
+  await suite.browser.waitGone(tid("priorities-panel-loading"))
 }
 
 // ---------------------------------------------------------------- US-E1
