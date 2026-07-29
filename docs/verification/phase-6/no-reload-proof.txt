@@ -1,0 +1,21 @@
+no-reload proof — captured at 2026-07-29T09:13:05Z
+
+A marker planted in session A before the FIRST agent turn, and read back after the LAST one.
+A page reload would clear window state and add a navigation entry.
+
+session A (chat + task pane):
+  window.__phase6Marker            = "MARK-1785315612957"
+  navigation entries               = 1
+  navigation[0].type               = "navigate"
+
+session B (task pane only, no eve stream):
+  window.__phase6MarkerB           = "MARKB-1785316085861"
+  navigation entries               = 1
+  navigation[0].type               = "navigate"
+
+No 'agent-browser reload', 'open', or 'back/forward' was issued in either session
+after the initial page load. Both markers survive; both pages report exactly one
+navigation entry, of type 'navigate' (not 'reload').
+
+console errors, session A:
+console errors, session B:

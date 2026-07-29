@@ -1,0 +1,26 @@
+tests/e2e/07-live-sync.test.ts — re-run for the Phase 6 verification packet
+captured 2026-07-29T09:17:18Z
+
+  pnpm exec eve build && pnpm build \
+    && node --env-file=.env.local --env-file-if-exists=.env.test \
+         --test --test-concurrency=1 tests/e2e/07-live-sync.test.ts
+
+Production topology: eve build + next build + next start + eve start,
+against the separate Neon TEST database. Build output and the two
+drizzle 'already exists, skipping' NOTICEs are elided.
+
+✔ US-G1.1: an agent-created task appears in the left pane without a reload (29142.188ms)
+✔ US-G1.2: statuses, priorities and projects update live too (37985.906625ms)
+✔ US-G2: a UI change is visible to the agent's very next answer (14669.429917ms)
+✔ US-G3.1: last write wins when the UI and the agent edit the same task (44533.52025ms)
+✔ US-G3.2: overlapping edits converge, with no error or lock state (43707.933667ms)
+✔ Phase 6: onEvent invalidation does not cause a fetch storm (21961.796666ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 203003.536416
+EXIT=0

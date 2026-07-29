@@ -17,9 +17,11 @@ import { useState, type ReactNode } from "react"
  * One `QueryClient` configuration, in one place.
  *
  * - `refetchOnWindowFocus` + `refetchInterval` are implementation plan §2.6's
- *   backstop for live sync (§5), configured once on the client rather than per
- *   hook. The `onEvent`-driven half arrives in Phase 6; this half costs nothing
- *   now and avoids a client-config retrofit later.
+ *   backstop for live sync (§5.3), configured once on the client rather than
+ *   per hook. The `onEvent`-driven half now lives in
+ *   `lib/chat/tool-invalidation.ts`, wired from `components/workspace/chat-pane.tsx`;
+ *   this half covers what that one structurally cannot — a second tab, which
+ *   receives no eve events at all, and a dropped stream.
  * - `retry: 0` is deliberate. TanStack's default of three retries with
  *   exponential backoff would delay every `*-error` testid by roughly seven
  *   seconds, making the deterministic error state plan §2.7 requires both slow

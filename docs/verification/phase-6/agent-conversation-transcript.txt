@@ -1,0 +1,143 @@
+Listed statuses — 3 rows
+
+Project → Personal
+
+LIST_STATUSES
+
+Updated “Repaint the shed and the fence”
+
+Status → In Progress
+
+UPDATE_TASK
+
+Moved "Repaint the shed and the fence" from To Do to In Progress.
+
+Move the task "Repaint the shed and the fence" to Done.
+
+Updated “Repaint the shed and the fence”
+
+Status → Done
+
+UPDATE_TASK
+
+Moved "Repaint the shed and the fence" to Done — it's now marked complete.
+
+Move the task "Repaint the shed and the fence" back to To Do.
+
+Updated “Repaint the shed and the fence”
+
+Status → Queued
+
+UPDATE_TASK
+
+Moved "Repaint the shed and the fence" back to To Do from Done.
+
+Delete the task "Repaint the shed and the fence".
+
+I'm about to permanently delete the task "Repaint the shed and the fence" from Personal.
+
+Deleted “Repaint the shed and the fence”
+
+DELETE_TASK
+
+Deleted "Repaint the shed and the fence" from Personal.
+
+Rename the status "To Do" in the Personal project to "Queued".
+
+Updated “Queued”
+
+Name → “Queued” · Status → Queued
+
+UPDATE_STATUS
+
+Renamed the "To Do" status in Personal to "Queued".
+
+Rename the priority "Low" in the Personal project to "Whenever".
+
+Updated “Whenever”
+
+Name → “Whenever” · Priority → Whenever
+
+UPDATE_PRIORITY
+
+Renamed the "Low" priority in Personal to "Whenever".
+
+Create a project called "Greenhouse".
+
+Created project — Greenhouse
+
+Name → “Greenhouse”
+
+CREATE_PROJECT
+
+Created the "Greenhouse" project, seeded with the standard statuses (To Do, In Progress, Done) and priorities (Low, Medium, High).
+
+What status is the task "Regrout the tiles ZQVXKB" in, and what is its priority?
+
+Listed tasks — 1 rows
+
+Search → “Regrout the tiles ZQVXKB” · Completed → included
+
+LIST_TASKS
+
+"Regrout the tiles ZQVXKB" (in Personal) is In Progress with Medium priority.
+
+And what status is it in now?
+
+Read “Regrout the tiles ZQVXKB”
+
+GET_TASK
+
+It's now in "Queued" status, still with Medium priority — it must have been moved since I last checked.
+
+Move the task "Reseal the deck WKPQNM" to Done.
+
+Listed tasks — 1 rows
+
+Search → “Reseal the deck WKPQNM” · Completed → included
+
+LIST_TASKS
+
+Updated “Reseal the deck WKPQNM”
+
+Status → Done
+
+UPDATE_TASK
+
+Moved "Reseal the deck WKPQNM" from In Progress to Done.
+
+Move the task "Rewire the lamp JHTVBD" to Done.
+
+Listed tasks — 1 rows
+
+Search → “Rewire the lamp JHTVBD” · Completed → included
+
+LIST_TASKS
+
+Updated “Rewire the lamp JHTVBD”
+
+Status → Done
+
+UPDATE_TASK
+
+Moved "Rewire the lamp JHTVBD" from In Progress to Done.
+
+How many tasks are in the Personal project?
+
+Listed tasks — 3 rows
+
+Project → Personal · Completed → included
+
+LIST_TASKS
+
+The Personal project has 3 tasks total: "Regrout the tiles ZQVXKB" (Queued), "Reseal the deck WKPQNM" (Done), and "Rewire the lamp JHTVBD" (Done).
+
+Move the task "Regrout the tiles ZQVXKB" to Done.
+
+Updated “Regrout the tiles ZQVXKB”
+
+Status → Done
+
+UPDATE_TASK
+
+Moved "Regrout the tiles ZQVXKB" from Queued to Done. All 3 Personal tasks are now Done.

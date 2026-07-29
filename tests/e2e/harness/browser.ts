@@ -29,6 +29,13 @@ type CliResult<T> = { success: boolean; data: T | null; error?: string }
 
 export type Browser = ReturnType<typeof createBrowser>
 
+/** The three fields of a captured request this suite reads. */
+export type NetworkRequest = {
+  readonly url: string
+  readonly method?: string
+  readonly status?: number
+}
+
 /**
  * A non-zero exit rejects with the CLI's own stderr, so a missing element
  * fails the test with the CLI's message rather than a bare exit code.
@@ -238,6 +245,49 @@ export function createBrowser(session: string) {
           "console",
         ])
       ).messages,
+
+    /**
+     * Empties the captured request log, so a capture window starts at zero.
+     *
+     * Capture is on by default for a session — no `--enable` flag is needed.
+     * Verified by hand against a live session during the Phase 6 build.
+     */
+    clearNetworkRequests: () => call("network", "requests", "--clear"),
+
+    /**
+     * The captured requests, optionally narrowed by URL substring.
+     *
+     * `agent-browser --json network requests [--filter …]` answers with the
+     * usual envelope wrapping `{ requests: [...] }`. Each record carries far
+     * more than this suite needs — `headers`, `responseHeaders`, `mimeType`,
+     * `resourceType`, `requestId`, `timestamp` — so only the three fields
+     * anything here asserts on are surfaced:
+     *
+     * ```json
+     * { "method": "GET", "status": 200,
+     *   "url": "http://127.0.0.1:3000/api/tasks?includeCompleted=true" }
+     * ```
+     *
+     * Normalised defensively (`requests` may be absent, or the payload may be
+     * a bare array) because the fetch-storm assertions in `07` are counting
+     * these, and an unexpected envelope should show up as an empty list here
+     * rather than as a `TypeError` inside a test.
+     */
+    networkRequests: async (filter?: string) => {
+      const data = await json<
+        { requests?: NetworkRequest[] } | NetworkRequest[]
+      >(
+        filter === undefined
+          ? ["network", "requests"]
+          : ["network", "requests", "--filter", filter]
+      )
+
+      const requests = Array.isArray(data) ? data : (data?.requests ?? [])
+
+      return requests.filter(
+        (request): request is NetworkRequest => typeof request?.url === "string"
+      )
+    },
 
     screenshot: (path: string) => call("screenshot", path),
     a11y: (tags: string) => json<unknown>(["a11y", "--tags", tags]),

@@ -16,7 +16,7 @@ script would silently never fire. `harness/server.ts` refuses to start
 without `.next/BUILD_ID` — or, for the agent suite, without
 `.output/server/index.mjs` — and says how to get one.
 
-### The eve agent server (`06` only)
+### The eve agent server (`06` and `07`)
 
 `next start` does **not** boot the agent, and cannot. `withEve()` spawns it
 from inside `next.config.ts`'s `rewrites()`, which Next evaluates at build
@@ -33,7 +33,9 @@ rewrite baked it in, so a `pnpm dev` holding 4274 will fail the suite — the
 harness says so in the error. `pnpm exec eve build` must have run first;
 `pnpm test:e2e` does it for you.
 
-Only `06-agent-chat.test.ts` opts in, so 01–05 stay fast.
+`06-agent-chat.test.ts` and `07-live-sync.test.ts` opt in, so 01–05 stay
+fast. They are the only suites that pay the eve boot and the fixed-port
+constraint.
 
 ## What runs against what
 
@@ -65,7 +67,9 @@ tests/e2e/
 ├── 03-projects-ui.test.ts
 ├── 04-statuses-ui.test.ts
 ├── 05-priorities-ui.test.ts
-└── 06-agent-chat.test.ts   # real model, real turns — `{ eve: true }`
+├── 06-agent-chat.test.ts   # real model, real turns — `{ eve: true }`
+└── 07-live-sync.test.ts    # live sync + convergence — `{ eve: true }`,
+                            # two agent-browser sessions, never reloads
 ```
 
 ## `data-testid` conventions (implementation plan §2.7)
@@ -185,7 +189,12 @@ above one, on each row of the manifest.
 | US-F6.2 | Not asserted — plan §4.5 forbids asserting the assistant's prose |
 | US-F6.3 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` |
 | US-F6.4 | `06-agent-chat.test.ts › "US-F1.3/1.4 + US-F6.3: …"` (entries re-render after reload) |
-| US-G1 – US-G4 | **Open gap** — live sync and parity (Phase 6/7, `07-live-sync.test.ts`, `08-parity.test.ts`) |
+| US-G1.1 | `07-live-sync.test.ts › "US-G1.1: an agent-created task appears in the left pane without a reload"` |
+| US-G1.2 | `07-live-sync.test.ts › "US-G1.2: statuses, priorities and projects update live too"` (all four entity types) |
+| US-G2.1 | `07-live-sync.test.ts › "US-G2: a UI change is visible to the agent's very next answer"` |
+| US-G3.1 | `07-live-sync.test.ts › "US-G3.1: last write wins when the UI and the agent edit the same task"` (writes sequenced, so the winner is determinate) |
+| US-G3.2 | `07-live-sync.test.ts › "US-G3.2: overlapping edits converge, with no error or lock state"` (writes overlapped; convergence asserted against whatever the database says) |
+| US-G4 | **Open gap** — parity capstone (Phase 7, `08-parity.test.ts`) |
 
 ## Baselines
 
