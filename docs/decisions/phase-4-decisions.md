@@ -407,6 +407,33 @@ adjusted after the fact — which is worth recording precisely because it means
 the bulk-routing assumption below is currently *observed* rather than merely
 argued.
 
+### A second harness was added for the criteria the first one does not reach
+
+`scripts/verify-agent-tools.ts` was written against the phase's **exit
+criteria** — a grounded read, a rule violation relayed with an alternative, a
+delete pausing for approval — and covers them well. It does not reach creation
+defaults, field edits, text search, read freshness, project / status / priority
+management, or the `delete_project` and `delete_priority` gates, all of which are
+acceptance criteria of the four stories the phase must demonstrably pass.
+`scripts/verify-agent-stories.ts` (`pnpm verify:agent:stories`) covers those,
+built the same way and against the same test database, rather than stretching the
+exit-criteria harness into a general story suite. Two harnesses with distinct
+jobs are easier to read, and easier to keep honest, than one that does both.
+
+### `verify:agent` exits 1 on an assertion the criterion nonetheless passes
+
+Recorded rather than smoothed over, because a non-zero exit in a committed
+transcript otherwise looks like a defect. Scenario 03's assertion inspects
+`Turn.finalMessage`, which keeps only a turn's **last** assistant message; the
+agent offered its alternative in that turn's *first* message and again as four
+labelled `ask_question` options. Both are quoted verbatim from the event stream
+in the verification README, so US-F4.4 passes on the evidence while the assertion
+— which is narrower than the criterion — does not. Tightening the assertion to
+scan every assistant message of the turn is a small change left to whoever next
+touches the harness; it was not made here because rewriting an assertion after
+seeing it fail is the kind of edit that should be deliberate rather than
+incidental to closing a phase.
+
 ---
 
 ## Assumptions
@@ -449,9 +476,10 @@ Then three clarifications where the plan is terser than the code:
    otherwise purely additive under `agent/`; this one type-only move (plus a
    re-export) was preferred over a second copy of the type inside `agent/lib/`.
 
-`package.json` gained one script (`verify:agent`) and **no dependency**. §1.1
-governs dependencies, not scripts, and the existing `db:*` and `test:*` scripts
-already establish the `node --env-file … scripts/*.ts` pattern.
+`package.json` gained two scripts (`verify:agent`, `verify:agent:stories`) and
+**no dependency**. §1.1 governs dependencies, not scripts, and the existing
+`db:*` and `test:*` scripts already establish the `node --env-file …
+scripts/*.ts` pattern.
 
 ---
 
@@ -497,6 +525,11 @@ already establish the `node --env-file … scripts/*.ts` pattern.
   request produces more than one ungated write, and the durable fix — should
   EVE ever expose turn-scoped state to an approval policy — is to move the
   counter there.
+- **One harness assertion is narrower than the criterion it checks.**
+  `verify:agent` exits 1 because scenario 03's assertion reads only
+  `Turn.finalMessage`. US-F4.4 passes on the recorded event stream; the
+  assertion should be widened to scan every assistant message of the turn.
+  Anyone re-running the packet should expect the non-zero exit until then.
 - **`ask_question` is live but unexercised.** It is kept and instructed
   ("only for genuine ambiguity about *which* item"), but no scenario in this
   packet triggers it. Phase 5 should confirm it renders sanely in the chat pane.
@@ -517,5 +550,13 @@ summary:
 | `04-delete-approval-denied.json` | US-F3.3 — the row is read back **while parked** and still exists; the denial changes nothing |
 | `05-bulk-approval-approved.json` | US-F5 — one `bulk_update_tasks` call, zero `update_task` calls, all three ids in the prompt, every row moved |
 | `06-looped-edit-gated.json` | US-F5 the other way round — a two-task rename the bulk tool cannot express, two `update_task` calls, the second parked at `input.requested`, exactly one rename committed while parked, denial leaves the second alone |
-| `07-typecheck.txt`, `08-lint.txt`, `09-test-unit.txt` | Clean typecheck and lint; **230 unit tests, 0 failures** |
-| `10-verify-agent-second-run.txt` | The whole packet re-run back to back — 27/27 assertions again |
+| `07-typecheck.txt`, `08-lint.txt`, `09-test.txt` | Clean typecheck and lint; **307 tests, 0 failures** |
+| `10-verify-agent-tools-run.txt` | `pnpm verify:agent` stdout for `01`–`06` — 27/28 assertions, exit 1 on the narrow scenario-03 assertion discussed above |
+| `11-task-lifecycle.json` | US-F3.1 / F3.2 / F3.5 — creation defaults matching UI creation, title / description / status / priority edits, and single-task writes running without a gate |
+| `12-search-and-freshness.json` | US-F2.2 / F2.3 — a task found by text through search rather than guesswork, and a second turn reflecting a change made between turns |
+| `13-list-management.json` | US-F4.1 / F4.2 — project create and rename with seeded defaults; status and priority create, rename, reorder, toggle-completed and set-default, each scoped to a named project |
+| `14-delete-gates-and-blocks.json` | US-F4.3 / F4.4 — the `delete_project` and `delete_priority` gates, and all three blocked-deletion rules refused with the UI's reasons and a way forward |
+| `15-verify-agent-stories-run.txt` | `pnpm verify:agent:stories` stdout — **42/42** assertions, exit 0 |
+
+The packet's verdict is **pass**: all 17 acceptance criteria across US-F2,
+US-F3, US-F4 and US-F5 pass, none skipped, none blocked.
