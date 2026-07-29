@@ -185,6 +185,8 @@ describe("describeToolCall — the seven gated tools", () => {
     )
 
     assert.equal(summary.headline, "Delete 3 tasks")
+    // The same sentence in the tense an action entry needs once it has run.
+    assert.equal(summary.pastHeadline, "Deleted 3 tasks")
     assert.equal(summary.count, 3)
     assert.deepEqual(
       summary.targets.map((target) => target.label),
@@ -379,6 +381,7 @@ describe("describeToolCall — malformed input never throws", () => {
 
         assert.equal(typeof summary.headline, "string")
         assert.ok(summary.headline.length > 0)
+        assert.ok(summary.pastHeadline.length > 0)
         assert.ok(Array.isArray(summary.targets))
         assert.ok(Array.isArray(summary.changes))
         assert.equal(summary.count, summary.targets.length)

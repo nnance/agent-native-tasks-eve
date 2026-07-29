@@ -272,7 +272,10 @@ export type ResolvedTarget = {
 export type ToolChange = { readonly label: string; readonly value: string }
 
 export type ToolCallSummary = {
+  /** Imperative — for a pending call and for the confirm button. */
   readonly headline: string
+  /** Past tense — for a call that already ran. Same targets, same count. */
+  readonly pastHeadline: string
   readonly count: number
   readonly severity: ToolSeverity
   readonly consequence?: string
@@ -409,15 +412,20 @@ export function describeToolCall(
 
   const count = targets.length
 
-  const headline =
+  // One shape, two tenses: an action entry says "Deleted 3 tasks" once the
+  // call has run and "Delete 3 tasks" while it is pending, and the approval
+  // card's confirm button says the imperative. Building both here keeps the
+  // renderers from doing string surgery on a finished sentence.
+  const buildHeadline = (verb: string) =>
     count > 1
-      ? `${meta.verb} ${count} ${meta.nounPlural}`
+      ? `${verb} ${count} ${meta.nounPlural}`
       : count === 1
-        ? `${meta.verb} ${quoted(targets[0]!.label)}`
-        : `${meta.verb} ${meta.noun}`
+        ? `${verb} ${quoted(targets[0]!.label)}`
+        : `${verb} ${meta.noun}`
 
   return {
-    headline,
+    headline: buildHeadline(meta.verb),
+    pastHeadline: buildHeadline(meta.pastVerb),
     count,
     severity: meta.severity,
     ...(meta.consequence === undefined
