@@ -1,0 +1,32 @@
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-G1.1: an agent-created task appears in the left pane without a reload (40318.59625ms)
+✔ US-G1.2: statuses, priorities and projects update live too (52486.049333ms)
+✔ US-G2: a UI change is visible to the agent's very next answer (15214.363417ms)
+✔ US-G3.1: last write wins when the UI and the agent edit the same task (43687.003792ms)
+✔ US-G3.2: overlapping edits converge, with no error or lock state (44279.650041ms)
+✔ Phase 6: onEvent invalidation does not cause a fetch storm (22058.01075ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 229004.071209
