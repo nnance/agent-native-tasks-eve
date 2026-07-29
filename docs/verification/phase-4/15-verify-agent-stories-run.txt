@@ -1,0 +1,59 @@
+
+> agent-native-tasks-eve@0.0.1 verify:agent:stories /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-stories.ts
+
+Server: http://127.0.0.1:61981 (test database)
+Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
+
+11 single-task lifecycle
+  ✔ create_task ran
+  ✔ the task exists after the turn
+  ✔ the omitted status defaulted to the project's first status (To Do)
+  ✔ the omitted priority defaulted to the project's default (Medium)
+  ✔ creating a task did not pause for approval
+  ✔ update_task ran for the edit
+  ✔ the title, description and priority are all committed
+  ✔ editing one task did not pause for approval
+  ✔ update_task ran for the status move
+  ✔ the task is now in Done
+  ✔ moving one task's status did not pause for approval
+
+12 search, and no stale reads
+  ✔ the task was found with a text search, not a guessed title
+  ✔ the reply names the real task and its real status
+  ✔ the follow-up re-read the data instead of reusing the first answer
+  ✔ the reply includes the task created after the first read
+  ✔ the reply names all four committed tasks
+  ✔ the header task is reported in its new status, not the one just read
+
+13 project, status and priority management
+  ✔ create_project ran
+  ✔ the project exists
+  ✔ the new project carries the standard seeded statuses
+  ✔ the new project carries the standard seeded priorities, Medium default
+  ✔ creating a project did not pause for approval
+  ✔ rename_project ran
+  ✔ the project's new name is committed
+  ✔ create_status and update_status both ran
+  ✔ the status list now reads Shipped, Backlog, In Progress, Done
+  ✔ "Shipped" counts as completed
+  ✔ create_priority and update_priority both ran
+  ✔ the priority list now reads Critical, Whenever, Medium, High
+  ✔ "Critical" is the project's one default priority
+  ✔ none of the list management paused for approval
+
+14 delete gates and blocked deletions
+  ✔ delete_project paused for approval
+  ✔ the approval prompt carries the project id the tool would delete
+  ✔ the project still exists — the delete was blocked, not performed
+  ✔ the block is explained in terms of the tasks it still has
+  ✔ a concrete way forward is offered
+  ✔ delete_priority paused for approval
+  ✔ the in-use priority still exists
+  ✔ the block names the rule and offers a way forward
+  ✔ delete_status paused for approval on the last remaining status too
+  ✔ the last remaining status still exists
+  ✔ the block is explained as the last-remaining rule, with a way forward
+
+All assertions passed.
+exit=0

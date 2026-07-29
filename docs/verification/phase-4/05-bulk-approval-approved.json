@@ -1,0 +1,922 @@
+{
+  "scenario": "A multi-task move routes through one gated bulk call; approving it moves every row",
+  "userStories": [
+    "US-F5.1",
+    "US-F5.2",
+    "US-F5.3",
+    "US-F5.4"
+  ],
+  "model": "anthropic/claude-sonnet-5",
+  "project": "Phase4 BulkMove 920e2d34",
+  "seeded": [
+    {
+      "id": "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+      "title": "Audit the image pipeline"
+    },
+    {
+      "id": "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+      "title": "Draft the migration plan"
+    },
+    {
+      "id": "5aedcecd-c507-48b8-859b-d2ef18bb62f5",
+      "title": "Prune stale feature flags"
+    }
+  ],
+  "turns": [
+    {
+      "events": [
+        {
+          "data": {
+            "runtime": {
+              "agentId": "agent-native-tasks-eve",
+              "agentName": "agent-native-tasks-eve",
+              "eveVersion": "0.27.8",
+              "modelId": "anthropic/claude-sonnet-5"
+            }
+          },
+          "type": "session.started",
+          "meta": {
+            "at": "2026-07-28T23:54:07.397Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:54:07.397Z"
+          }
+        },
+        {
+          "data": {
+            "message": "In the project \"Phase4 BulkMove 920e2d34\", move everything that's in To Do to In Progress.",
+            "parts": [
+              {
+                "text": "In the project \"Phase4 BulkMove 920e2d34\", move everything that's in To Do to In Progress.",
+                "type": "text"
+              }
+            ],
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:54:07.397Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:54:07.397Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:08.737Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01No6nrEpzKqf3nBDSLuiq4V",
+                "input": {},
+                "kind": "tool-call",
+                "toolName": "list_projects"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:54:08.764Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01No6nrEpzKqf3nBDSLuiq4V",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "c8d602ec-d685-472b-8143-946b1839ddf8",
+                    "name": "Personal",
+                    "createdAt": "2026-07-28T22:34:44.087Z"
+                  },
+                  {
+                    "id": "32253e04-b5c0-4710-bf63-cc4967a391eb",
+                    "name": "Phase4 Grounded 33d4d9a0",
+                    "createdAt": "2026-07-28T23:53:20.866Z"
+                  },
+                  {
+                    "id": "4f8be35c-f89f-45cb-b3e0-ede47ce663eb",
+                    "name": "Phase4 MoveFrom 25ac8abb",
+                    "createdAt": "2026-07-28T23:53:34.868Z"
+                  },
+                  {
+                    "id": "e8ca9d58-c933-44a8-9d25-a4df7f465027",
+                    "name": "Phase4 MoveTo 73cfb1de",
+                    "createdAt": "2026-07-28T23:53:35.318Z"
+                  },
+                  {
+                    "id": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                    "name": "Phase4 BlockedStatus b4367cbc",
+                    "createdAt": "2026-07-28T23:53:44.070Z"
+                  },
+                  {
+                    "id": "d89e1919-ff9e-491f-b18d-3327d99f4179",
+                    "name": "Phase4 DeleteDenied b8559ba8",
+                    "createdAt": "2026-07-28T23:53:57.748Z"
+                  },
+                  {
+                    "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                    "name": "Phase4 BulkMove 920e2d34",
+                    "createdAt": "2026-07-28T23:54:04.894Z"
+                  }
+                ]
+              },
+              "toolName": "list_projects"
+            },
+            "sequence": 0,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:54:08.811Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0027604,
+              "inputTokens": 11392,
+              "outputTokens": 50,
+              "cacheReadTokens": 11282,
+              "cacheWriteTokens": 108
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJCRRBQBWFHCPGARG4TAPS"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:08.814Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:54:08.854Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01KRzCaigshpouWJ8yohLCXj",
+                "input": {
+                  "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7"
+                },
+                "kind": "tool-call",
+                "toolName": "list_statuses"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:54:10.369Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01KRzCaigshpouWJ8yohLCXj",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "11334e56-7d56-4dbf-8247-591c7816a1fd",
+                    "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                    "name": "To Do",
+                    "order": 0,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "368d6b91-4bbb-4854-994a-202c08c4f223",
+                    "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                    "name": "In Progress",
+                    "order": 1,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "f58ba470-9ece-44de-bbfe-ff365f5000c2",
+                    "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                    "name": "Done",
+                    "order": 2,
+                    "isCompleted": true
+                  }
+                ]
+              },
+              "toolName": "list_statuses"
+            },
+            "sequence": 0,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:54:10.470Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.003052,
+              "inputTokens": 11833,
+              "outputTokens": 77,
+              "cacheReadTokens": 11390,
+              "cacheWriteTokens": 441
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJCT5GM7ADCWKAPP9710NW"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:10.473Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:54:10.518Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01Y7GSi2pCMpB6aqnvcqKynJ",
+                "input": {
+                  "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                  "statusId": "11334e56-7d56-4dbf-8247-591c7816a1fd"
+                },
+                "kind": "tool-call",
+                "toolName": "list_tasks"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:54:12.293Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01Y7GSi2pCMpB6aqnvcqKynJ",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+                    "title": "Audit the image pipeline",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:05.804Z",
+                    "updatedAt": "2026-07-28T23:54:05.804Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "11334e56-7d56-4dbf-8247-591c7816a1fd",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  },
+                  {
+                    "id": "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+                    "title": "Draft the migration plan",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:06.459Z",
+                    "updatedAt": "2026-07-28T23:54:06.459Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "11334e56-7d56-4dbf-8247-591c7816a1fd",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  },
+                  {
+                    "id": "5aedcecd-c507-48b8-859b-d2ef18bb62f5",
+                    "title": "Prune stale feature flags",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:07.188Z",
+                    "updatedAt": "2026-07-28T23:54:07.188Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "11334e56-7d56-4dbf-8247-591c7816a1fd",
+                      "name": "To Do",
+                      "order": 0,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  }
+                ]
+              },
+              "toolName": "list_tasks"
+            },
+            "sequence": 0,
+            "stepIndex": 2,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:54:12.388Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0036102,
+              "inputTokens": 12086,
+              "outputTokens": 124,
+              "cacheReadTokens": 11831,
+              "cacheWriteTokens": 253
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJCVSZBKDKFY2B1RVG9F1R"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:12.391Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:54:12.434Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "I",
+            "messageSoFar": "I",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:13.763Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "'ll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pip",
+            "messageSoFar": "I'll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pip",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:14.173Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "eline,\" \"Draft the migration plan,\" and \"Prune stale feature flags\" — to In Progress.",
+            "messageSoFar": "I'll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags\" — to In Progress.",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:14.509Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "I'll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags\" — to In Progress.",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:15.442Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01MdoF6k1XetwsPPh9XtZ64S",
+                "input": {
+                  "taskIds": [
+                    "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+                    "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+                    "5aedcecd-c507-48b8-859b-d2ef18bb62f5"
+                  ],
+                  "statusId": "368d6b91-4bbb-4854-994a-202c08c4f223"
+                },
+                "kind": "tool-call",
+                "toolName": "bulk_update_tasks"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:54:15.443Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0050308,
+              "inputTokens": 12498,
+              "outputTokens": 261,
+              "cacheReadTokens": 12084,
+              "cacheWriteTokens": 412
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJCXMESE6ME4Q05JG8AG8A"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:15.495Z"
+          }
+        },
+        {
+          "data": {
+            "requests": [
+              {
+                "action": {
+                  "callId": "toolu_01MdoF6k1XetwsPPh9XtZ64S",
+                  "input": {
+                    "taskIds": [
+                      "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+                      "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+                      "5aedcecd-c507-48b8-859b-d2ef18bb62f5"
+                    ],
+                    "statusId": "368d6b91-4bbb-4854-994a-202c08c4f223"
+                  },
+                  "kind": "tool-call",
+                  "toolName": "bulk_update_tasks"
+                },
+                "allowFreeform": false,
+                "display": "confirmation",
+                "options": [
+                  {
+                    "id": "approve",
+                    "label": "Yes"
+                  },
+                  {
+                    "id": "deny",
+                    "label": "No"
+                  }
+                ],
+                "prompt": "Approve tool call: bulk_update_tasks",
+                "requestId": "aitxt-bjqYaSLmWCpyilaCR9Ba7mrm"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 3,
+            "turnId": "turn_0"
+          },
+          "type": "input.requested",
+          "meta": {
+            "at": "2026-07-28T23:54:15.508Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:15.509Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:48962e33-4462-4903-ba3e-7475333de919",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:54:15.509Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_projects",
+          "input": {}
+        },
+        {
+          "name": "list_statuses",
+          "input": {
+            "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7"
+          }
+        },
+        {
+          "name": "list_tasks",
+          "input": {
+            "projectId": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+            "statusId": "11334e56-7d56-4dbf-8247-591c7816a1fd"
+          }
+        },
+        {
+          "name": "bulk_update_tasks",
+          "input": {
+            "taskIds": [
+              "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+              "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+              "5aedcecd-c507-48b8-859b-d2ef18bb62f5"
+            ],
+            "statusId": "368d6b91-4bbb-4854-994a-202c08c4f223"
+          }
+        }
+      ],
+      "approvalRequests": [
+        {
+          "action": {
+            "callId": "toolu_01MdoF6k1XetwsPPh9XtZ64S",
+            "input": {
+              "taskIds": [
+                "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+                "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+                "5aedcecd-c507-48b8-859b-d2ef18bb62f5"
+              ],
+              "statusId": "368d6b91-4bbb-4854-994a-202c08c4f223"
+            },
+            "kind": "tool-call",
+            "toolName": "bulk_update_tasks"
+          },
+          "allowFreeform": false,
+          "display": "confirmation",
+          "options": [
+            {
+              "id": "approve",
+              "label": "Yes"
+            },
+            {
+              "id": "deny",
+              "label": "No"
+            }
+          ],
+          "prompt": "Approve tool call: bulk_update_tasks",
+          "requestId": "aitxt-bjqYaSLmWCpyilaCR9Ba7mrm"
+        }
+      ],
+      "finalMessage": "I'll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags\" — to In Progress."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:54:15.616Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:54:15.616Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01MdoF6k1XetwsPPh9XtZ64S",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "261e95f6-27e9-4f48-8f84-450f1af7c0bf",
+                    "title": "Audit the image pipeline",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:05.804Z",
+                    "updatedAt": "2026-07-28T23:54:16.008Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "368d6b91-4bbb-4854-994a-202c08c4f223",
+                      "name": "In Progress",
+                      "order": 1,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  },
+                  {
+                    "id": "db7f40a8-529d-410a-be30-f5dfe94c0f51",
+                    "title": "Draft the migration plan",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:06.459Z",
+                    "updatedAt": "2026-07-28T23:54:16.008Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "368d6b91-4bbb-4854-994a-202c08c4f223",
+                      "name": "In Progress",
+                      "order": 1,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  },
+                  {
+                    "id": "5aedcecd-c507-48b8-859b-d2ef18bb62f5",
+                    "title": "Prune stale feature flags",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:54:07.188Z",
+                    "updatedAt": "2026-07-28T23:54:16.008Z",
+                    "project": {
+                      "id": "29b8923f-fc91-4c90-b5c9-0afede8e70c7",
+                      "name": "Phase4 BulkMove 920e2d34"
+                    },
+                    "status": {
+                      "id": "368d6b91-4bbb-4854-994a-202c08c4f223",
+                      "name": "In Progress",
+                      "order": 1,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "82352e22-1b92-4481-97da-6e7fa0db353c",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  }
+                ]
+              },
+              "toolName": "bulk_update_tasks"
+            },
+            "sequence": 1,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_1"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:54:16.237Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Done —",
+            "messageSoFar": "Done —",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:17.618Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the",
+            "messageSoFar": "Done — moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:18.061Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " migration plan,\" and \"Prune stale feature flags.\"",
+            "messageSoFar": "Done — moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags.\"",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:54:18.146Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "Done — moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags.\"",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:18.160Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.0032532,
+              "inputTokens": 13052,
+              "outputTokens": 75,
+              "cacheReadTokens": 12496,
+              "cacheWriteTokens": 554
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJD1CDH0PXSQVVTDSZWMKK"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:18.162Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:54:18.174Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:48962e33-4462-4903-ba3e-7475333de919",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:54:18.175Z"
+          }
+        }
+      ],
+      "toolCalls": [],
+      "approvalRequests": [],
+      "finalMessage": "Done — moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags.\""
+    }
+  ],
+  "assertions": [
+    {
+      "name": "exactly one bulk_update_tasks call, and no single-task updates",
+      "passed": true,
+      "detail": "[\"list_projects\",\"list_statuses\",\"list_tasks\",\"bulk_update_tasks\"]"
+    },
+    {
+      "name": "the message states the count and the titles before the call",
+      "passed": true,
+      "detail": "I'll move all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" — \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags\" — to In Progress."
+    },
+    {
+      "name": "the approval prompt carries all three task ids",
+      "passed": true,
+      "detail": "[{\"taskIds\":[\"261e95f6-27e9-4f48-8f84-450f1af7c0bf\",\"db7f40a8-529d-410a-be30-f5dfe94c0f51\",\"5aedcecd-c507-48b8-859b-d2ef18bb62f5\"],\"statusId\":\"368d6b91-4bbb-4854-994a-202c08c4f223\"}]"
+    },
+    {
+      "name": "every seeded task is now In Progress",
+      "passed": true,
+      "detail": "[[\"Audit the image pipeline\",\"In Progress\"],[\"Draft the migration plan\",\"In Progress\"],[\"Prune stale feature flags\",\"In Progress\"]]"
+    },
+    {
+      "name": "the summary reports the move",
+      "passed": true,
+      "detail": "Done — moved all 3 To Do tasks in \"Phase4 BulkMove 920e2d34\" to In Progress: \"Audit the image pipeline,\" \"Draft the migration plan,\" and \"Prune stale feature flags.\""
+    }
+  ]
+}

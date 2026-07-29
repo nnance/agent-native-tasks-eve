@@ -1,0 +1,920 @@
+{
+  "scenario": "An in-use status: approval granted, action blocked, rule relayed with an alternative",
+  "userStories": [
+    "US-F4.3",
+    "US-F3.4"
+  ],
+  "model": "anthropic/claude-sonnet-5",
+  "project": "Phase4 BlockedStatus b4367cbc",
+  "turns": [
+    {
+      "events": [
+        {
+          "data": {
+            "runtime": {
+              "agentId": "agent-native-tasks-eve",
+              "agentName": "agent-native-tasks-eve",
+              "eveVersion": "0.27.8",
+              "modelId": "anthropic/claude-sonnet-5"
+            }
+          },
+          "type": "session.started",
+          "meta": {
+            "at": "2026-07-28T23:53:45.173Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:53:45.173Z"
+          }
+        },
+        {
+          "data": {
+            "message": "Delete the \"In Progress\" status from the project \"Phase4 BlockedStatus b4367cbc\".",
+            "parts": [
+              {
+                "text": "Delete the \"In Progress\" status from the project \"Phase4 BlockedStatus b4367cbc\".",
+                "type": "text"
+              }
+            ],
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:53:45.173Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:53:45.174Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:46.799Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01BxdouPJvHJoN89GJWARBcN",
+                "input": {},
+                "kind": "tool-call",
+                "toolName": "list_projects"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:46.803Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01BxdouPJvHJoN89GJWARBcN",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "c8d602ec-d685-472b-8143-946b1839ddf8",
+                    "name": "Personal",
+                    "createdAt": "2026-07-28T22:34:44.087Z"
+                  },
+                  {
+                    "id": "32253e04-b5c0-4710-bf63-cc4967a391eb",
+                    "name": "Phase4 Grounded 33d4d9a0",
+                    "createdAt": "2026-07-28T23:53:20.866Z"
+                  },
+                  {
+                    "id": "4f8be35c-f89f-45cb-b3e0-ede47ce663eb",
+                    "name": "Phase4 MoveFrom 25ac8abb",
+                    "createdAt": "2026-07-28T23:53:34.868Z"
+                  },
+                  {
+                    "id": "e8ca9d58-c933-44a8-9d25-a4df7f465027",
+                    "name": "Phase4 MoveTo 73cfb1de",
+                    "createdAt": "2026-07-28T23:53:35.318Z"
+                  },
+                  {
+                    "id": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                    "name": "Phase4 BlockedStatus b4367cbc",
+                    "createdAt": "2026-07-28T23:53:44.070Z"
+                  }
+                ]
+              },
+              "toolName": "list_projects"
+            },
+            "sequence": 0,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:53:46.851Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0026604,
+              "inputTokens": 11390,
+              "outputTokens": 40,
+              "cacheReadTokens": 11282,
+              "cacheWriteTokens": 106
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJC32KNF0M0X2A4258HY13"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:46.855Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:53:46.899Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01XVnuPeyy3vsQP7w6tNdgBi",
+                "input": {
+                  "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9"
+                },
+                "kind": "tool-call",
+                "toolName": "list_statuses"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:48.743Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01XVnuPeyy3vsQP7w6tNdgBi",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "173f9543-0fe2-4af6-bbe6-74badcc04396",
+                    "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                    "name": "To Do",
+                    "order": 0,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "0a45544c-c6a8-4f26-be0f-ce7017f270c6",
+                    "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                    "name": "In Progress",
+                    "order": 1,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "c84357ee-073e-4a98-8b54-6329e6aab305",
+                    "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                    "name": "Done",
+                    "order": 2,
+                    "isCompleted": true
+                  }
+                ]
+              },
+              "toolName": "list_statuses"
+            },
+            "sequence": 0,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:53:48.839Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0030816,
+              "inputTokens": 11713,
+              "outputTokens": 80,
+              "cacheReadTokens": 11388,
+              "cacheWriteTokens": 323
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJC4RDG3CBXDQ1VSPR7ED0"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:48.840Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:53:48.862Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "I",
+            "messageSoFar": "I",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:50.255Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "'ll delete the \"In Progress\" status from the \"Phase4 BlockedStatus b4367cbc\" project.",
+            "messageSoFar": "I'll delete the \"In Progress\" status from the \"Phase4 BlockedStatus b4367cbc\" project.",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:50.294Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "I'll delete the \"In Progress\" status from the \"Phase4 BlockedStatus b4367cbc\" project.",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:50.668Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_013fFfVk4C8Hm77u6FGPeeee",
+                "input": {
+                  "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+                },
+                "kind": "tool-call",
+                "toolName": "delete_status"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:50.670Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0034862,
+              "inputTokens": 11970,
+              "outputTokens": 114,
+              "cacheReadTokens": 11711,
+              "cacheWriteTokens": 257
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJC6NMNKC3SA6DHCGJAXT1"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:50.782Z"
+          }
+        },
+        {
+          "data": {
+            "requests": [
+              {
+                "action": {
+                  "callId": "toolu_013fFfVk4C8Hm77u6FGPeeee",
+                  "input": {
+                    "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+                  },
+                  "kind": "tool-call",
+                  "toolName": "delete_status"
+                },
+                "allowFreeform": false,
+                "display": "confirmation",
+                "options": [
+                  {
+                    "id": "approve",
+                    "label": "Yes"
+                  },
+                  {
+                    "id": "deny",
+                    "label": "No"
+                  }
+                ],
+                "prompt": "Approve tool call: delete_status",
+                "requestId": "aitxt-3BFzxXf1Fu6V1aC36HX2AA7P"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 2,
+            "turnId": "turn_0"
+          },
+          "type": "input.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:50.793Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:50.794Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:14e5f987-c122-43a8-acaa-a9c4cf3c4ca4",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:53:50.794Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_projects",
+          "input": {}
+        },
+        {
+          "name": "list_statuses",
+          "input": {
+            "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9"
+          }
+        },
+        {
+          "name": "delete_status",
+          "input": {
+            "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+          }
+        }
+      ],
+      "approvalRequests": [
+        {
+          "action": {
+            "callId": "toolu_013fFfVk4C8Hm77u6FGPeeee",
+            "input": {
+              "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+            },
+            "kind": "tool-call",
+            "toolName": "delete_status"
+          },
+          "allowFreeform": false,
+          "display": "confirmation",
+          "options": [
+            {
+              "id": "approve",
+              "label": "Yes"
+            },
+            {
+              "id": "deny",
+              "label": "No"
+            }
+          ],
+          "prompt": "Approve tool call: delete_status",
+          "requestId": "aitxt-3BFzxXf1Fu6V1aC36HX2AA7P"
+        }
+      ],
+      "finalMessage": "I'll delete the \"In Progress\" status from the \"Phase4 BlockedStatus b4367cbc\" project."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:53:50.892Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:53:50.892Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_013fFfVk4C8Hm77u6FGPeeee",
+              "kind": "tool-result",
+              "output": {
+                "ok": false,
+                "kind": "blocked",
+                "message": "Status 'In Progress' is used by 1 task. Move those tasks to another status (or delete them) first, then delete the status."
+              },
+              "toolName": "delete_status"
+            },
+            "sequence": 1,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_1"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:53:51.355Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:52.878Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "The deletion was blocked:",
+            "messageSoFar": "The deletion was blocked:",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:52.881Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " \"In Progress\" still has 1 task assigned to it, and a status in use can't be deleted. Want",
+            "messageSoFar": "The deletion was blocked: \"In Progress\" still has 1 task assigned to it, and a status in use can't be deleted. Want",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:53.155Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " me to move that task to another status (e.g., \"To Do\" or \"Done\") first, or would you rather I find and delete the task it",
+            "messageSoFar": "The deletion was blocked: \"In Progress\" still has 1 task assigned to it, and a status in use can't be deleted. Want me to move that task to another status (e.g., \"To Do\" or \"Done\") first, or would you rather I find and delete the task it",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:53.522Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "self?",
+            "messageSoFar": "The deletion was blocked: \"In Progress\" still has 1 task assigned to it, and a status in use can't be deleted. Want me to move that task to another status (e.g., \"To Do\" or \"Done\") first, or would you rather I find and delete the task itself?",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:53.926Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "The deletion was blocked: \"In Progress\" still has 1 task assigned to it, and a status in use can't be deleted. Want me to move that task to another status (e.g., \"To Do\" or \"Done\") first, or would you rather I find and delete the task itself?",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:54.304Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01DAtJYT3qJSthvLgZ9RJBsf",
+                "input": {
+                  "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                  "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+                },
+                "kind": "tool-call",
+                "toolName": "list_tasks"
+              }
+            ],
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:54.305Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01DAtJYT3qJSthvLgZ9RJBsf",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "12e1def7-be7b-40b9-9545-3ac5d420075a",
+                    "title": "Rebuild the search index",
+                    "description": null,
+                    "createdAt": "2026-07-28T23:53:44.923Z",
+                    "updatedAt": "2026-07-28T23:53:44.923Z",
+                    "project": {
+                      "id": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+                      "name": "Phase4 BlockedStatus b4367cbc"
+                    },
+                    "status": {
+                      "id": "0a45544c-c6a8-4f26-be0f-ce7017f270c6",
+                      "name": "In Progress",
+                      "order": 1,
+                      "isCompleted": false
+                    },
+                    "priority": {
+                      "id": "a50cc031-c78b-4685-a599-13f18d92a5ed",
+                      "name": "Medium",
+                      "order": 1,
+                      "isDefault": true
+                    }
+                  }
+                ]
+              },
+              "toolName": "list_tasks"
+            },
+            "sequence": 1,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_1"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:53:54.448Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.0047176,
+              "inputTokens": 12149,
+              "outputTokens": 232,
+              "cacheReadTokens": 11968,
+              "cacheWriteTokens": 179
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJC94D20V5A5P0WYCT3G72"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:54.449Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:53:54.474Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "The",
+            "messageSoFar": "The",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:55.502Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:",
+            "messageSoFar": "The task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:53:55.828Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "message": "The task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:57.369Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.0048234,
+              "inputTokens": 12492,
+              "outputTokens": 239,
+              "cacheReadTokens": 12147,
+              "cacheWriteTokens": 343
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJCC5B4JWPER2ETPF57PF4"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:57.371Z"
+          }
+        },
+        {
+          "data": {
+            "requests": [
+              {
+                "action": {
+                  "callId": "toolu_01EJzH53NyW2rP3TXKTi4PoW",
+                  "input": {
+                    "options": [
+                      {
+                        "id": "todo",
+                        "label": "Move it to 'To Do'"
+                      },
+                      {
+                        "id": "done",
+                        "label": "Move it to 'Done'"
+                      },
+                      {
+                        "id": "delete_task",
+                        "label": "Delete the task instead"
+                      },
+                      {
+                        "id": "cancel",
+                        "label": "Leave everything as is"
+                      }
+                    ],
+                    "prompt": "The \"In Progress\" status is still used by one task: \"Rebuild the search index\". How would you like to handle it before I can delete the status?"
+                  },
+                  "kind": "tool-call",
+                  "toolName": "ask_question"
+                },
+                "display": "select",
+                "prompt": "The \"In Progress\" status is still used by one task: \"Rebuild the search index\". How would you like to handle it before I can delete the status?",
+                "requestId": "toolu_01EJzH53NyW2rP3TXKTi4PoW",
+                "options": [
+                  {
+                    "id": "todo",
+                    "label": "Move it to 'To Do'"
+                  },
+                  {
+                    "id": "done",
+                    "label": "Move it to 'Done'"
+                  },
+                  {
+                    "id": "delete_task",
+                    "label": "Delete the task instead"
+                  },
+                  {
+                    "id": "cancel",
+                    "label": "Leave everything as is"
+                  }
+                ]
+              }
+            ],
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "input.requested",
+          "meta": {
+            "at": "2026-07-28T23:53:57.385Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:53:57.386Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:14e5f987-c122-43a8-acaa-a9c4cf3c4ca4",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:53:57.386Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_tasks",
+          "input": {
+            "projectId": "4070a8cb-02a4-40b7-9371-8d1e0cf7b3d9",
+            "statusId": "0a45544c-c6a8-4f26-be0f-ce7017f270c6"
+          }
+        }
+      ],
+      "approvalRequests": [
+        {
+          "action": {
+            "callId": "toolu_01EJzH53NyW2rP3TXKTi4PoW",
+            "input": {
+              "options": [
+                {
+                  "id": "todo",
+                  "label": "Move it to 'To Do'"
+                },
+                {
+                  "id": "done",
+                  "label": "Move it to 'Done'"
+                },
+                {
+                  "id": "delete_task",
+                  "label": "Delete the task instead"
+                },
+                {
+                  "id": "cancel",
+                  "label": "Leave everything as is"
+                }
+              ],
+              "prompt": "The \"In Progress\" status is still used by one task: \"Rebuild the search index\". How would you like to handle it before I can delete the status?"
+            },
+            "kind": "tool-call",
+            "toolName": "ask_question"
+          },
+          "display": "select",
+          "prompt": "The \"In Progress\" status is still used by one task: \"Rebuild the search index\". How would you like to handle it before I can delete the status?",
+          "requestId": "toolu_01EJzH53NyW2rP3TXKTi4PoW",
+          "options": [
+            {
+              "id": "todo",
+              "label": "Move it to 'To Do'"
+            },
+            {
+              "id": "done",
+              "label": "Move it to 'Done'"
+            },
+            {
+              "id": "delete_task",
+              "label": "Delete the task instead"
+            },
+            {
+              "id": "cancel",
+              "label": "Leave everything as is"
+            }
+          ]
+        }
+      ],
+      "finalMessage": "The task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "delete_status paused for approval",
+      "passed": true,
+      "detail": "[\"delete_status\"]"
+    },
+    {
+      "name": "the status still exists after the approved-but-blocked delete",
+      "passed": true
+    },
+    {
+      "name": "the blocking rule is relayed to the user",
+      "passed": true,
+      "detail": "The task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:"
+    },
+    {
+      "name": "a concrete way forward is offered",
+      "passed": false,
+      "detail": "The task currently in \"In Progress\" is **\"Rebuild the search index\"**. Let me know how you'd like to proceed:"
+    }
+  ]
+}

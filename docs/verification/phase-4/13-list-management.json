@@ -1,0 +1,1862 @@
+{
+  "scenario": "Create and rename a project (seeded), then manage its statuses and priorities",
+  "userStories": [
+    "US-F4.1",
+    "US-F4.2"
+  ],
+  "model": "anthropic/claude-sonnet-5",
+  "project": {
+    "created": "Phase4 Lists 1e85e3fa",
+    "renamedTo": "Phase4 Lists 1e85e3fa (renamed)"
+  },
+  "committed": {
+    "seededStatuses": [
+      [
+        "To Do",
+        false
+      ],
+      [
+        "In Progress",
+        false
+      ],
+      [
+        "Done",
+        true
+      ]
+    ],
+    "seededPriorities": [
+      [
+        "Low",
+        false
+      ],
+      [
+        "Medium",
+        true
+      ],
+      [
+        "High",
+        false
+      ]
+    ],
+    "statusesAfter": [
+      [
+        "Shipped",
+        0,
+        true
+      ],
+      [
+        "Backlog",
+        1,
+        false
+      ],
+      [
+        "In Progress",
+        2,
+        false
+      ],
+      [
+        "Done",
+        3,
+        true
+      ]
+    ],
+    "prioritiesAfter": [
+      [
+        "Critical",
+        0,
+        true
+      ],
+      [
+        "Whenever",
+        1,
+        false
+      ],
+      [
+        "Medium",
+        2,
+        false
+      ],
+      [
+        "High",
+        3,
+        false
+      ]
+    ]
+  },
+  "turns": [
+    {
+      "events": [
+        {
+          "data": {
+            "runtime": {
+              "agentId": "agent-native-tasks-eve",
+              "agentName": "agent-native-tasks-eve",
+              "eveVersion": "0.27.8",
+              "modelId": "anthropic/claude-sonnet-5"
+            }
+          },
+          "type": "session.started",
+          "meta": {
+            "at": "2026-07-28T23:55:47.496Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:55:47.496Z"
+          }
+        },
+        {
+          "data": {
+            "message": "Create a project called \"Phase4 Lists 1e85e3fa\".",
+            "parts": [
+              {
+                "text": "Create a project called \"Phase4 Lists 1e85e3fa\".",
+                "type": "text"
+              }
+            ],
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:55:47.496Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:55:47.496Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01UwQnn3T3H4PTrfajHsiSAA",
+                "input": {
+                  "name": "Phase4 Lists 1e85e3fa"
+                },
+                "kind": "tool-call",
+                "toolName": "create_project"
+              }
+            ],
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:55:48.937Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01UwQnn3T3H4PTrfajHsiSAA",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Phase4 Lists 1e85e3fa",
+                  "createdAt": "2026-07-28T23:55:49.111Z"
+                }
+              },
+              "toolName": "create_project"
+            },
+            "sequence": 0,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_0"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:55:49.385Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 0,
+            "stepIndex": 0,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0028804,
+              "inputTokens": 11379,
+              "outputTokens": 62,
+              "cacheReadTokens": 11282,
+              "cacheWriteTokens": 95
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJFTGN73YZVJWEZC3GKQT0"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:49.389Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:55:49.444Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Created the",
+            "messageSoFar": "Created the",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:55:52.060Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " project \"Phase4 Lists 1e85e3fa\", seeded with the standard statuses (To Do, In Progress, Done) and priorities (Low, Medium, High).",
+            "messageSoFar": "Created the project \"Phase4 Lists 1e85e3fa\", seeded with the standard statuses (To Do, In Progress, Done) and priorities (Low, Medium, High).",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:55:52.108Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "Created the project \"Phase4 Lists 1e85e3fa\", seeded with the standard statuses (To Do, In Progress, Done) and priorities (Low, Medium, High).",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:52.183Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 0,
+            "stepIndex": 1,
+            "turnId": "turn_0",
+            "usage": {
+              "costUsd": 0.0028894,
+              "inputTokens": 11532,
+              "outputTokens": 61,
+              "cacheReadTokens": 11377,
+              "cacheWriteTokens": 153
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJFWDMKR741GX7BA4XZT7W"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:52.185Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 0,
+            "turnId": "turn_0"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:52.198Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:285fc8e3-2f9f-4fd7-88d2-57ee6f3a5d6d",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:55:52.199Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "create_project",
+          "input": {
+            "name": "Phase4 Lists 1e85e3fa"
+          }
+        }
+      ],
+      "approvalRequests": [],
+      "finalMessage": "Created the project \"Phase4 Lists 1e85e3fa\", seeded with the standard statuses (To Do, In Progress, Done) and priorities (Low, Medium, High)."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:55:53.119Z"
+          }
+        },
+        {
+          "data": {
+            "message": "Rename the project \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\".",
+            "parts": [
+              {
+                "text": "Rename the project \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\".",
+                "type": "text"
+              }
+            ],
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:55:53.119Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:55:53.119Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01VEnbhAZzE8DxB4gecwXUht",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Phase4 Lists 1e85e3fa (renamed)"
+                },
+                "kind": "tool-call",
+                "toolName": "rename_project"
+              }
+            ],
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:55:54.673Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01VEnbhAZzE8DxB4gecwXUht",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Phase4 Lists 1e85e3fa (renamed)",
+                  "createdAt": "2026-07-28T23:55:49.111Z"
+                }
+              },
+              "toolName": "rename_project"
+            },
+            "sequence": 1,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_1"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:55:54.760Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 1,
+            "stepIndex": 0,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.00346,
+              "inputTokens": 11642,
+              "outputTokens": 115,
+              "cacheReadTokens": 11530,
+              "cacheWriteTokens": 110
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJG00J05NP40KFVWMB6GSP"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:54.761Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:55:54.786Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Renamed the",
+            "messageSoFar": "Renamed the",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:55:58.848Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " project from \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\".",
+            "messageSoFar": "Renamed the project from \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\".",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:55:59.259Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "Renamed the project from \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\".",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:59.265Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 1,
+            "stepIndex": 1,
+            "turnId": "turn_1",
+            "usage": {
+              "costUsd": 0.002842,
+              "inputTokens": 11853,
+              "outputTokens": 51,
+              "cacheReadTokens": 11640,
+              "cacheWriteTokens": 211
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJG1PA7HGWQFK3A09JRKFC"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:59.266Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 1,
+            "turnId": "turn_1"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:55:59.283Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:285fc8e3-2f9f-4fd7-88d2-57ee6f3a5d6d",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:55:59.284Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "rename_project",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+            "name": "Phase4 Lists 1e85e3fa (renamed)"
+          }
+        }
+      ],
+      "approvalRequests": [],
+      "finalMessage": "Renamed the project from \"Phase4 Lists 1e85e3fa\" to \"Phase4 Lists 1e85e3fa (renamed)\"."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "sequence": 2,
+            "turnId": "turn_2"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:55:59.397Z"
+          }
+        },
+        {
+          "data": {
+            "message": "In the project \"Phase4 Lists 1e85e3fa (renamed)\": add a status called \"Shipped\", mark \"Shipped\" as counting as completed, rename \"To Do\" to \"Backlog\", and move \"Shipped\" to the front of the status list.",
+            "parts": [
+              {
+                "text": "In the project \"Phase4 Lists 1e85e3fa (renamed)\": add a status called \"Shipped\", mark \"Shipped\" as counting as completed, rename \"To Do\" to \"Backlog\", and move \"Shipped\" to the front of the status list.",
+                "type": "text"
+              }
+            ],
+            "sequence": 2,
+            "turnId": "turn_2"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:55:59.397Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 2,
+            "stepIndex": 0,
+            "turnId": "turn_2"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:55:59.397Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 2,
+            "stepIndex": 0,
+            "turnId": "turn_2"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:02.404Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_017CHcsvSpr9y6QEZ6UAE8Wy",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+                },
+                "kind": "tool-call",
+                "toolName": "list_statuses"
+              }
+            ],
+            "sequence": 2,
+            "stepIndex": 0,
+            "turnId": "turn_2"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:02.922Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_017CHcsvSpr9y6QEZ6UAE8Wy",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "8ecd7512-7462-4b7e-91b1-eb72d5fe4df8",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "To Do",
+                    "order": 0,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "20ff21d3-540c-4f33-98af-2a71dbe0934f",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "In Progress",
+                    "order": 1,
+                    "isCompleted": false
+                  },
+                  {
+                    "id": "0107a805-0894-4e27-b9b3-fda15a3dd519",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Done",
+                    "order": 2,
+                    "isCompleted": true
+                  }
+                ]
+              },
+              "toolName": "list_statuses"
+            },
+            "sequence": 2,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_2"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:03.022Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 2,
+            "stepIndex": 0,
+            "turnId": "turn_2",
+            "usage": {
+              "costUsd": 0.0041642,
+              "inputTokens": 11987,
+              "outputTokens": 179,
+              "cacheReadTokens": 11851,
+              "cacheWriteTokens": 134
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJG6BTBVN3RGQ04N4V7SRG"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:03.026Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 2,
+            "stepIndex": 1,
+            "turnId": "turn_2"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:03.077Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01HbzQVdMzkYuWwTpCmUtWPn",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Shipped",
+                  "isCompleted": true
+                },
+                "kind": "tool-call",
+                "toolName": "create_status"
+              }
+            ],
+            "sequence": 2,
+            "stepIndex": 1,
+            "turnId": "turn_2"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:05.410Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01M737v9rM719HXiZ3uoUHS2",
+                "input": {
+                  "statusId": "8ecd7512-7462-4b7e-91b1-eb72d5fe4df8",
+                  "name": "Backlog"
+                },
+                "kind": "tool-call",
+                "toolName": "update_status"
+              }
+            ],
+            "sequence": 2,
+            "stepIndex": 1,
+            "turnId": "turn_2"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:05.891Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01HbzQVdMzkYuWwTpCmUtWPn",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "dd097d0c-adff-4e17-bdc3-df37e005f134",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Shipped",
+                  "order": 3,
+                  "isCompleted": true
+                }
+              },
+              "toolName": "create_status"
+            },
+            "sequence": 2,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_2"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:06.346Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01M737v9rM719HXiZ3uoUHS2",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "8ecd7512-7462-4b7e-91b1-eb72d5fe4df8",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Backlog",
+                  "order": 0,
+                  "isCompleted": false
+                }
+              },
+              "toolName": "update_status"
+            },
+            "sequence": 2,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_2"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:06.770Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 2,
+            "stepIndex": 1,
+            "turnId": "turn_2",
+            "usage": {
+              "costUsd": 0.004601,
+              "inputTokens": 12347,
+              "outputTokens": 220,
+              "cacheReadTokens": 11985,
+              "cacheWriteTokens": 360
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJG9QGEDPX45NV2ZH2FH83"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:06.774Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 2,
+            "stepIndex": 2,
+            "turnId": "turn_2"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:06.819Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01SzqhmvsCtkwqj1p7PFN2xa",
+                "input": {
+                  "statusId": "dd097d0c-adff-4e17-bdc3-df37e005f134",
+                  "order": 0
+                },
+                "kind": "tool-call",
+                "toolName": "update_status"
+              }
+            ],
+            "sequence": 2,
+            "stepIndex": 2,
+            "turnId": "turn_2"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:08.422Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01SzqhmvsCtkwqj1p7PFN2xa",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "dd097d0c-adff-4e17-bdc3-df37e005f134",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Shipped",
+                  "order": 0,
+                  "isCompleted": true
+                }
+              },
+              "toolName": "update_status"
+            },
+            "sequence": 2,
+            "stepIndex": 2,
+            "status": "completed",
+            "turnId": "turn_2"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:09.306Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 2,
+            "stepIndex": 2,
+            "turnId": "turn_2",
+            "usage": {
+              "costUsd": 0.003413,
+              "inputTokens": 12815,
+              "outputTokens": 94,
+              "cacheReadTokens": 12345,
+              "cacheWriteTokens": 468
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJGDCSM9GBHNJSZAEGX42P"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:09.309Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:09.361Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Done — in",
+            "messageSoFar": "Done — in",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:10.352Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " \"Phase4 Lists 1e85e",
+            "messageSoFar": "Done — in \"Phase4 Lists 1e85e",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:10.664Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "3fa (renamed)\":\n- Added \"Shipped\" status, marked it",
+            "messageSoFar": "Done — in \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added \"Shipped\" status, marked it",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:11.051Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " as completed.\n- Renamed \"To Do\" to \"Backlog\".\n- Moved \"Shipped\" to the front of the status list (",
+            "messageSoFar": "Done — in \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added \"Shipped\" status, marked it as completed.\n- Renamed \"To Do\" to \"Backlog\".\n- Moved \"Shipped\" to the front of the status list (",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:11.436Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "order: Shipped, Backlog, In Progress, Done).",
+            "messageSoFar": "Done — in \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added \"Shipped\" status, marked it as completed.\n- Renamed \"To Do\" to \"Backlog\".\n- Moved \"Shipped\" to the front of the status list (order: Shipped, Backlog, In Progress, Done).",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:11.608Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "Done — in \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added \"Shipped\" status, marked it as completed.\n- Renamed \"To Do\" to \"Backlog\".\n- Moved \"Shipped\" to the front of the status list (order: Shipped, Backlog, In Progress, Done).",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:11.622Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 2,
+            "stepIndex": 3,
+            "turnId": "turn_2",
+            "usage": {
+              "costUsd": 0.0036166,
+              "inputTokens": 13008,
+              "outputTokens": 105,
+              "cacheReadTokens": 12813,
+              "cacheWriteTokens": 193
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJGFW3MMTRKS5D8GYMZB0A"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:11.623Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 2,
+            "turnId": "turn_2"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:11.625Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:285fc8e3-2f9f-4fd7-88d2-57ee6f3a5d6d",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:56:11.625Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_statuses",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+          }
+        },
+        {
+          "name": "create_status",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+            "name": "Shipped",
+            "isCompleted": true
+          }
+        },
+        {
+          "name": "update_status",
+          "input": {
+            "statusId": "8ecd7512-7462-4b7e-91b1-eb72d5fe4df8",
+            "name": "Backlog"
+          }
+        },
+        {
+          "name": "update_status",
+          "input": {
+            "statusId": "dd097d0c-adff-4e17-bdc3-df37e005f134",
+            "order": 0
+          }
+        }
+      ],
+      "approvalRequests": [],
+      "finalMessage": "Done — in \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added \"Shipped\" status, marked it as completed.\n- Renamed \"To Do\" to \"Backlog\".\n- Moved \"Shipped\" to the front of the status list (order: Shipped, Backlog, In Progress, Done)."
+    },
+    {
+      "events": [
+        {
+          "data": {
+            "sequence": 3,
+            "turnId": "turn_3"
+          },
+          "type": "turn.started",
+          "meta": {
+            "at": "2026-07-28T23:56:11.798Z"
+          }
+        },
+        {
+          "data": {
+            "message": "In the project \"Phase4 Lists 1e85e3fa (renamed)\": add a priority called \"Critical\", make \"Critical\" the project's default, rename \"Low\" to \"Whenever\", and reorder the priorities so the list reads Critical, Whenever, Medium, High.",
+            "parts": [
+              {
+                "text": "In the project \"Phase4 Lists 1e85e3fa (renamed)\": add a priority called \"Critical\", make \"Critical\" the project's default, rename \"Low\" to \"Whenever\", and reorder the priorities so the list reads Critical, Whenever, Medium, High.",
+                "type": "text"
+              }
+            ],
+            "sequence": 3,
+            "turnId": "turn_3"
+          },
+          "type": "message.received",
+          "meta": {
+            "at": "2026-07-28T23:56:11.798Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "stepIndex": 0,
+            "turnId": "turn_3"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:11.798Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 3,
+            "stepIndex": 0,
+            "turnId": "turn_3"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:13.426Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_017GGsPWCiBDYHZ5q1uncdbm",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+                },
+                "kind": "tool-call",
+                "toolName": "list_priorities"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 0,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:13.578Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_017GGsPWCiBDYHZ5q1uncdbm",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "e04ff389-7da3-4c91-b3f0-0401549a208c",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Low",
+                    "order": 0,
+                    "isDefault": false
+                  },
+                  {
+                    "id": "ca62cd7c-407c-4054-a7d0-9b3941e15b0b",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Medium",
+                    "order": 1,
+                    "isDefault": true
+                  },
+                  {
+                    "id": "895d65d2-9065-4ed0-89b2-d9d26a9e528e",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "High",
+                    "order": 2,
+                    "isDefault": false
+                  }
+                ]
+              },
+              "toolName": "list_priorities"
+            },
+            "sequence": 3,
+            "stepIndex": 0,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:13.669Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 3,
+            "stepIndex": 0,
+            "turnId": "turn_3",
+            "usage": {
+              "costUsd": 0.0034852,
+              "inputTokens": 13203,
+              "outputTokens": 88,
+              "cacheReadTokens": 13006,
+              "cacheWriteTokens": 195
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJGJ927MPBABJAWDG5RPBA"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:13.672Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "stepIndex": 1,
+            "turnId": "turn_3"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:13.715Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 3,
+            "stepIndex": 1,
+            "turnId": "turn_3"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:25.316Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01YFucJW9HdkQJNzB4xwhMaN",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Critical"
+                },
+                "kind": "tool-call",
+                "toolName": "create_priority"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 1,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:25.894Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01VcZ1kmXDRVPyGAnPseZmHR",
+                "input": {
+                  "priorityId": "e04ff389-7da3-4c91-b3f0-0401549a208c",
+                  "name": "Whenever"
+                },
+                "kind": "tool-call",
+                "toolName": "update_priority"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 1,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:26.081Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01VcZ1kmXDRVPyGAnPseZmHR",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "e04ff389-7da3-4c91-b3f0-0401549a208c",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Whenever",
+                  "order": 0,
+                  "isDefault": false
+                }
+              },
+              "toolName": "update_priority"
+            },
+            "sequence": 3,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:26.519Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01YFucJW9HdkQJNzB4xwhMaN",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Critical",
+                  "order": 3,
+                  "isDefault": false
+                }
+              },
+              "toolName": "create_priority"
+            },
+            "sequence": 3,
+            "stepIndex": 1,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:26.521Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 3,
+            "stepIndex": 1,
+            "turnId": "turn_3",
+            "usage": {
+              "costUsd": 0.0142042,
+              "inputTokens": 13466,
+              "outputTokens": 1156,
+              "cacheReadTokens": 13201,
+              "cacheWriteTokens": 263
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJGM43N54V32NBHRM2RVEN"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:26.524Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "stepIndex": 2,
+            "turnId": "turn_3"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:26.568Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 3,
+            "stepIndex": 2,
+            "turnId": "turn_3"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:30.547Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_018r1vfeQN7YSCN7DdqRJK76",
+                "input": {
+                  "priorityId": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                  "isDefault": true
+                },
+                "kind": "tool-call",
+                "toolName": "update_priority"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 2,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:30.924Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_01BkVtxjmsiS7hb3Ro7zYFeB",
+                "input": {
+                  "priorityId": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                  "order": 0
+                },
+                "kind": "tool-call",
+                "toolName": "update_priority"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 2,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:31.372Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_018r1vfeQN7YSCN7DdqRJK76",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Critical",
+                  "order": 3,
+                  "isDefault": true
+                }
+              },
+              "toolName": "update_priority"
+            },
+            "sequence": 3,
+            "stepIndex": 2,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:31.805Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_01BkVtxjmsiS7hb3Ro7zYFeB",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": {
+                  "id": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                  "name": "Critical",
+                  "order": 0,
+                  "isDefault": true
+                }
+              },
+              "toolName": "update_priority"
+            },
+            "sequence": 3,
+            "stepIndex": 2,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:32.286Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 3,
+            "stepIndex": 2,
+            "turnId": "turn_3",
+            "usage": {
+              "costUsd": 0.0070068,
+              "inputTokens": 14866,
+              "outputTokens": 431,
+              "cacheReadTokens": 13464,
+              "cacheWriteTokens": 1400
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJH0NRYGY1PC752ZXQANXW"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:32.290Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "stepIndex": 3,
+            "turnId": "turn_3"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:32.342Z"
+          }
+        },
+        {
+          "data": {
+            "reasoningDelta": "",
+            "reasoningSoFar": "",
+            "sequence": 3,
+            "stepIndex": 3,
+            "turnId": "turn_3"
+          },
+          "type": "reasoning.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:35.179Z"
+          }
+        },
+        {
+          "data": {
+            "actions": [
+              {
+                "callId": "toolu_012g7GEsGDRYhJ7w4wLy3kMf",
+                "input": {
+                  "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+                },
+                "kind": "tool-call",
+                "toolName": "list_priorities"
+              }
+            ],
+            "sequence": 3,
+            "stepIndex": 3,
+            "turnId": "turn_3"
+          },
+          "type": "actions.requested",
+          "meta": {
+            "at": "2026-07-28T23:56:35.430Z"
+          }
+        },
+        {
+          "data": {
+            "result": {
+              "callId": "toolu_012g7GEsGDRYhJ7w4wLy3kMf",
+              "kind": "tool-result",
+              "output": {
+                "ok": true,
+                "data": [
+                  {
+                    "id": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Critical",
+                    "order": 0,
+                    "isDefault": true
+                  },
+                  {
+                    "id": "e04ff389-7da3-4c91-b3f0-0401549a208c",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Whenever",
+                    "order": 1,
+                    "isDefault": false
+                  },
+                  {
+                    "id": "ca62cd7c-407c-4054-a7d0-9b3941e15b0b",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "Medium",
+                    "order": 2,
+                    "isDefault": false
+                  },
+                  {
+                    "id": "895d65d2-9065-4ed0-89b2-d9d26a9e528e",
+                    "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+                    "name": "High",
+                    "order": 3,
+                    "isDefault": false
+                  }
+                ]
+              },
+              "toolName": "list_priorities"
+            },
+            "sequence": 3,
+            "stepIndex": 3,
+            "status": "completed",
+            "turnId": "turn_3"
+          },
+          "type": "action.result",
+          "meta": {
+            "at": "2026-07-28T23:56:35.518Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "tool-calls",
+            "sequence": 3,
+            "stepIndex": 3,
+            "turnId": "turn_3",
+            "usage": {
+              "costUsd": 0.0040068,
+              "inputTokens": 15541,
+              "outputTokens": 103,
+              "cacheReadTokens": 14864,
+              "cacheWriteTokens": 675
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJH6A8GBZR86877FFJ0HHP"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:35.522Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "step.started",
+          "meta": {
+            "at": "2026-07-28T23:56:35.565Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "The",
+            "messageSoFar": "The",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:36.674Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": " list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"",
+            "messageSoFar": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:37.093Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "Phase4 Lists 1e85e3",
+            "messageSoFar": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"Phase4 Lists 1e85e3",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:37.753Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "fa (renamed)\":\n- Added a new priority \"Critical\" and made it the project",
+            "messageSoFar": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added a new priority \"Critical\" and made it the project",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:37.822Z"
+          }
+        },
+        {
+          "data": {
+            "messageDelta": "'s default.\n- Renamed \"Low\" to \"Whenever\".\n- The priority list now reads Critical, Whenever, Medium, High, as requested.",
+            "messageSoFar": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added a new priority \"Critical\" and made it the project's default.\n- Renamed \"Low\" to \"Whenever\".\n- The priority list now reads Critical, Whenever, Medium, High, as requested.",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.appended",
+          "meta": {
+            "at": "2026-07-28T23:56:38.124Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "message": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added a new priority \"Critical\" and made it the project's default.\n- Renamed \"Low\" to \"Whenever\".\n- The priority list now reads Critical, Whenever, Medium, High, as requested.",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3"
+          },
+          "type": "message.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:38.184Z"
+          }
+        },
+        {
+          "data": {
+            "finishReason": "stop",
+            "sequence": 3,
+            "stepIndex": 4,
+            "turnId": "turn_3",
+            "usage": {
+              "costUsd": 0.0043518,
+              "inputTokens": 15872,
+              "outputTokens": 124,
+              "cacheReadTokens": 15539,
+              "cacheWriteTokens": 331
+            },
+            "providerMetadata": {
+              "gateway": {
+                "generationId": "gen_01KYNJH9F01SFARG0FXY2Q8YBN"
+              }
+            }
+          },
+          "type": "step.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:38.186Z"
+          }
+        },
+        {
+          "data": {
+            "sequence": 3,
+            "turnId": "turn_3"
+          },
+          "type": "turn.completed",
+          "meta": {
+            "at": "2026-07-28T23:56:38.198Z"
+          }
+        },
+        {
+          "data": {
+            "continuationToken": "eve:285fc8e3-2f9f-4fd7-88d2-57ee6f3a5d6d",
+            "wait": "next-user-message"
+          },
+          "type": "session.waiting",
+          "meta": {
+            "at": "2026-07-28T23:56:38.198Z"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "list_priorities",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+          }
+        },
+        {
+          "name": "create_priority",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783",
+            "name": "Critical"
+          }
+        },
+        {
+          "name": "update_priority",
+          "input": {
+            "priorityId": "e04ff389-7da3-4c91-b3f0-0401549a208c",
+            "name": "Whenever"
+          }
+        },
+        {
+          "name": "update_priority",
+          "input": {
+            "priorityId": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+            "isDefault": true
+          }
+        },
+        {
+          "name": "update_priority",
+          "input": {
+            "priorityId": "9e2f858f-5a8b-415e-bfda-a73851bf7449",
+            "order": 0
+          }
+        },
+        {
+          "name": "list_priorities",
+          "input": {
+            "projectId": "d9309851-5e9b-457d-99e4-ece3da6b8783"
+          }
+        }
+      ],
+      "approvalRequests": [],
+      "finalMessage": "The list already reads Critical, Whenever, Medium, High — no further reordering needed.\n\nSummary for \"Phase4 Lists 1e85e3fa (renamed)\":\n- Added a new priority \"Critical\" and made it the project's default.\n- Renamed \"Low\" to \"Whenever\".\n- The priority list now reads Critical, Whenever, Medium, High, as requested."
+    }
+  ],
+  "assertions": [
+    {
+      "name": "create_project ran",
+      "passed": true,
+      "detail": "[\"create_project\"]"
+    },
+    {
+      "name": "the project exists",
+      "passed": true
+    },
+    {
+      "name": "the new project carries the standard seeded statuses",
+      "passed": true,
+      "detail": "[[\"To Do\",false],[\"In Progress\",false],[\"Done\",true]]"
+    },
+    {
+      "name": "the new project carries the standard seeded priorities, Medium default",
+      "passed": true,
+      "detail": "[[\"Low\",false],[\"Medium\",true],[\"High\",false]]"
+    },
+    {
+      "name": "creating a project did not pause for approval",
+      "passed": true
+    },
+    {
+      "name": "rename_project ran",
+      "passed": true,
+      "detail": "[\"rename_project\"]"
+    },
+    {
+      "name": "the project's new name is committed",
+      "passed": true,
+      "detail": "Phase4 Lists 1e85e3fa (renamed)"
+    },
+    {
+      "name": "create_status and update_status both ran",
+      "passed": true,
+      "detail": "[\"list_statuses\",\"create_status\",\"update_status\",\"update_status\"]"
+    },
+    {
+      "name": "the status list now reads Shipped, Backlog, In Progress, Done",
+      "passed": true,
+      "detail": "[\"Shipped\",\"Backlog\",\"In Progress\",\"Done\"]"
+    },
+    {
+      "name": "\"Shipped\" counts as completed",
+      "passed": true,
+      "detail": "[[\"Shipped\",true],[\"Backlog\",false],[\"In Progress\",false],[\"Done\",true]]"
+    },
+    {
+      "name": "create_priority and update_priority both ran",
+      "passed": true,
+      "detail": "[\"list_priorities\",\"create_priority\",\"update_priority\",\"update_priority\",\"update_priority\",\"list_priorities\"]"
+    },
+    {
+      "name": "the priority list now reads Critical, Whenever, Medium, High",
+      "passed": true,
+      "detail": "[\"Critical\",\"Whenever\",\"Medium\",\"High\"]"
+    },
+    {
+      "name": "\"Critical\" is the project's one default priority",
+      "passed": true,
+      "detail": "[[\"Critical\",true],[\"Whenever\",false],[\"Medium\",false],[\"High\",false]]"
+    },
+    {
+      "name": "none of the list management paused for approval",
+      "passed": true
+    }
+  ]
+}

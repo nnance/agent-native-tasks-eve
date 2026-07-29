@@ -1,0 +1,71 @@
+☰eve  v0.27.8
+eve Info
+========
+Resolved application paths and the active message contract.
+
+Application
+App Root      /Users/nicknance/Developer/genai/agent-native-tasks-eve
+Agent Root    /Users/nicknance/Developer/genai/agent-native-tasks-eve/agent
+Layout        nested
+Compile       ready
+Diagnostics   0 errors, 0 warnings
+Instructions  instructions.md
+Skills        2 skills
+Tools         19 tools
+Subagents     0 subagents
+Schedules     0 schedules
+
+Artifacts
+Compiled Manifest   /Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/compile/compiled-agent-manifest.json
+Discovery Manifest  /Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/discovery/agent-discovery-manifest.json
+Diagnostics         /Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/discovery/diagnostics.json
+Module Map          /Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/compile/module-map.mjs
+Metadata            /Users/nicknance/Developer/genai/agent-native-tasks-eve/.eve/compile/compile-metadata.json
+Workflow Build      /Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/eve@0.27.8_ai@7.0.37_zod@4.4.3__dotenv@17.4.2_drizzle-orm@0.45.2_postgres@3.4.9__jiti@2_ef4b6e31159f5e7b0dc8724a2ac16911/node_modules/eve/.eve/workflow-cache/0c29f1def641
+Output              /Users/nicknance/Developer/genai/agent-native-tasks-eve/.output
+
+Instructions
+Instructions  instructions.md
+
+Messaging
+Workflow ID  workflow//eve//workflowEntry
+Source Dir   /Users/nicknance/Developer/genai/agent-native-tasks-eve/node_modules/.pnpm/eve@0.27.8_ai@7.0.37_zod@4.4.3__dotenv@17.4.2_drizzle-orm@0.45.2_postgres@3.4.9__jiti@2_ef4b6e31159f5e7b0dc8724a2ac16911/node_modules/eve/dist/src/execution
+Create       POST /eve/v1/session
+Continue     POST /eve/v1/session/:sessionId
+Stream       GET /eve/v1/session/:sessionId/stream
+
+--- authored tools (19) ---
+bulk_delete_tasks
+bulk_update_tasks
+create_priority
+create_project
+create_status
+create_task
+delete_priority
+delete_project
+delete_status
+delete_task
+get_task
+list_priorities
+list_projects
+list_statuses
+list_tasks
+rename_project
+update_priority
+update_status
+update_task
+
+--- disabled framework tools (9) ---
+agent
+bash
+glob
+grep
+read_file
+todo
+web_fetch
+web_search
+write_file
+
+--- skills discovered ---
+neon
+neon-postgres
