@@ -71,23 +71,29 @@ const entryFor = (toolName: string) =>
   `[data-testid="action-entry"][data-tool="${toolName}"]`
 
 /**
- * Waits until the agent's turn has settled.
+ * Waits until the agent's turn has settled — finished, or parked for the user.
  *
  * The **textarea** is the signal, not the send button: the button is also
  * disabled whenever the draft is empty, which it always is right after a send,
- * so it never reports "ready". The textarea is disabled only while
- * `agent.status` is `submitted` or `streaming`.
+ * so it never reports "ready".
+ *
+ * Two states count as settled, because eve treats both as the end of a turn.
+ * `chat-blocked` is the second one: a turn parked at `session.waiting` on an
+ * approval closes the composer deliberately, and that park is *durably* idle,
+ * not in flight. (A turn parked on an `ask_question` leaves the composer open,
+ * so it settles through the first clause.)
  *
  * Letting a turn run past the end of a test is not a cosmetic problem — the
  * next test truncates the database in `beforeEach`, and a turn still in flight
- * writes into the fresh world.
+ * writes into the fresh world. A parked one writes nothing until answered.
  */
 async function turnSettled(): Promise<void> {
-  await suite.browser.waitUntil(
+  const { browser } = suite
+
+  await browser.waitUntil(
     async () =>
-      (await suite.browser.count(
-        `${tid("chat-composer-input")}:not([disabled])`
-      )) > 0,
+      (await browser.count(`${tid("chat-composer-input")}:not([disabled])`)) >
+        0 || (await browser.count(tid("chat-blocked"))) > 0,
     { timeoutMs: TURN_MS, label: "the agent's turn to settle" }
   )
 }
@@ -262,6 +268,71 @@ test(
       "approving deleted the row"
     )
     await waits().waitGoneSlow(tid(`task-row-${task.id}`), 15_000)
+  }
+)
+
+// ------------------------------------------------------- US-F5.1 (the gate holds)
+
+test(
+  "US-F5.1: a pending approval cannot be pushed off screen by the next message",
+  TEST_TIMEOUT,
+  async () => {
+    const { browser } = suite
+    const project = await seededProject()
+
+    await makeTask({
+      projectId: project.id,
+      title: "Shred the old contracts",
+    })
+
+    await suite.open()
+    await ask('Delete the task "Shred the old contracts".')
+
+    await waits().waitForSlow(tid("approval-card"), TURN_MS)
+
+    // The composer is closed while the gate is open. Without this the user's
+    // own next message — "wait, why?" — projects optimistically into
+    // `agent.data.messages`, and a card keyed off the *last* message would
+    // stop being live and lose its Approve and Deny buttons while the turn
+    // stayed durably parked on the server, waiting for exactly that answer.
+    assert.equal(
+      await browser.count(`${tid("chat-composer-input")}:not([disabled])`),
+      0,
+      "the composer is closed while an approval is pending"
+    )
+    assert.equal(
+      await browser.count(`${tid("chat-send")}:not([disabled])`),
+      0,
+      "and so is Send"
+    )
+    assert.equal(
+      await browser.visible(tid("chat-blocked")),
+      true,
+      "and the pane says why"
+    )
+
+    // The card is still the only thing on the table, buttons and all.
+    assert.equal(await browser.count(tid("approval-card")), 1)
+    assert.equal(await browser.count(tid("approval-approve")), 1)
+    assert.equal(await browser.count(tid("approval-deny")), 1)
+
+    // Answering is what reopens it — and nothing was lost in the meantime.
+    await browser.click(tid("approval-deny"))
+    await waits().waitGoneSlow(tid("approval-card"), TURN_MS)
+
+    // Not `turnSettled()`: that now also accepts a parked turn, and the claim
+    // here is the stronger one — the composer itself came back.
+    await browser.waitUntil(
+      async () =>
+        (await browser.count(`${tid("chat-composer-input")}:not([disabled])`)) >
+        0,
+      { timeoutMs: TURN_MS, label: "the composer to reopen" }
+    )
+
+    assert.ok(
+      await findTaskByTitle("Shred the old contracts"),
+      "denying left the task in place"
+    )
   }
 )
 

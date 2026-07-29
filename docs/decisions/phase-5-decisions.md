@@ -320,7 +320,80 @@ eve parks the whole turn on an `input.requested`, and its frontend guide places
 the pending request on "a `dynamic-tool` part of the latest message". So
 `ToolPart` takes a `live` flag, true only for the newest message; every earlier
 `approval-requested` part renders as history. Measured after the fix: one card,
-not two.
+not two. (Refined in review: "newest message" became "newest message that is
+not the user's" — see below.)
+
+### The composer closes while a request is pending, and `live` skips the user's own messages
+
+Reversing the assumption recorded below, on review. Two facts collide:
+
+1. `useEveAgent` runs with `optimistic: true` by default, so
+   `agent.send({ message })` projects the user's text into
+   `agent.data.messages` **immediately**, before eve confirms anything
+   (`EveAgentStore#y` emits `client.message.submitted`).
+2. The composer was open while a turn was parked at `session.waiting`, because
+   `agent.status` is back to `ready` there — the store calls `onFinish` from a
+   `finally` block on that boundary too.
+
+So an entirely ordinary act — typing "wait, why?" while a delete confirmation
+was on screen — appended a user message, moved `messages.at(-1)`, and demoted
+the assistant message carrying the still-pending request to `live: false`. The
+card downgraded to a plain action entry and its Approve and Deny buttons left
+the transcript with no other way back, while the server-side turn stayed
+durably parked waiting for exactly that answer and every later message queued
+behind it. That is the failure mode plan §8 risk 6 asks this phase to spend
+design effort on, and eve's own docs make the trigger normal rather than
+exotic.
+
+Both halves are fixed, because either alone leaves a sharp edge:
+
+- **An approval card no longer depends on its position in the transcript at
+  all.** Position was never evidence for a tool approval: answering one always
+  advances the part on the *server* — `output-available`, `output-error` or
+  `output-denied` — so a part still reading `approval-requested` is still
+  genuinely parked, reload or no reload. The reload guard above was really
+  about `ask_question`, which has no `execute` and therefore no server-side
+  event that ever advances it; that one keeps the position rule, now measured
+  against the newest message **that is not the user's** so an optimistic
+  projection cannot blink it out either. Verified in the browser after the
+  change: a reloaded transcript containing an answered question shows zero
+  cards, while a reload with a genuinely pending approval shows exactly one and
+  keeps the composer closed.
+- **The composer and Send are disabled while that message carries an
+  unresolved *approval***, with a one-line `chat-blocked` note saying why. eve
+  would hold the follow-up rather than deny the call, so this is not needed for
+  *correctness*; it is needed because a message the agent cannot answer until
+  you decide buys the user nothing while a destructive call sits waiting.
+
+Approvals only, deliberately: eve's two HITL shapes differ in exactly the way
+that matters here. A follow-up sent under an approval is *held* until the
+approval is answered; one sent under an `ask_question` "clears that pending
+request before the model continues" and starts the next turn. Typing past a
+question is therefore a supported, sensible move — "never mind, show me my
+tasks" — and the composer stays open for it. Typing past a delete confirmation
+is not. `06-agent-chat`'s `turnSettled` helper learned the same distinction: a
+turn parked on an approval is durably idle, not a hang.
+
+It cannot wedge the pane: Approve and Deny stay enabled, and answering either
+projects `client.input.responded`, which resolves the part locally and reopens
+the composer even for a request the server has long since forgotten.
+`06-agent-chat` asserts the closed composer, the visible reason, the intact
+card, and the reopening.
+
+### Resolved names are remembered, so the transcript does not forget
+
+Also from review. `useEntityLabels` reads only rows that **currently exist**,
+and `onFinish` invalidates those queries at every turn boundary — so the moment
+the agent deleted something, every name it had vanished from the cache and the
+settled entry for that very delete rewrote itself from "Deleted Archive the old
+logo files" to "Deleted 7f3a1c2b", in front of the user, right after they
+approved it. Every earlier mention of the row degraded with it.
+
+The hook now keeps a monotone cache: an id that has ever resolved keeps its
+name, and a fresh name always wins over a remembered one, so a rename still
+lands. Nothing is fabricated — an id that never resolved is still absent, and
+`describeToolCall` still degrades it to a short id. A transcript is a record of
+what happened; it does not get to forget.
 
 ### Three prose defects the browser pass caught
 
@@ -396,7 +469,7 @@ name would fail a correct answer reached a slightly different way.
 | `ask_question` renders sanely through `ApprovalCard`. | eve's docs state approvals and questions share one protocol and produce the same `input.requested` pause; the component branches on `request.display`, `options` and `allowFreeform` rather than on tool name. | A question renders with the wrong control. Phase 4 recorded `ask_question` as live but unexercised; this phase closes the gap by construction rather than by test, since forcing model ambiguity deterministically is outside its control. |
 | Two requests resolve every id a typical approval card references. | `TaskView` denormalises project, status and priority names onto every row, so `useProjects()` + `useTasks({includeCompleted:true})` cover every task and every list in use. | The tier-2 fan-out fires more often than expected — O(projects) extra cached requests. Bounded and invisible at this product's scale. |
 | With an explicit "using a single bulk update" instruction, the model calls `bulk_update_tasks` once. | `instructions.md` and `update_task`'s own description both push toward the bulk tool, and the edit gate makes the looping path visibly worse. | The bulk test sees separate `update_task` cards and fails. The fix is a tighter prompt, never a loosened legibility assertion — tool-choice quality is Phase 6's evals. |
-| The composer may stay open while an approval is pending. | `eve/docs/tools/human-in-the-loop.md`: unrelated follow-up text does not deny the tool call; eve holds it durably and replays it once the approval is answered. | A follow-up sent during a pending approval is lost or misinterpreted. The composer would then gain a pending-approval disable, which is a two-line change. |
+| ~~The composer may stay open while an approval is pending.~~ **Reversed in review** — see "The composer closes while a request is pending" below. | — | — |
 
 ---
 

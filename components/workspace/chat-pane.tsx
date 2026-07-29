@@ -175,7 +175,70 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
   const refs = React.useMemo(() => collectToolCallRefs(messages), [messages])
   const labels = useEntityLabels(refs)
 
+  /**
+   * The newest message that can be carrying a *pending* request — the newest
+   * message that is not the user's.
+   *
+   * Deliberately **not** `messages.at(-1)`. `useEveAgent` runs with
+   * `optimistic: true` by default, so `agent.send({ message })` projects the
+   * user's text into `agent.data.messages` immediately, before eve confirms
+   * anything, and the last element stops being the assistant's.
+   *
+   * This only gates **questions** now — `ToolPart` explains why an approval
+   * needs no position at all — but a question card should still not blink out
+   * of existence between the click on Send and the server's answer.
+   */
+  const liveMessage = React.useMemo(() => {
+    for (let index = messages.length - 1; index >= 0; index -= 1) {
+      const candidate = messages[index]
+      if (candidate.role !== "user") return candidate
+    }
+
+    return undefined
+  }, [messages])
+
+  /**
+   * Whether the transcript is waiting on an **approval** anywhere.
+   *
+   * Not on an `ask_question`, which arrives through the same protocol. eve
+   * treats the two differently, and so does this pane: a follow-up sent while
+   * an approval is pending is *held* until the approval is answered, whereas
+   * one sent while a question is pending "clears that pending request before
+   * the model continues" and starts the next turn. Typing past a question is a
+   * supported, sensible move — "never mind, show me my tasks" — so the
+   * composer stays open for it. Typing past an approval is not.
+   *
+   * Position-independent, matching `ToolPart`: answering an approval always
+   * advances its part on the server, so one still reading `approval-requested`
+   * is still parked, wherever it sits in the transcript.
+   */
+  const hasPendingApproval = messages.some((message) =>
+    message.parts.some(
+      (part) =>
+        part.type === "dynamic-tool" &&
+        part.state === "approval-requested" &&
+        part.toolMetadata?.eve?.inputRequest?.display === "confirmation"
+    )
+  )
+
   const isBusy = agent.status === "submitted" || agent.status === "streaming"
+
+  /**
+   * The composer is closed while an approval is pending.
+   *
+   * `agent.status` returns to `ready` on a turn parked at `session.waiting`
+   * (the store calls `onFinish` from a `finally` block), so busy alone does not
+   * cover this. eve would hold the follow-up rather than deny the tool call, so
+   * nothing breaks without the lock — but the message buys the user nothing
+   * either: it queues behind the very decision they are being asked to make,
+   * unanswered, while a destructive call sits waiting. Closing the composer is
+   * what keeps the safety control the only thing on the table.
+   *
+   * It cannot wedge: Approve and Deny stay enabled, and answering either one
+   * projects `client.input.responded` locally, which resolves the part and
+   * reopens the composer even if the request was stale.
+   */
+  const isBlocked = isBusy || hasPendingApproval
 
   const [draft, setDraft] = React.useState("")
 
@@ -187,9 +250,9 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
   )
 
   /**
-   * `live` is true only for the newest message, which is the only place a
-   * still-pending request can be — see `ToolPart`'s own note for why that
-   * matters after a reload.
+   * `live` is true only for `liveMessage`, the only place a still-pending
+   * request can be — see `ToolPart`'s own note for why that matters after a
+   * reload.
    */
   const renderPartFor = React.useCallback(
     (live: boolean) => {
@@ -213,12 +276,10 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
     [labels, respond, isBusy]
   )
 
-  const latestMessageId = messages.at(-1)?.id
-
   const submit = () => {
     const message = draft.trim()
 
-    if (message === "" || isBusy) return
+    if (message === "" || isBlocked) return
 
     setDraft("")
     void agent.send({ message })
@@ -270,7 +331,7 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
                         key={message.id}
                         message={message}
                         renderPart={renderPartFor(
-                          message.id === latestMessageId
+                          message.id === liveMessage?.id
                         )}
                         scrollAnchor={PIN_QUESTIONS_TO_TOP}
                       />
@@ -294,6 +355,18 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
             </div>
           ) : null}
 
+          {hasPendingApproval ? (
+            // Says why the composer is closed, and points at the one control
+            // that reopens it. Muted and one line: the card above is the thing
+            // to read, and this must not compete with it.
+            <p
+              data-testid="chat-blocked"
+              className="px-1 text-xs text-muted-foreground"
+            >
+              Approve or deny the request above to keep going.
+            </p>
+          ) : null}
+
           <form
             data-testid="chat-composer"
             onSubmit={(event) => {
@@ -305,17 +378,20 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
               <InputGroupTextarea
                 data-testid="chat-composer-input"
                 aria-label="Message the agent"
-                placeholder="Ask for a change…"
+                placeholder={
+                  hasPendingApproval
+                    ? "Approve or deny the request above to keep going…"
+                    : "Ask for a change…"
+                }
                 rows={2}
                 value={draft}
-                disabled={isBusy}
+                disabled={isBlocked}
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
-                  // Enter sends, Shift+Enter starts a line. Nothing here
-                  // blocks on a pending approval: eve durably queues unrelated
-                  // follow-up text and replays it once the approval is
-                  // answered, so refusing to send would be a restriction the
-                  // framework does not need.
+                  // Enter sends, Shift+Enter starts a line. `submit` is the
+                  // only send path, so the pending-request lock applies here
+                  // too — a disabled textarea should never receive this, but
+                  // the guard does not live in the DOM.
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault()
                     submit()
@@ -329,7 +405,7 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
                   size="icon-sm"
                   variant="default"
                   className="ml-auto"
-                  disabled={isBusy || draft.trim() === ""}
+                  disabled={isBlocked || draft.trim() === ""}
                   aria-label="Send"
                 >
                   <SendHorizontalIcon />

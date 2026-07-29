@@ -44,25 +44,46 @@ export function ToolPart({
   onRespond: (response: InputResponse) => void
   disabled: boolean
   /**
-   * Whether this part can still be carrying a *pending* request.
+   * Whether this part sits on the newest message that is not the user's.
    *
-   * Only the newest message can: eve parks the whole turn on an
-   * `input.requested`, and its docs state the pending request "rides on a
-   * `dynamic-tool` part of the latest message". Anything earlier is history.
+   * It gates **questions** only, and it exists because of a real defect: after
+   * a page reload an already-answered `ask_question` replays as
+   * `approval-requested`. Nothing on the server ever advances that part —
+   * `ask_question` has no `execute`, so there is no output event — and the
+   * projection event that resolved it client-side
+   * (`client.input.responded`) is reducer-facing only, deliberately absent
+   * from the authoritative `events` array we persist. Without the flag the
+   * transcript grows a scrollback of live-looking buttons for decisions the
+   * user already made.
    *
-   * This is not a nicety. A browser pass found that after a page reload an
-   * **already-answered** request replays as `approval-requested`, because the
-   * projection event that resolved it (`client.input.responded`) is
-   * reducer-facing only and is deliberately absent from the authoritative
-   * `events` array we persist. Without this flag the transcript grows a
-   * scrollback of live-looking Approve buttons for decisions the user already
-   * made — the worst possible failure mode for a safety control.
+   * A follow-up message also *answers* a question as far as eve is concerned —
+   * it "clears that pending request before the model continues" — so a
+   * question's card stepping aside for the next message is correct, not a
+   * loss.
    */
   live: boolean
 }) {
   const request = part.toolMetadata?.eve?.inputRequest
 
-  if (live && part.state === "approval-requested" && request) {
+  /**
+   * An approval, unlike a question, is live wherever it sits.
+   *
+   * Position is not evidence for a tool approval: answering one always
+   * advances the part on the *server* — to `output-available`, `output-error`
+   * or `output-denied` — so a part still reading `approval-requested` is still
+   * genuinely parked, reload or no reload. Meanwhile an unrelated follow-up
+   * does **not** answer it (eve holds the text), so nothing appended later may
+   * take Approve and Deny off the screen. `ChatPane` closes the composer for
+   * the same reason; this is the half that holds even if that lock is ever
+   * relaxed.
+   */
+  const isConfirmation = request?.display === "confirmation"
+
+  if (
+    (live || isConfirmation) &&
+    part.state === "approval-requested" &&
+    request
+  ) {
     return (
       <ApprovalCard
         part={part}

@@ -32,7 +32,7 @@
  * short id rather than to a fabricated name.
  */
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useQueries } from "@tanstack/react-query"
 import type { EveMessage } from "eve/react"
 
@@ -77,6 +77,29 @@ export function collectToolCallRefs(
 }
 
 export function useEntityLabels(refs: readonly EntityRef[]): EntityLabels {
+  /**
+   * Names, once resolved, stay resolved.
+   *
+   * The two tiers below only ever see rows that **currently exist**, and the
+   * chat pane invalidates those queries at every turn boundary — so the moment
+   * the agent deletes something, every name it had disappears from the caches
+   * and the transcript rewrites its own history into short ids. That hits the
+   * one entry the user most needs to be able to read afterwards: the settled
+   * `delete_task` row for the delete they just approved, which would flip from
+   * "Deleted Archive the old logo files" to "Deleted 7f3a1c2b" in front of
+   * them. A transcript is a record of what happened; it does not get to forget.
+   *
+   * So this is a monotone cache: an id that has ever had a name keeps it, and
+   * a fresh name always wins over a remembered one (a rename still lands).
+   * Nothing ever fabricates a name — an id that was never resolved is still
+   * absent, and `describeToolCall` still degrades it to a short id.
+   *
+   * State rather than a ref, because this *is* rendered — and the merge below
+   * returns the state object itself whenever nothing changed, so the identity
+   * consumers see is stable in the steady state.
+   */
+  const [remembered, setRemembered] = useState<Record<string, string>>({})
+
   const projects = useProjects()
   const tasks = useTasks({ includeCompleted: true })
 
@@ -140,11 +163,30 @@ export function useEntityLabels(refs: readonly EntityRef[]): EntityLabels {
     (query) => (query.data as { id: string; name: string }[] | undefined) ?? []
   )
 
-  if (listRows.length === 0) return tier1
+  const merged: Record<string, string> = { ...remembered, ...tier1 }
 
-  const labels: Record<string, string> = { ...tier1 }
+  for (const row of listRows) merged[row.id] = row.name
 
-  for (const row of listRows) labels[row.id] = row.name
+  // Identical content collapses back to the state object, so `labels` only
+  // changes identity when a label actually changed.
+  const labels = sameLabels(remembered, merged) ? remembered : merged
+
+  // React's own "adjusting state while rendering" pattern, not an effect: the
+  // new map is already in hand and returned this render, and the setState only
+  // parks it for the next one. Guarded by the comparison above, so it cannot
+  // loop.
+  if (labels !== remembered) setRemembered(labels)
 
   return labels
+}
+
+function sameLabels(
+  a: Record<string, string>,
+  b: Record<string, string>
+): boolean {
+  const keys = Object.keys(b)
+
+  if (keys.length !== Object.keys(a).length) return false
+
+  return keys.every((key) => a[key] === b[key])
 }

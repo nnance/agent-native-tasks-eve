@@ -68,6 +68,9 @@ appeared on any command line.
 | [`11-lint.txt`](./11-lint.txt) | `pnpm lint` — 0 errors. (The one warning is in `.remember/tmp/`, a tool scratch file outside the project's source.) |
 | [`12-test.txt`](./12-test.txt) | `pnpm test` — 349/349 unit + API tests, including the new `tests/unit/chat/describe-tool-call.test.ts`. |
 | [`13-test-e2e-run-1.txt`](./13-test-e2e-run-1.txt), [`14`](./14-test-e2e-run-2.txt), [`15`](./15-test-e2e-run-3.txt) | Three consecutive full `pnpm test:e2e` runs on the final code, each from a clean `pnpm db:reset:test` — **55/55 every time**. |
+| [`16-composer-closed-on-approval.png`](./16-composer-closed-on-approval.png) | **Review fix.** A pending `delete_task` approval with the composer **closed** underneath it: the textarea and Send are disabled and the pane says "Approve or deny the request above to keep going." The user cannot dispatch a message that would leave the gate unanswered — and cannot lose the buttons to their own next message. |
+| [`17-06-agent-chat-after-fix.txt`](./17-06-agent-chat-after-fix.txt) | `06-agent-chat` on the fixed code — 7/8, with the new `US-F5.1` case green (composer closed, reason shown, card intact, composer reopened on Deny). The one failure is a 120s per-turn timeout on `US-F5.2/5.3`, model latency rather than app behaviour. |
+| [`18-06-bulk-test-isolated.txt`](./18-06-bulk-test-isolated.txt) | That same `US-F5.2/5.3` test run on its own against the identical build — green in 27s, which is what makes the timeout above latency and not a regression. |
 
 ---
 
@@ -114,7 +117,7 @@ appeared on any command line.
 
 | # | Criterion | How it was verified |
 | --- | --- | --- |
-| 5.1 | Multi-task requests treated as bulk | `06 › "US-F5.2/5.3"` and the framework-held gate: `bulk_update_tasks`, `bulk_delete_tasks` and all four deletes are `always()`, and `update_task` gates from the second distinct task in a turn. |
+| 5.1 | Multi-task requests treated as bulk | `06 › "US-F5.2/5.3"` and the framework-held gate: `bulk_update_tasks`, `bulk_delete_tasks` and all four deletes are `always()`, and `update_task` gates from the second distinct task in a turn. `06 › "US-F5.1: a pending approval cannot be pushed off screen by the next message"` additionally asserts the gate cannot be walked away from: composer and Send disabled, the reason shown, the card and both buttons intact, and the composer reopened by answering. |
 | 5.2 | States exactly what it will do — which tasks, what change, how many — and waits | `06 › "US-F5.2/5.3"` asserts `data-count="3"`, exactly three `approval-target-*` nodes, each carrying a real fixture title, and the target status resolved to the name "Done". `04-approval-card-bulk.png` is the same card as a picture. The delete test additionally asserts the card names the task and carries `data-severity="destructive"`. |
 | 5.3 | Approve applies everything; decline changes nothing | The bulk test asserts all three rows are still un-moved while the card is up, then all three moved after Approve. The delete test asserts the row survives a Deny. |
 | 5.4 | Reports what actually changed | The settled `action-entry` renders "Updated 3 tasks / Status → Done" from the tool result — see `05-approved-and-landed.png`. |
@@ -145,6 +148,29 @@ appeared on any command line.
 - **Console and page errors.** Zero of each on a fresh load of the rewired
   shell, and zero page errors across the whole `06` suite
   (`tests/e2e/artifacts/06-agent-chat/errors.json`).
+- **Review fix: a pending approval can no longer be hidden by the next
+  message.** Three reviewers went over this branch; the finding that mattered
+  was that `useEveAgent`'s optimistic projection appends the user's own message
+  to `data.messages` the instant Send is pressed, so an approval card keyed off
+  "is this the last message?" lost its Approve and Deny buttons the moment the
+  user typed "wait, why?" — while the turn stayed durably parked on the server.
+  Both halves are fixed and both were re-checked in a browser: an approval card
+  no longer depends on its position at all (answering one always advances the
+  part server-side, so `approval-requested` always means *parked*), and the
+  composer closes while an approval is pending. `ask_question` deliberately
+  keeps the composer open, because eve treats a follow-up as an answer to a
+  question but *holds* it under an approval. Measured after the change: a
+  reloaded transcript containing an already-answered question shows **zero**
+  cards; a reload with a genuinely pending approval shows **one**, with the
+  composer still closed. See `docs/decisions/phase-5-decisions.md`.
+- **`06-agent-chat` turn timeouts are model-latency flake, not app failure.**
+  Re-running the suite repeatedly on the fixed code, individual tests sometimes
+  exceed the 120s per-turn budget waiting for the *first* streamed token, and a
+  different test each time — 8/8, 5/8, 6/8, 7/8 across four runs, with `US-F3.3`
+  and the new `US-F5.1` gate tests passing in **every** run, and each timed-out
+  test passing on its own against the identical build (`18-…`, 27s). The budget
+  was left alone: no slow-but-successful turn was observed, so raising it would
+  be chasing a degraded gateway rather than matching measured reality.
 - **No Stop button.** `agent.stop()` only detaches the client stream — the
   server turn keeps running and billing — so shipping one would be misleading.
   Recorded in `docs/decisions/phase-5-decisions.md`; nothing in US-F1–F6 asks

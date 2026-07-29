@@ -143,13 +143,93 @@ function stopChild(child: ChildProcess): () => Promise<void> {
 }
 
 /**
- * The eve agent server on the fixed port the rewrite was built against.
+ * Spawns one server and waits for its health endpoint to answer `{ ok: true }`.
  *
- * `DATABASE_URL` is overridden in the child's environment for the same reason
- * the Next server's is: the agent's tools reach Postgres through
- * `lib/actions` → `lib/db/client.ts`, which reads it at import time, and a
- * credential must never appear in a process listing.
+ * Both servers this module starts are the same shape — detached process group,
+ * capped output kept only for failure messages, poll until healthy or the
+ * child dies — so they share one implementation and differ in their argv,
+ * their health URL, and the sentence a failure prints.
+ *
+ * `DATABASE_URL` is overridden in the child's **environment**, never on the
+ * command line, so no credential can reach a process listing. Both servers
+ * need it: the agent's tools reach Postgres through `lib/actions` →
+ * `lib/db/client.ts` exactly as the Next app does.
  */
+async function startHealthyServer(options: {
+  args: readonly string[]
+  baseUrl: string
+  healthPath: string
+  /** Names the process in every failure message: "The eve agent server". */
+  name: string
+  /** Heads the captured output in a failure message: "eve output". */
+  outputLabel: string
+  /** One sentence of likeliest cause, appended to both failure messages. */
+  hint?: string
+}): Promise<E2eServer> {
+  // Capped, and printed only when boot fails.
+  let output = ""
+  const record = (chunk: unknown) => {
+    output = (output + String(chunk)).slice(-20_000)
+  }
+
+  const child: ChildProcess = spawn(process.execPath, [...options.args], {
+    cwd: repoRoot,
+    env: {
+      ...process.env,
+      DATABASE_URL: resolveTestDbUrl(),
+      NEXT_TELEMETRY_DISABLED: "1",
+    },
+    stdio: ["ignore", "pipe", "pipe"],
+    // A process group, so teardown takes anything the server forked with it
+    // rather than orphaning it on a held port.
+    detached: true,
+  })
+
+  child.stdout?.on("data", record)
+  child.stderr?.on("data", record)
+
+  const hint = options.hint === undefined ? "" : ` ${options.hint}`
+  const tail = () => `\n--- ${options.outputLabel} ---\n${output}`
+  const deadline = Date.now() + BOOT_TIMEOUT_MS
+  let healthy = false
+
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null) {
+      throw new Error(
+        `${options.name} exited with code ${child.exitCode} before becoming ` +
+          `healthy.${hint}${tail()}`
+      )
+    }
+
+    try {
+      const response = await fetch(`${options.baseUrl}${options.healthPath}`)
+      const body = (await response.json()) as { ok?: boolean }
+      if (response.ok && body.ok === true) {
+        healthy = true
+        break
+      }
+    } catch {
+      // Not listening yet. Keep polling until the deadline.
+    }
+
+    await sleep(POLL_INTERVAL_MS)
+  }
+
+  if (!healthy) {
+    throw new Error(
+      `${options.name} did not report healthy at ${options.baseUrl} within ` +
+        `${BOOT_TIMEOUT_MS}ms.${hint}${tail()}`
+    )
+  }
+
+  return {
+    baseUrl: options.baseUrl,
+    output: () => output,
+    stop: stopChild(child),
+  }
+}
+
+/** The eve agent server on the fixed port the rewrite was built against. */
 async function startEveServer(): Promise<E2eServer> {
   if (!existsSync(eveOutputPath)) {
     throw new Error(
@@ -160,66 +240,23 @@ async function startEveServer(): Promise<E2eServer> {
     )
   }
 
-  let output = ""
-  const record = (chunk: unknown) => {
-    output = (output + String(chunk)).slice(-20_000)
-  }
-
-  const child: ChildProcess = spawn(
-    process.execPath,
-    [eveBin, "start", "--host", "127.0.0.1", "--port", String(EVE_LOCAL_PORT)],
-    {
-      cwd: repoRoot,
-      env: {
-        ...process.env,
-        DATABASE_URL: resolveTestDbUrl(),
-        NEXT_TELEMETRY_DISABLED: "1",
-      },
-      stdio: ["ignore", "pipe", "pipe"],
-      detached: true,
-    }
-  )
-
-  child.stdout?.on("data", record)
-  child.stderr?.on("data", record)
-
-  const baseUrl = `http://127.0.0.1:${EVE_LOCAL_PORT}`
-  const deadline = Date.now() + BOOT_TIMEOUT_MS
-  let healthy = false
-
-  while (Date.now() < deadline) {
-    if (child.exitCode !== null) {
-      throw new Error(
-        `The eve agent server exited with code ${child.exitCode} before ` +
-          `becoming healthy. Port ${EVE_LOCAL_PORT} is fixed by the rewrite ` +
-          "baked at build time, so a `pnpm dev` already holding it is the " +
-          `likeliest cause.\n--- eve output ---\n${output}`
-      )
-    }
-
-    try {
-      const response = await fetch(`${baseUrl}/eve/v1/health`)
-      const body = (await response.json()) as { ok?: boolean }
-      if (response.ok && body.ok === true) {
-        healthy = true
-        break
-      }
-    } catch {
-      // Not listening yet.
-    }
-
-    await sleep(POLL_INTERVAL_MS)
-  }
-
-  if (!healthy) {
-    throw new Error(
-      `The eve agent server did not report healthy on ${EVE_LOCAL_PORT} ` +
-        `within ${BOOT_TIMEOUT_MS}ms. A \`pnpm dev\` already holding that ` +
-        `port is the likeliest cause.\n--- eve output ---\n${output}`
-    )
-  }
-
-  return { baseUrl, output: () => output, stop: stopChild(child) }
+  return startHealthyServer({
+    args: [
+      eveBin,
+      "start",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      String(EVE_LOCAL_PORT),
+    ],
+    baseUrl: `http://127.0.0.1:${EVE_LOCAL_PORT}`,
+    healthPath: "/eve/v1/health",
+    name: "The eve agent server",
+    outputLabel: "eve output",
+    hint:
+      "That port is fixed by the rewrite baked at build time, so a `pnpm " +
+      "dev` already holding it is the likeliest cause.",
+  })
 }
 
 export async function startE2eServer(
@@ -238,87 +275,50 @@ export async function startE2eServer(
   const eve = options.eve === true ? await startEveServer() : undefined
 
   const port = await findFreePort()
-  const baseUrl = `http://127.0.0.1:${port}`
 
-  // Capped, and printed only when boot fails.
-  let output = ""
-  const record = (chunk: unknown) => {
-    output = (output + String(chunk)).slice(-20_000)
+  // `@next/env` does not overwrite a variable already present in `process.env`,
+  // so the test DATABASE_URL `startHealthyServer` injects survives .env.local —
+  // and 01-foundation.test.ts asserts that claim at runtime by creating a
+  // project through the UI and finding it in the test database.
+  let next: E2eServer
+
+  try {
+    next = await startHealthyServer({
+      args: [
+        nextBin,
+        "start",
+        "--port",
+        String(port),
+        "--hostname",
+        "127.0.0.1",
+      ],
+      baseUrl: `http://127.0.0.1:${port}`,
+      healthPath: "/api/health",
+      name: "The E2E server",
+      outputLabel: "server output",
+    })
+  } catch (error) {
+    // eve is already up and holds the *fixed* port, so leaking it here would
+    // fail the next suite instead of this one.
+    if (eve) await eve.stop()
+    throw error
   }
 
-  // DATABASE_URL is overridden in the child's env, never on the command line,
-  // so no credential can reach a process listing. `@next/env` does not
-  // overwrite a variable already present in `process.env`, so this survives
-  // .env.local — and 01-foundation.test.ts asserts that claim at runtime by
-  // creating a project through the UI and finding it in the test database.
-  const child: ChildProcess = spawn(
-    process.execPath,
-    [nextBin, "start", "--port", String(port), "--hostname", "127.0.0.1"],
-    {
-      cwd: repoRoot,
-      env: {
-        ...process.env,
-        DATABASE_URL: resolveTestDbUrl(),
-        NEXT_TELEMETRY_DISABLED: "1",
-      },
-      stdio: ["ignore", "pipe", "pipe"],
-      // A process group, so teardown takes anything the server forked with it
-      // rather than orphaning it on a held port.
-      detached: true,
-    }
-  )
-
-  child.stdout?.on("data", record)
-  child.stderr?.on("data", record)
-
-  const deadline = Date.now() + BOOT_TIMEOUT_MS
-  let healthy = false
-
-  while (Date.now() < deadline) {
-    if (child.exitCode !== null) {
-      throw new Error(
-        `The E2E server exited with code ${child.exitCode} before becoming ` +
-          `healthy.\n--- server output ---\n${output}`
-      )
-    }
-
-    try {
-      const response = await fetch(`${baseUrl}/api/health`)
-      const body = (await response.json()) as { ok?: boolean }
-      if (response.ok && body.ok === true) {
-        healthy = true
-        break
-      }
-    } catch {
-      // Not listening yet. Keep polling until the deadline.
-    }
-
-    await sleep(POLL_INTERVAL_MS)
-  }
-
-  if (!healthy) {
-    throw new Error(
-      `The E2E server did not report healthy within ${BOOT_TIMEOUT_MS}ms.\n` +
-        `--- server output ---\n${output}`
-    )
-  }
-
-  const stopNext = stopChild(child)
-
-  // eve last, and unconditionally: it holds the fixed port, so leaving it
-  // running would break the *next* suite rather than this one.
+  // eve last, and unconditionally, for the same reason.
   const stop = async (): Promise<void> => {
     try {
-      await stopNext()
+      await next.stop()
     } finally {
       if (eve) await eve.stop()
     }
   }
 
   return {
-    baseUrl,
+    baseUrl: next.baseUrl,
     output: () =>
-      eve ? `${output}\n--- eve output ---\n${eve.output()}` : output,
+      eve
+        ? `${next.output()}\n--- eve output ---\n${eve.output()}`
+        : next.output(),
     stop,
   }
 }

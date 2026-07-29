@@ -83,7 +83,7 @@ Attributes only — no testid is ever read by business logic.
 | Projects | `projects-panel-{loading,error,empty}`, `project-row-<id>`, `project-name-<id>`, `project-rename-<id>` (+ `-input`/`-submit`/`-cancel`/`-error`), `project-delete-<id>`, `project-create-{input,submit,error}` |
 | Statuses | `manage-project-select`, `statuses-panel-{loading,error,empty}`, `status-row-<id>` (+ `data-completed`), `status-name-<id>`, `status-rename-<id>` (+ `-input`/…), `status-up-<id>`, `status-down-<id>`, `status-completed-<id>`, `status-delete-<id>`, `status-create-{input,completed,submit,error}` |
 | Priorities | `priorities-panel-{loading,error,empty}`, `priority-row-<id>` (+ `data-default`), `priority-name-<id>`, `priority-rename-<id>` (+ `-input`/…), `priority-up-<id>`, `priority-down-<id>`, `priority-set-default-<id>`, `priority-default-badge-<id>`, `priority-delete-<id>`, `priority-create-{input,submit,error}` |
-| Chat pane | `chat-conversation`, `chat-transcript`, `chat-empty`, `chat-error`, `chat-composer`, `chat-composer-input`, `chat-send` |
+| Chat pane | `chat-conversation`, `chat-transcript`, `chat-empty`, `chat-error`, `chat-composer`, `chat-composer-input`, `chat-send`, `chat-blocked` |
 | Agent activity | `action-entry` (+ `data-tool`, `data-state`, `data-outcome`), `action-entry-details` |
 | Approvals | `approval-card` (+ `data-tool`, `data-severity`, `data-count`), `approval-approve`, `approval-deny`, `approval-option-<id>`, `approval-freeform`, `approval-freeform-submit`, `approval-target-<id>` |
 
