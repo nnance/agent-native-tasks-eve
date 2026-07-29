@@ -32,14 +32,27 @@
  * PUT there covers US-F1.3 including a reload with an approval card on screen.
  * The whole snapshot goes every time, session cursor included in full.
  *
- * ## Cache hygiene
+ * ## Cache hygiene, and live sync
  *
- * `onFinish` also invalidates the four query families. That is this pane's own
- * housekeeping, not Phase 6's live sync: without it the label resolver goes
- * stale the moment the agent creates or renames anything, and the next
- * approval card in the same conversation degrades to short ids — a direct
- * US-F5.2 regression. Phase 6 replaces it with finer-grained `onEvent`
- * invalidation.
+ * `onEvent` is Phase 6's "agent → UI" half (plan §5.1, US-G1). It fires once
+ * per *completed successful mutating tool call*, mid-turn, and invalidates
+ * only the families that call can have changed — `lib/chat/tool-invalidation.ts`
+ * owns that mapping and explains why it keys off eve's real `action.result`
+ * event rather than the `tool-result` the plan's prose names.
+ *
+ * It **replaces** the blanket four-family sweep `onFinish` used to run, and is
+ * a strict refinement of it: every family the sweep touched is still
+ * invalidated, per mutation rather than per turn, and *earlier*. So the
+ * US-F5.2 label-resolver hygiene the sweep existed for is better served, not
+ * merely preserved — a `create_project` mid-turn now refreshes labels before
+ * the approval card for a later call in the same turn renders. Keeping both
+ * would only manufacture the redundant refetching Phase 6's own fetch-storm
+ * check exists to catch.
+ *
+ * One thing is genuinely lost: a dropped stream that the turn boundary would
+ * previously have swept up anyway. `app/providers.tsx`'s refetch-on-focus plus
+ * 30s poll is the documented backstop for exactly that (plan §5.3), and
+ * `07-live-sync.test.ts` asserts it against a second browser session.
  *
  * §3.4: everything the agent writes into this pane is untrusted *data*. It is
  * rendered as text and never interpreted.
@@ -91,6 +104,7 @@ import {
   useEntityLabels,
 } from "@/lib/chat/use-entity-labels"
 import { persistChatState } from "@/lib/chat/persist-chat-state"
+import { queryFamiliesForEvent } from "@/lib/chat/tool-invalidation"
 import { queryKeys } from "@/lib/queries/keys"
 
 /**
@@ -159,14 +173,17 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
           unknown
         > | null,
       })
+    },
 
-      for (const key of [
-        queryKeys.tasks.all,
-        queryKeys.projects.all,
-        queryKeys.statuses.all,
-        queryKeys.priorities.all,
-      ]) {
-        void queryClient.invalidateQueries({ queryKey: key })
+    /**
+     * Observe-only, over the authoritative server stream — the store calls
+     * this for confirmed events and never for its own optimistic client
+     * projections, so an invalidation here can never race a write that has not
+     * happened yet.
+     */
+    onEvent: (event) => {
+      for (const family of queryFamiliesForEvent(event)) {
+        void queryClient.invalidateQueries({ queryKey: queryKeys[family].all })
       }
     },
   })
