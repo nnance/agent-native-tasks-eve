@@ -380,6 +380,35 @@ across a full read-only agent turn is only true if invalidation is keyed on
 mutating tool names, and it is the one deterministic proof of the mechanism
 that lives in the browser suite.
 
+### Four tests in `02` and `05` were fixed, outside this phase's scope
+
+The full-suite run that closes this phase failed four tests — three in `05`,
+one in `02` — every one of which passed when its file was run alone. Neither
+file drives the agent, and `useEveAgent` emits no stream events without a send,
+so `onEvent` never fires in either: not a Phase 6 regression. But §4.5's
+standing rule is that flake is never retried away, and on inspection neither
+was flake:
+
+- `openLists()` (in both `04` and `05`) waited for `manage-project-select`,
+  which renders when the **projects** query resolves. The statuses and
+  priorities panels are separate queries keyed by the selected project, so
+  every test that then clicked a control inside a row was racing a fetch —
+  "Element not found: `priority-delete-<id>`" at 3.8s. Both helpers now also
+  wait for the panel's loading state to clear, which covers the empty and error
+  renderings too. `04` had the identical latent race and was fixed with it.
+- `02`'s US-B3.1/3.2 had **no** settle point on the status and priority filter
+  chips. `click` returns when the event dispatches, not when the new query
+  key's fetch has landed, so the assertion read the previous filter's list and
+  saw three rows where one was expected. Now uses the `waitCount` idiom the
+  search test three tests below already used.
+
+This is scope Phase 6 did not ask for. It was taken on because the phase's own
+exit evidence is a full-suite run, and a suite that fails four tests under
+latency is not evidence — and because Phase 7 needs the full suite green as its
+completion gate. No assertion was weakened or removed; the fixes are the same
+class Phase 3's record already documents ("three harness waits, each from a
+real race the first run exposed").
+
 ### The Neon test project intermittently refuses the first connection
 
 Two `pnpm eval` runs failed during `scripts/reset.ts` with `ETIMEDOUT` on
