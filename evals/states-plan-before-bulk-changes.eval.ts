@@ -68,10 +68,15 @@ export default defineEval({
     asked.messageIncludes(/\b(3|three)\b/i)
 
     t.judge.autoevals
-      // One checkable property, stated declaratively. autoevals' ClosedQA is
-      // a binary Y/N grader, and a compound criterion with a subordinate
-      // clause it cannot verify from the text alone ("before asking for
-      // approval …") reliably scores N on a reply that is in fact perfect.
+      // One checkable property, stated declaratively, because autoevals'
+      // ClosedQA is a binary Y/N grader. The first draft asked a compound
+      // question with a clause it could not verify from the text alone
+      // ("*before asking for approval*, does the reply …"). It scored 0 — but
+      // so did every other judge in the tree at that point, because
+      // `asked.message` was `undefined` and all of them were grading an empty
+      // string. Both were changed together, so the criterion's own
+      // contribution was never isolated. It is phrased this way on the
+      // grader's documented terms rather than on evidence.
       .closedQA(
         "The submission names each affected task and states the status they " +
           "will be moved to.",

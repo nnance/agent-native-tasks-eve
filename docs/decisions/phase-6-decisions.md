@@ -296,13 +296,20 @@ own events. `assertions.mdx` names the typed event stream as the sanctioned
 escape hatch for exactly this, so this is the documented move rather than a
 workaround.
 
-### `autoevals`' ClosedQA is binary, and compound criteria score N
+### The two HITL criteria were also simplified, and that change is unmeasured
 
-The first criteria were phrased as questions with a subordinate contrast
-("… — rather than claiming it is already done?"). Two of them scored 0 on
-replies that plainly satisfied the positive half. Criteria are now single
-declarative properties ("The submission names each affected task and states the
-status they will be moved to."). All four judges score 100% after the change.
+`autoevals`' ClosedQA is a binary Y/N grader, and the first drafts of the two
+HITL criteria were compound questions with a clause the grader could not verify
+from the text alone ("*before asking for approval*, does the reply …"). They
+were rewritten as single declarative properties at the same commit as the
+empty-string fix above.
+
+Stated plainly because the temptation is to claim a diagnosis here: **the two
+changes were not isolated from each other.** The empty string alone explains
+both 0% scores, and the criterion rewrite may have contributed nothing. It is
+phrased on the grader's documented terms rather than on evidence, and the
+comments in both eval files say so. All four judges score 100% after the two
+changes together.
 
 ### One eval criterion was wrong about the product's own contract
 

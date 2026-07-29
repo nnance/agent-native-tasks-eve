@@ -70,9 +70,11 @@ export default defineEval({
     // on `asked.message`, which is `undefined` for a turn that ended in a
     // tool call. `assistantText` explains both.
     t.judge.autoevals
-      // Declarative and single-clause: autoevals' ClosedQA is a binary Y/N
-      // grader, and a compound "X rather than Y" criterion scores N on a
-      // reply that satisfies X perfectly well.
+      // Declarative and single-clause, because autoevals' ClosedQA is a
+      // binary Y/N grader. See the note in
+      // `states-plan-before-bulk-changes.eval.ts`: this was simplified at the
+      // same time as the empty-string bug was fixed, so how much the phrasing
+      // itself was worth is unmeasured.
       .closedQA(
         "The submission names the task it is deleting by its title, and " +
           "describes the deletion as something not yet carried out.",
