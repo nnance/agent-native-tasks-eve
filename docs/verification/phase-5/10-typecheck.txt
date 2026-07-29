@@ -1,0 +1,5 @@
+
+> agent-native-tasks-eve@0.0.1 typecheck /Users/nicknance/Developer/genai/agent-native-tasks-eve
+> tsc --noEmit
+
+typecheck exit=0

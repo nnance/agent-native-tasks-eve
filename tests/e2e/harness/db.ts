@@ -55,18 +55,35 @@ export async function migrateTestDatabase(): Promise<void> {
  * Every test starts from a freshly seeded, otherwise-empty database.
  *
  * Implementation plan §4.4 words this as "drop, migrate, seed" per test. A
- * TRUNCATE plus `ensureSeeded()` gives the identical isolation guarantee in
- * one round trip; re-running DDL between tests would buy nothing (the schema
- * is constant) and would dominate the suite's runtime against a remote Neon
+ * wipe plus `ensureSeeded()` gives the identical isolation guarantee far more
+ * cheaply; re-running DDL between tests would buy nothing (the schema is
+ * constant) and would dominate the suite's runtime against a remote Neon
  * instance. `chat_state` is included so a Phase 5/6 test can never inherit a
  * transcript from the test before it.
+ *
+ * **`DELETE`, not `TRUNCATE`, and that is not a style preference.** From Phase
+ * 5 the agent suite runs a *second* process — the eve agent server — holding
+ * its own connection pool against this database. `TRUNCATE` needs an
+ * `AccessExclusiveLock` on every table, so it blocks that pool's writer, while
+ * the writer holds the row locks `TRUNCATE` is waiting for: a textbook cycle,
+ * and Postgres duly reported `40P01 deadlock detected` on two tests of the
+ * first full `06` run. `DELETE` takes only `RowExclusiveLock`, which is
+ * compatible with the writer's, so the lock-upgrade cycle cannot form.
+ *
+ * The identity restart TRUNCATE offered is not missed: every primary key in
+ * this schema is a UUID.
  */
 export async function resetTestDatabase(): Promise<void> {
   const database = testDb()
 
-  await database.execute(
-    `truncate table tasks, statuses, priorities, projects, chat_state restart identity cascade`
-  )
+  // Child rows first: the FKs are ON DELETE CASCADE, but deleting in
+  // dependency order keeps each statement's footprint small and predictable.
+  await database.execute(`delete from tasks`)
+  await database.execute(`delete from statuses`)
+  await database.execute(`delete from priorities`)
+  await database.execute(`delete from projects`)
+  await database.execute(`delete from chat_state`)
+
   await ensureSeeded(database)
 }
 
