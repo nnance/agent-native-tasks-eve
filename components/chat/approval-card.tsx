@@ -97,6 +97,28 @@ export function ApprovalCard({
   const shouldReduceMotion = useReducedMotion()
   const [freeform, setFreeform] = React.useState("")
 
+  /**
+   * The card puts itself on screen.
+   *
+   * Measured in the browser: with the message scroller's anchor-plus-spacer
+   * layout, a card that appears after a long reply lands a full viewport
+   * below the fold (card top 637 in a viewport ending at 454), behind a
+   * scroll-to-bottom button. Neither anchoring setting fixes that reliably,
+   * and a control the user has to go looking for is not a safety gate.
+   *
+   * So the guarantee lives on the card rather than in the scroller's
+   * heuristics. `block: "nearest"` moves the minimum distance, so it is a
+   * no-op when the card is already visible.
+   */
+  const cardRef = React.useRef<HTMLElement>(null)
+
+  React.useEffect(() => {
+    cardRef.current?.scrollIntoView({
+      block: "nearest",
+      behavior: shouldReduceMotion ? "auto" : "smooth",
+    })
+  }, [shouldReduceMotion])
+
   const summary = describeToolCall(part.toolName, part.input, labels)
   const isQuestion = request.display !== "confirmation"
   const severity = isQuestion ? "question" : summary.severity
@@ -120,6 +142,7 @@ export function ApprovalCard({
 
   return (
     <motion.section
+      ref={cardRef}
       data-testid="approval-card"
       data-tool={part.toolName}
       data-severity={severity}

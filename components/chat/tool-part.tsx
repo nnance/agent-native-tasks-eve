@@ -37,15 +37,32 @@ export function ToolPart({
   labels,
   onRespond,
   disabled,
+  live,
 }: {
   part: EveDynamicToolPart
   labels: EntityLabels
   onRespond: (response: InputResponse) => void
   disabled: boolean
+  /**
+   * Whether this part can still be carrying a *pending* request.
+   *
+   * Only the newest message can: eve parks the whole turn on an
+   * `input.requested`, and its docs state the pending request "rides on a
+   * `dynamic-tool` part of the latest message". Anything earlier is history.
+   *
+   * This is not a nicety. A browser pass found that after a page reload an
+   * **already-answered** request replays as `approval-requested`, because the
+   * projection event that resolved it (`client.input.responded`) is
+   * reducer-facing only and is deliberately absent from the authoritative
+   * `events` array we persist. Without this flag the transcript grows a
+   * scrollback of live-looking Approve buttons for decisions the user already
+   * made — the worst possible failure mode for a safety control.
+   */
+  live: boolean
 }) {
   const request = part.toolMetadata?.eve?.inputRequest
 
-  if (part.state === "approval-requested" && request) {
+  if (live && part.state === "approval-requested" && request) {
     return (
       <ApprovalCard
         part={part}

@@ -94,15 +94,6 @@ import { persistChatState } from "@/lib/chat/persist-chat-state"
 import { queryKeys } from "@/lib/queries/keys"
 
 /**
- * The persisted snapshot, in the envelope shape `putChatStateSchema` defines.
- *
- * Deliberately loose. That schema is envelope-only on purpose — the interior
- * of an eve event belongs to a young runtime — so the one cast to eve's
- * concrete types happens here, in the component that actually knows what eve
- * expects, rather than in a Server Component that should not carry
- * agent-runtime knowledge.
- */
-/**
  * `end`, not the scroller's default `last-anchor`.
  *
  * A conversation restored from the persisted snapshot has to open on the
@@ -112,6 +103,33 @@ import { queryKeys } from "@/lib/queries/keys"
  */
 const RESTORED_SCROLL_POSITION = "end" as const
 
+/**
+ * This transcript sticks to the bottom; it does not pin each question to the
+ * top of the viewport.
+ *
+ * The scroller's default is the familiar "your question stays at the top while
+ * the reply reads downward" pattern, which it implements with a message anchor
+ * plus a viewport-height spacer under the last message. Measured in the
+ * browser, that combination put an **approval card entirely below the fold**
+ * (card top 637, viewport ending at 454) behind a scroll-to-bottom button, and
+ * scrolling to `end` then landed a full viewport *past* the last real content
+ * because the spacer counts toward `scrollHeight`.
+ *
+ * A safety control the user has to go looking for is not a safety control, so
+ * this pane opts out of both halves: no anchor, and `spacerClassName="h-0"`.
+ * The pane is half a screen wide, where that dead space is expensive anyway.
+ */
+const PIN_QUESTIONS_TO_TOP = false
+
+/**
+ * The persisted snapshot, in the envelope shape `putChatStateSchema` defines.
+ *
+ * Deliberately loose. That schema is envelope-only on purpose — the interior
+ * of an eve event belongs to a young runtime — so the one cast to eve's
+ * concrete types happens here, in the component that actually knows what eve
+ * expects, rather than in a Server Component that should not carry
+ * agent-runtime knowledge.
+ */
 export type ChatSnapshot = {
   events: unknown[]
   session: Record<string, unknown> | null
@@ -168,19 +186,34 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
     [agent]
   )
 
-  const renderPart = React.useCallback(
-    (part: { type: string }, key: string) =>
-      part.type === "dynamic-tool" ? (
-        <ToolPart
-          key={key}
-          part={part as EveDynamicToolPart}
-          labels={labels}
-          onRespond={respond}
-          disabled={isBusy}
-        />
-      ) : null,
+  /**
+   * `live` is true only for the newest message, which is the only place a
+   * still-pending request can be — see `ToolPart`'s own note for why that
+   * matters after a reload.
+   */
+  const renderPartFor = React.useCallback(
+    (live: boolean) => {
+      // Named rather than an inline arrow: an anonymous function returning JSX
+      // reads to eslint as a component definition without a display name.
+      function renderToolPart(part: { type: string }, key: string) {
+        return part.type === "dynamic-tool" ? (
+          <ToolPart
+            key={key}
+            part={part as EveDynamicToolPart}
+            labels={labels}
+            onRespond={respond}
+            disabled={isBusy}
+            live={live}
+          />
+        ) : null
+      }
+
+      return renderToolPart
+    },
     [labels, respond, isBusy]
   )
+
+  const latestMessageId = messages.at(-1)?.id
 
   const submit = () => {
     const message = draft.trim()
@@ -228,12 +261,18 @@ export function ChatPane({ snapshot }: { snapshot: ChatSnapshot }) {
                   data-testid="chat-transcript"
                   className="px-4 py-4"
                 >
-                  <MessageScrollerContent className="gap-6">
+                  <MessageScrollerContent
+                    className="gap-6"
+                    spacerClassName="h-0"
+                  >
                     {messages.map((message) => (
                       <MessageAnimated
                         key={message.id}
                         message={message}
-                        renderPart={renderPart}
+                        renderPart={renderPartFor(
+                          message.id === latestMessageId
+                        )}
+                        scrollAnchor={PIN_QUESTIONS_TO_TOP}
                       />
                     ))}
                   </MessageScrollerContent>
