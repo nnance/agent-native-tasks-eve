@@ -1,0 +1,100 @@
+PROJECTS Result(2) [
+  { id: '0165d55e-23ee-42fa-8f50-fbabf8dd9e20', name: 'Greenhouse' },
+  { id: '33cf2b08-0f05-45bc-82cc-85077fdd2882', name: 'Personal' }
+]
+STATUSES Result(6) [
+  {
+    id: 'ec762d05-8072-4c63-b53c-07a05f60c63d',
+    name: 'Queued',
+    sort_order: 0,
+    is_completed: false
+  },
+  {
+    id: 'b4a28a58-196b-465a-9729-8326184c5729',
+    name: 'To Do',
+    sort_order: 0,
+    is_completed: false
+  },
+  {
+    id: 'fff10379-5eab-43ee-91e0-65243d82222f',
+    name: 'In Progress',
+    sort_order: 1,
+    is_completed: false
+  },
+  {
+    id: '1688d600-8f3a-4d90-8826-bd2b0f4b5194',
+    name: 'In Progress',
+    sort_order: 1,
+    is_completed: false
+  },
+  {
+    id: 'cf065d33-4c95-4d67-93e0-bf9bb394ad25',
+    name: 'Done',
+    sort_order: 2,
+    is_completed: true
+  },
+  {
+    id: 'c767b189-eb1d-46fe-bc51-9470b261c2c5',
+    name: 'Done',
+    sort_order: 2,
+    is_completed: true
+  }
+]
+PRIORITIES Result(6) [
+  {
+    id: 'eb5ffe57-d732-47c9-8f6e-1da59bf6e243',
+    name: 'Whenever',
+    sort_order: 0
+  },
+  {
+    id: '9d48cf94-0573-4eb3-9c8d-2ed625e61d6f',
+    name: 'Low',
+    sort_order: 0
+  },
+  {
+    id: 'fbd7d376-cc9f-481a-bf4b-1e5c1be26d48',
+    name: 'Medium',
+    sort_order: 1
+  },
+  {
+    id: '685f3da7-323d-405f-9f52-6bcb7c130e05',
+    name: 'Medium',
+    sort_order: 1
+  },
+  {
+    id: '51af92e0-23ba-432b-8b82-87813fd46016',
+    name: 'High',
+    sort_order: 2
+  },
+  {
+    id: 'b2a4e98e-2011-4903-956b-f70a55ee4f96',
+    name: 'High',
+    sort_order: 2
+  }
+]
+TASKS Result(3) [
+  {
+    id: '9659aa67-35db-4eae-878a-e79dcb5e11fc',
+    title: 'Regrout the tiles ZQVXKB',
+    status: 'Done',
+    priority: 'Medium',
+    project: 'Personal',
+    updated_at: 2026-07-29T09:12:26.294Z
+  },
+  {
+    id: '824daa25-93a7-486a-8e1a-d83da65c3fd6',
+    title: 'Reseal the deck WKPQNM',
+    status: 'Done',
+    priority: 'Medium',
+    project: 'Personal',
+    updated_at: 2026-07-29T09:08:48.719Z
+  },
+  {
+    id: '2c0ac124-eb23-45e0-9bc7-9b4ec56ffcb0',
+    title: 'Rewire the lamp JHTVBD',
+    status: 'Done',
+    priority: 'Medium',
+    project: 'Personal',
+    updated_at: 2026-07-29T09:10:45.888Z
+  }
+]
