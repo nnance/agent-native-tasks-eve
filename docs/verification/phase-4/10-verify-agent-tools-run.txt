@@ -2,7 +2,7 @@
 > agent-native-tasks-eve@0.0.1 verify:agent /Users/nicknance/Developer/genai/agent-native-tasks-eve
 > node --env-file=.env.local --env-file-if-exists=.env.test scripts/verify-agent-tools.ts
 
-Server: http://127.0.0.1:61055 (test database)
+Server: http://127.0.0.1:61660 (test database)
 Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
 
 01 grounded read
@@ -22,7 +22,7 @@ Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
   ✔ delete_status paused for approval
   ✔ the status still exists after the approved-but-blocked delete
   ✔ the blocking rule is relayed to the user
-  ✔ a concrete way forward is offered
+  ✘ a concrete way forward is offered
 
 04 delete approval denied
   ✔ delete_task paused for approval
@@ -45,4 +45,7 @@ Agent: agent-native-tasks-eve on anthropic/claude-sonnet-5
   ✔ at most one task was renamed before the user was asked
   ✔ declining leaves at most the one ungated single-task edit applied
 
-All assertions passed.
+1 assertion(s) failed:
+  ✘ a concrete way forward is offered — The task currently in "In Progress" is **"Rebuild the search index"**. Let me know how you'd like to proceed:
+ ELIFECYCLE  Command failed with exit code 1.
+exit=1

@@ -1,3 +1,4 @@
+$ pnpm lint
 
 > agent-native-tasks-eve@0.0.1 lint /Users/nicknance/Developer/genai/agent-native-tasks-eve
 > eslint
@@ -8,3 +9,4 @@
 
 ✖ 1 problem (0 errors, 1 warning)
 
+exit=0
