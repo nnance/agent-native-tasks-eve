@@ -1,0 +1,102 @@
+[nitro] ✔ Generated public .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/public
+[nitro] ℹ Building server (builder: rolldown, preset: node-server, compatibility date: 2026-07-24)
+ℹ Generated .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/nitro.json
+[nitro] ✔ Server built in 362ms
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_.mjs (287 B) (183 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_10.mjs (525 B) (301 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_11.mjs (286 B) (190 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_12.mjs (387 B) (242 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_13.mjs (275 B) (167 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_14.mjs (285 B) (171 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_15.mjs (283 B) (170 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_16.mjs (241 B) (161 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_17.mjs (264 B) (164 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_2.mjs (267 B) (166 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_3.mjs (230 B) (149 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_4.mjs (228 B) (149 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_5.mjs (227 B) (148 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_6.mjs (268 B) (168 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_7.mjs (237 B) (157 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_8.mjs (234 B) (154 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/_9.mjs (234 B) (154 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/@ai-sdk/gateway+[...].mjs (433 kB) (84.9 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/ai.mjs (275 kB) (49.8 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/drizzle-orm+postgres.mjs (246 kB) (52.1 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/eve+ms+workflow__utils.mjs (3.24 kB) (1.23 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/eve+zod.mjs (5.69 MB) (1.31 MB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/h3+rou3+srvx.mjs (45.5 kB) (12.1 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/hookable.mjs (1.37 kB) (602 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/ufo.mjs (2.39 kB) (794 B gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_libs/vercel__oidc.mjs (2.88 kB) (1.08 kB gzip)
+  ├─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/_runtime.mjs (1.71 kB) (777 B gzip)
+  └─ .eve/builds/ms5miik7-ffb67624-c51d-4986-89c7-9d7db589a9ad/output/server/index.mjs (333 kB) (96.5 kB gzip)
+Σ Total size: 7.04 MB (1.61 MB gzip)
+[nitro] ✔ You can preview this build using npx nitro preview
+[BUILD] built output at /Users/nicknance/Developer/genai/agent-native-tasks-eve/.output
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.4s
+  Running TypeScript ...
+  Finished TypeScript in 2.2s ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/8) ...
+  Generating static pages using 13 workers (2/8) 
+  Generating static pages using 13 workers (4/8) 
+  Generating static pages using 13 workers (6/8) 
+✓ Generating static pages using 13 workers (8/8) in 92ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/chat-state
+├ ƒ /api/health
+├ ƒ /api/projects
+├ ƒ /api/projects/[projectId]
+├ ƒ /api/projects/[projectId]/priorities
+├ ƒ /api/projects/[projectId]/priorities/[priorityId]
+├ ƒ /api/projects/[projectId]/statuses
+├ ƒ /api/projects/[projectId]/statuses/[statusId]
+├ ƒ /api/tasks
+└ ƒ /api/tasks/[taskId]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+✔ US-F1.1/1.2 + US-F2: the pane is a live agent that answers from real data (21214.55075ms)
+✔ US-F3.2/3.5 + US-F6.1: a single-task status move runs with no approval gate (19764.563292ms)
+✔ US-F3.3 + US-F5.1/5.2: deleting a task gates, and denying leaves it alone (18039.817833ms)
+✔ US-F5.1: a pending approval cannot be pushed off screen by the next message (11768.703792ms)
+✔ US-F4.3: deleting a project gates too — the card is not task-specific (21696.440167ms)
+✔ US-F5.2/5.3: a bulk card states how many and names every task (23732.150125ms)
+✔ US-F1.3/1.4 + US-F6.3: the conversation survives a reload, pronoun and all (24309.221125ms)
+✔ US-F3.4: moving a task to another project is refused, and nothing changes (10350.920417ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 161852.607792
