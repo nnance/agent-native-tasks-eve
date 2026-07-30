@@ -8,7 +8,7 @@ import { never } from "eve/tools/approval"
 
 import { updatePriority } from "../../lib/actions/index.ts"
 import { updatePrioritySchema } from "../../lib/schemas/index.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

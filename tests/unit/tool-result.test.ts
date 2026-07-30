@@ -3,18 +3,18 @@
  * database: `runAction` takes a thunk, so every branch is reachable by
  * throwing the real error classes the shared actions throw.
  *
- * Mirrors tests/unit/{actions,domain}/ — `agent` is its own top-level root in
- * the test tree because `agent/lib/` is a different architectural half from
- * the repo-root `lib/`, and a `tests/unit/lib/` directory would read as the
- * latter.
+ * Sits at the root of tests/unit/ because its subject sits at the root of
+ * lib/: the module was `agent/lib/tool-result.ts` until the MCP interface
+ * needed it verbatim, and it moved rather than being imported across from a
+ * sibling interface.
  */
 
 import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 
-import { runAction, toJsonSafe } from "../../../agent/lib/tool-result.ts"
-import { NotFoundError, RuleViolation } from "../../../lib/domain/errors.ts"
-import { updateTaskSchema } from "../../../lib/schemas/tasks.ts"
+import { runAction, toJsonSafe } from "../../lib/tool-result.ts"
+import { NotFoundError, RuleViolation } from "../../lib/domain/errors.ts"
+import { updateTaskSchema } from "../../lib/schemas/tasks.ts"
 
 describe("toJsonSafe", () => {
   it("rewrites Date to an ISO string at every depth", () => {

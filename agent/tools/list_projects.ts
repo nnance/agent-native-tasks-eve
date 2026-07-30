@@ -12,9 +12,9 @@ import { never } from "eve/tools/approval"
 
 import { listProjects } from "../../lib/actions/index.ts"
 import { listProjectsSchema } from "../../lib/schemas/index.ts"
-import { compactProject } from "../lib/compact.ts"
+import { compactProject } from "../../lib/compact.ts"
 import { compactList } from "../lib/list-output.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

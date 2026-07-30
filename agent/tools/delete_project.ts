@@ -12,7 +12,7 @@ import { always } from "eve/tools/approval"
 
 import { deleteProject } from "../../lib/actions/index.ts"
 import { deleteProjectSchema } from "../../lib/schemas/index.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

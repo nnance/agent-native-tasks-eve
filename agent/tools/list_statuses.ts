@@ -11,9 +11,9 @@ import { never } from "eve/tools/approval"
 
 import { listStatuses } from "../../lib/actions/index.ts"
 import { listStatusesSchema } from "../../lib/schemas/index.ts"
-import { compactStatus } from "../lib/compact.ts"
+import { compactStatus } from "../../lib/compact.ts"
 import { compactList } from "../lib/list-output.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

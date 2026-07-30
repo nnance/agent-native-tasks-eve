@@ -1,6 +1,12 @@
 /**
  * The compact row projections the model sees from the six array-returning
- * tools (implementation plan §2.4).
+ * tools (implementation plan §2.4), and the shape they are wrapped in.
+ *
+ * Hoisted out of `agent/lib/` when the MCP interface landed (§2.8): trimming is
+ * a promise made to a *model*, and both agent-facing interfaces make it, so
+ * both must make it identically or the two agents are reading different data.
+ * `agent/lib/list-output.ts` wraps `compactPayload` in EVE's `toModelOutput`
+ * contract; `mcp/server.ts` puts the same value in an MCP content block.
  *
  * One pure function per entity, typed against the **serialized** shapes
  * because they run downstream of `runAction`, which has already rewritten
@@ -14,9 +20,28 @@
  * full record for when the model actually needs a task's text.
  */
 
-import type { TaskView } from "../../lib/actions/tasks.ts"
-import type { Priority, Project, Status } from "../../lib/db/schema.ts"
-import type { Serialized } from "../../lib/serialized.ts"
+import type { TaskView } from "./actions/tasks.ts"
+import type { Priority, Project, Status } from "./db/schema.ts"
+import type { Serialized } from "./serialized.ts"
+import type { ToolFailure, ToolResult } from "./tool-result.ts"
+
+/** A trimmed list result: how many there were, and the rows themselves. */
+export type CompactList<R> = { ok: true; count: number; items: R[] }
+
+/**
+ * Trims a successful array result down to a count plus compact rows.
+ *
+ * Failures pass through untouched: they are already small, and `kind` plus
+ * `message` are precisely what the model has to relay to the user.
+ */
+export function compactPayload<T, R>(
+  output: ToolResult<T[]>,
+  toRow: (row: T) => R
+): CompactList<R> | ToolFailure {
+  return output.ok
+    ? { ok: true, count: output.data.length, items: output.data.map(toRow) }
+    : output
+}
 
 /** A task row, with the joined names flattened and the long text dropped. */
 export function compactTask(task: Serialized<TaskView>) {
