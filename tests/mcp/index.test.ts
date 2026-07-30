@@ -139,12 +139,10 @@ describe("the spawned stdio server", () => {
   })
 
   it("writes nothing to stdout that is not a protocol message", () => {
-    // Every line the harness read was JSON.parse'd on arrival, so reaching here
-    // with the suite green is the assertion. This case states it out loud
-    // because it is the one thing a stray console.log would break, and the
-    // symptom — a client disconnecting with a parse error — would be reported
-    // as anything but its cause.
-    assert.ok(true)
+    // The one thing a stray console.log anywhere in the module graph breaks,
+    // whose symptom — a real client disconnecting with a parse error — points
+    // at anything but its cause. Every diagnostic must go to stderr instead.
+    assert.deepEqual(server.garbage(), [])
   })
 })
 

@@ -54,6 +54,13 @@ export type StdioClient = {
   elicitations: Record<string, unknown>[]
   /** Whatever the child wrote to stderr, for diagnosing a failed boot. */
   stderr: () => string
+  /**
+   * Lines the child wrote to stdout that were not JSON-RPC. Always empty unless
+   * something in the module graph wrote to stdout, which corrupts the stream and
+   * disconnects a real client. Recorded rather than thrown so the failure reads
+   * as an assertion instead of an uncaught exception in a stream handler.
+   */
+  garbage: () => string[]
   stop: () => Promise<void>
 }
 
@@ -70,11 +77,14 @@ export function startStdioServer(): StdioClient {
 
   const waiting = new Map<string | number, (message: Envelope) => void>()
   const elicitations: Record<string, unknown>[] = []
+  const garbage: string[] = []
   let errorOutput = ""
   let buffer = ""
   let nextId = 0
 
-  let elicitHandler = (): ElicitAnswer => ({
+  let elicitHandler: (
+    params: Record<string, unknown>
+  ) => ElicitAnswer = () => ({
     action: "accept",
     content: { confirm: true },
   })
@@ -101,13 +111,21 @@ export function startStdioServer(): StdioClient {
 
       if (line.trim() === "") continue
 
-      // Anything unparseable here is the failure this suite exists to catch:
-      // something wrote to stdout that was not a protocol message.
-      const message = JSON.parse(line) as Envelope
+      let message: Envelope
+
+      try {
+        message = JSON.parse(line) as Envelope
+      } catch {
+        // Something wrote to stdout that was not a protocol message. Collected
+        // for an assertion rather than thrown out of a stream handler.
+        garbage.push(line)
+        continue
+      }
 
       if (message.method === "elicitation/create") {
-        elicitations.push(message.params ?? {})
-        write({ jsonrpc: "2.0", id: message.id, result: elicitHandler() })
+        const params = message.params ?? {}
+        elicitations.push(params)
+        write({ jsonrpc: "2.0", id: message.id, result: elicitHandler(params) })
         continue
       }
 
@@ -154,8 +172,9 @@ export function startStdioServer(): StdioClient {
   return {
     elicitations,
     stderr: () => errorOutput,
+    garbage: () => [...garbage],
     onElicit: (handler) => {
-      elicitHandler = () => handler({})
+      elicitHandler = handler
     },
     oneChunk: async (requests) => {
       const prepared = requests.map((entry) =>
