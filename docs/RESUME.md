@@ -1,8 +1,10 @@
 # Resume here
 
-**State as of 2026-07-29.** Phases 0–6 of [implementation-plan.md](./implementation-plan.md) §6 are built and merged to `main`. Phases 7 and 8 remain.
+**State as of 2026-07-30.** Phases 0–6 of [implementation-plan.md](./implementation-plan.md) §6 are built and merged to `main`. Phases 7 and 8 remain.
 
 The app works end to end: task UI, list management, the EVE agent with framework-enforced approval gates, the chat pane, and live sync. What is *not* yet done is proving it exhaustively — that is Phase 7's job.
+
+**Since Phase 6, off the phase plan:** an **MCP server** (plan §2.8, `mcp/`) — a third interface over the same action layer, giving an external agent the same nineteen capabilities. stdio only; destructive operations gated by `elicitation/create` where the client supports it and by a bound single-use confirmation token where it does not. `mcp/README.md` states what parity does and does not mean; [mcp-server-decisions.md](./decisions/mcp-server-decisions.md) has the reasoning and the gaps. `pnpm test` now runs three suites in sequence — see item 3 under Defects.
 
 ---
 
@@ -128,6 +130,7 @@ Division of labour worth preserving: **E2E asserts effects, evals assert prose.*
 
 - The **bulk-edit gate** (`agent/lib/bulk-edit-gate.ts`) is the most valuable missing one. It ships an input-dependent approval policy departing from plan §2.4, with two documented fail-open limits (parallel calls judged one at a time; process-memory counter). Phase 4 flagged that Phase 6 should own this eval; Phase 6 did not add it.
 - `ask_question` — live, but no eval and no E2E scenario exercises it.
+- **The MCP gate's prose.** Whether an external model actually relays a `needs_confirmation` description to its user rather than confirming on their behalf is behaviour, not effect, and so belongs here. It needs a driven external agent, not just a server — nothing exercises it today.
 - Rule-violation *explanation quality* beyond project moves: blocked deletes, last-remaining-status, in-use priority. Those refusals are asserted for effect in E2E; the quality of the explanation is not.
 
 ### 3.4 The deployed agent never responds
@@ -151,18 +154,19 @@ Next steps in order: curl `/eve/v1/health` on the deployment (set `VERCEL_AUTOMA
 
 ### Defects
 1. **Silent unresumable conversation.** If the app process dies *while a turn is in flight*, the transcript restores but the next message is accepted and never answered, the composer stays disabled, and no error is shown. Clean restarts between turns are fine. Phase 5 packet, Defect 1.
-2. **`agent/lib/bulk-edit-gate.ts` state is process-scoped and in-memory.** Two documented fail-open limits: parallel tool calls are judged one at a time, so the first write lands before the prompt; and the counter does not survive a restart. Phase 6's `settledAction()` is the first test helper that had to work around it. Deserves an eval.
+2. **`agent/lib/bulk-edit-gate.ts` state is process-scoped and in-memory.** Two documented fail-open limits: parallel tool calls are judged one at a time, so the first write lands before the prompt; and the counter does not survive a restart. Phase 6's `settledAction()` is the first test helper that had to work around it. Deserves an eval. (The counting now lives in `lib/edit-gate.ts`, shared with the MCP gate; the limits are unchanged.)
+3. **`withEmptyDb` (tests/support/db.ts) cannot tolerate a concurrent committed write.** It deletes every project inside its transaction and then asserts the table holds exactly one row, which any other session's committed insert falsifies under READ COMMITTED. tests/api/ shares the exposure and survives only because it spends a minute booting `next dev` before writing; the MCP suite boots in two seconds and collided immediately. Worked around by running the suites in sequence (`pnpm test`), not fixed. **Fix this before trusting Phase 7's exit gate**, which is three consecutive green `test:all` runs.
 
 ### Decisions someone should actually make
-3. **Filter/search/show-completed state resets on tab switch.** A preference, not a defect — deliberately left out of a bug fix rather than bundled in.
-4. **No Stop button in the chat pane.** Needs `session.cancel({ turnId })`; the pane already owns its `ClientSession`.
-5. **Chat persistence is whole-snapshot last-write-wins.** Fine at single-user scale; revisit if the event log grows.
-6. **Neon endpoint IDs remain in git history.** Redacted from the working tree, but present in `d5033d1` and earlier. Not credentials — Neon still requires user and password — so history was left intact. Rotating the endpoints is the cheap fix if you want them gone.
+4. **Filter/search/show-completed state resets on tab switch.** A preference, not a defect — deliberately left out of a bug fix rather than bundled in.
+5. **No Stop button in the chat pane.** Needs `session.cancel({ turnId })`; the pane already owns its `ClientSession`.
+6. **Chat persistence is whole-snapshot last-write-wins.** Fine at single-user scale; revisit if the event log grows.
+7. **Neon endpoint IDs remain in git history.** Redacted from the working tree, but present in `d5033d1` and earlier. Not credentials — Neon still requires user and password — so history was left intact. Rotating the endpoints is the cheap fix if you want them gone.
 
 ### Verification debt
-7. **US-G4 is untouched** — the parity capstone, `08-parity.test.ts`, is the one remaining Epic G gap in `tests/e2e/README.md`'s coverage table. It is Phase 7's headline deliverable.
-8. **US-F6.2 was verified by inspection only.**
-9. **`readMigrationFiles()` in `/api/health`** is verified under `next dev` but never under `next start` from a `next build`, where `process.cwd()` could differ.
+8. **US-G4 is untouched** — the parity capstone, `08-parity.test.ts`, is the one remaining Epic G gap in `tests/e2e/README.md`'s coverage table. It is Phase 7's headline deliverable.
+9. **US-F6.2 was verified by inspection only.**
+10. **`readMigrationFiles()` in `/api/health`** is verified under `next dev` but never under `next start` from a `next build`, where `process.cwd()` could differ.
 
 ---
 

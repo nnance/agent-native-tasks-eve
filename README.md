@@ -19,21 +19,23 @@ A single-user task manager presented as a **split screen**: the direct UI (task 
 
 ## Architecture
 
-One set of actions, two front doors:
+One set of actions, three front doors:
 
 ```
-              lib/actions/*  ← every capability, every rule, defined once
-                 ↑        ↑
-    app/api/* (UI)      agent/tools/* (EVE agent)
-         ↑                    ↑
-   Task UI (left)       Chat UI (right)
-                 ↘        ↙
-                  Postgres
+                    lib/actions/*  ← every capability, every rule, defined once
+                 ↑          ↑           ↑
+    app/api/* (UI)   agent/tools/*     mcp/*
+         ↑            (EVE agent)  (external agents)
+   Task UI (left)          ↑
+                     Chat UI (right)
+                 ↘         ↓         ↙
+                       Postgres
 ```
 
 - **Backend:** CRUD API over Postgres (Drizzle ORM), with all business rules in a shared action layer.
 - **UI:** ToDo list with tag-based filtering (project/status/priority) + list management, built with shadcn/ui.
 - **Agent:** Vercel EVE agent embedded in the Next.js app via `withEve()`, with tools that call the same shared actions the API routes do, and framework-enforced approval gates on destructive operations.
+- **MCP server:** the same nineteen capabilities over the Model Context Protocol (`pnpm mcp`), so an agent in another host is a peer too. Same schemas, same actions, same rules; the approval gate differs by necessity and [`mcp/README.md`](mcp/README.md) says exactly how.
 
 ## Documentation
 
@@ -43,6 +45,8 @@ One set of actions, two front doors:
 | [User Stories](docs/user-stories.md) | Acceptance criteria per epic, plus the UI↔agent parity matrix |
 | [EVE Framework Notes](docs/eve-framework-notes.md) | Research notes mapping EVE's primitives onto this design |
 | [Implementation Plan](docs/implementation-plan.md) | Architecture decisions, tool inventory, and the phased build plan |
+| [MCP server](mcp/README.md) | Wiring an external agent in, and what parity does and does not mean there |
+| [Resume here](docs/RESUME.md) | Current state, open items, and harness gotchas |
 
 ## Status
 

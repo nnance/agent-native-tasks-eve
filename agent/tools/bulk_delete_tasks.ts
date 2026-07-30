@@ -8,9 +8,9 @@ import { always } from "eve/tools/approval"
 
 import { bulkDeleteTasks } from "../../lib/actions/index.ts"
 import { bulkDeleteTasksSchema } from "../../lib/schemas/index.ts"
-import { compactDeletedTask } from "../lib/compact.ts"
+import { compactDeletedTask } from "../../lib/compact.ts"
 import { compactList } from "../lib/list-output.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

@@ -20,7 +20,7 @@ import { defineTool } from "eve/tools"
 import { updateTask } from "../../lib/actions/index.ts"
 import { updateTaskSchema } from "../../lib/schemas/index.ts"
 import { afterFirstTaskInTurn } from "../lib/bulk-edit-gate.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

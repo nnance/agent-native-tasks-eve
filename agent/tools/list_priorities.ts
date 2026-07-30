@@ -8,9 +8,9 @@ import { never } from "eve/tools/approval"
 
 import { listPriorities } from "../../lib/actions/index.ts"
 import { listPrioritiesSchema } from "../../lib/schemas/index.ts"
-import { compactPriority } from "../lib/compact.ts"
+import { compactPriority } from "../../lib/compact.ts"
 import { compactList } from "../lib/list-output.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

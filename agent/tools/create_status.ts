@@ -8,7 +8,7 @@ import { never } from "eve/tools/approval"
 
 import { createStatus } from "../../lib/actions/index.ts"
 import { createStatusSchema } from "../../lib/schemas/index.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

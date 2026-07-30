@@ -51,8 +51,17 @@ Deliberately **not** added, with the built-in/in-repo replacement:
 | `uuid` / `nanoid` | `crypto.randomUUID()` (built-in) or Postgres `gen_random_uuid()`. | None. |
 | `date-fns` / `dayjs` | `Intl.DateTimeFormat` + `Intl.RelativeTimeFormat` (built-in). | None. |
 | assertion/HTTP-client libs for API tests | `fetch` (built-in) + `node:assert`. | None. |
+| `@modelcontextprotocol/sdk` | `mcp/server.ts` — JSON-RPC 2.0 over newline-delimited stdio, hand-authored (§2.8). Zod 4's own `z.toJSONSchema()` produces the tool schemas. | None material, and a saving. See below. |
 
 Any deviation from this policy during the build must be recorded here with its justification, in the same table form.
+
+**On rejecting the MCP SDK** (decided when §2.8 was built, against v1.29.0). The test in this policy is "framework-scale infrastructure we could not reasonably author", and an MCP *server* fails it in both halves:
+
+- **It is not framework-scale for us.** The server side of the protocol is a JSON-RPC dispatcher over five methods (`initialize`, `ping`, `tools/list`, `tools/call`, plus outbound `elicitation/create`). `mcp/server.ts` is that, in one file, with the protocol's own error-code split spelled out where a reader can check it against the spec.
+- **The dependency is not small.** v1.29.0 declares `express`, `hono`, `@hono/node-server`, `cors`, `ajv`, `ajv-formats`, `jose`, `eventsource`, `pkce-challenge`, `cross-spawn`, `raw-body` and `zod-to-json-schema` — a second HTTP server and a second JSON Schema generator, inside a Next app that already has both.
+- **The one thing it would have generated, zod already generates.** `zod-to-json-schema` exists for zod 3; we are on zod 4, whose built-in `z.toJSONSchema()` renders the shared `lib/schemas` objects directly. That is what keeps the parity contract of §2.1 intact through the third front door: the *same object* the route parses and the EVE tool advertises is the one the MCP client is served.
+
+The SDK is nonetheless the reference: it is vendored transitively (via `next` and `shadcn`), and its `types.ts` was read as the authority on revision 2025-11-25's exact shapes rather than trusting recollection of the spec.
 
 ---
 
@@ -190,6 +199,36 @@ The E2E suite in §4 drives the real UI, so the UI must be addressable. These ar
 - **Deterministic empty/loading/error states** with their own testids, so the suite can distinguish "still loading" from "genuinely empty".
 - **A `GET /api/health`** returning `{ok, db, migrations}` — the E2E harness polls it to know the server is up, and it doubles as the "all dependencies enabled" check (§4.4).
 - **No `data-testid` in business logic** — attributes only.
+
+### 2.8 MCP server (an external agent's front door)
+
+Added after Phase 6. A **third** interface over the same action layer, for an agent running in someone else's host:
+
+```
+mcp/
+├── inventory.ts      # the §2.4 table again: name → shared schema → shared action
+├── server.ts         # JSON-RPC 2.0 core, transport-agnostic (revision 2025-11-25)
+├── stdio.ts          # the transport and entry point — `pnpm mcp`
+├── guard.ts          # how a destructive call is guarded for an external caller
+├── preview.ts        # the read-back description a person is asked to confirm
+├── instructions.md   # sibling of agent/instructions.md, served on `initialize`
+└── README.md         # host wiring, and the parity statement in full
+```
+
+It obeys the same contract as `agent/tools/`: advertise the shared `lib/schemas` object, parse with it, call the one shared action, map the outcome through `runAction`. `tests/unit/mcp/inventory.test.ts` derives its expectations from `agent/tools/` **by import** — names, schema object identity, the approval column, the annotations — so divergence on either side fails a test.
+
+Four questions this raised, and their answers (reasoning in `docs/decisions/mcp-server-decisions.md`, limits in `mcp/README.md`):
+
+| Question | Answer |
+|---|---|
+| Approval, with no durable pause primitive | `elicitation/create` when the client declares the capability — a real server-side pause; otherwise a single-use `confirmationToken` bound to the exact arguments. `MCP_REQUIRE_ELICITATION=1` refuses rather than degrades. `annotations.destructiveHint` on all six destructive tools for hosts that prompt on their own. |
+| Transport | **stdio only.** It is the transport with a channel back to the client, which is what makes elicitation possible. |
+| Auth | None needed, because there is no HTTP surface. Adding one would make it the only authenticated route in an app whose `app/api/` tree has none. |
+| List trimming | Yes, identically — the same `compactPayload` and row projections, hoisted to `lib/compact.ts` so one definition serves both agents. |
+
+Parity is exact on capability, schemas, rules, errors, ordering and trimming. It is **not** exact on approval: EVE pauses the run durably and the data's owner answers in the chat pane, whereas the MCP token path enforces two round trips with a stated consequence in between, which a caller with no human attached can satisfy alone. That is stated in `mcp/README.md` where an operator will read it, not left to be inferred.
+
+`update_task`'s input-dependent gate (`agent/lib/bulk-edit-gate.ts`) is re-scoped from a turn to a session, because MCP has no turn — stricter inside one connection, never looser. The counting itself is shared: `lib/edit-gate.ts`.
 
 ---
 
@@ -362,9 +401,10 @@ The suite is complete when every row of the user-stories parity matrix and every
 
 ```jsonc
 // package.json scripts (added over the build)
-"test":          "node --test tests/unit/ tests/api/",
+"test":          "pnpm test:unit && pnpm test:api && pnpm test:mcp",
 "test:unit":     "node --test tests/unit/",
 "test:api":      "node --test tests/api/",
+"test:mcp":      "node --test tests/mcp/",   // §2.8; sequenced, see below
 "test:e2e":      "node --test --test-concurrency=1 tests/e2e/",
 "test:all":      "pnpm test && pnpm test:e2e",
 "db:generate":   "drizzle-kit generate",
@@ -372,6 +412,8 @@ The suite is complete when every row of the user-stories parity matrix and every
 "db:seed":       "node --env-file=.env.local scripts/seed.ts",
 "db:reset":      "node --env-file=.env.local scripts/reset.ts"
 ```
+
+`test` runs the three suites **in sequence** rather than handing `node --test` all three globs at once. `withEmptyDb` (tests/support/db.ts) deletes every project inside its transaction and then asserts the table holds exactly one row, which any concurrently *committed* insert invalidates under READ COMMITTED. tests/api/ shares that hazard and only survives it by spending the better part of a minute booting `next dev` before it writes anything; the §2.8 suite boots in two seconds and collided on the first run. Sequencing is the cheap fix; the fragility in `withEmptyDb` is the real one, and it matters before Phase 7's exit gate leans on three consecutive green runs.
 
 ---
 

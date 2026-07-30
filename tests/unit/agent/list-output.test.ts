@@ -8,7 +8,7 @@ import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 
 import { compactList } from "../../../agent/lib/list-output.ts"
-import type { ToolResult } from "../../../agent/lib/tool-result.ts"
+import type { ToolResult } from "../../../lib/tool-result.ts"
 
 type Row = { id: string; title: string; description: string | null }
 

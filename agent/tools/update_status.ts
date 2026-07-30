@@ -9,7 +9,7 @@ import { never } from "eve/tools/approval"
 
 import { updateStatus } from "../../lib/actions/index.ts"
 import { updateStatusSchema } from "../../lib/schemas/index.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:

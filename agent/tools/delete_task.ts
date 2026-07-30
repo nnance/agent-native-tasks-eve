@@ -8,7 +8,7 @@ import { always } from "eve/tools/approval"
 
 import { deleteTask } from "../../lib/actions/index.ts"
 import { deleteTaskSchema } from "../../lib/schemas/index.ts"
-import { runAction } from "../lib/tool-result.ts"
+import { runAction } from "../../lib/tool-result.ts"
 
 export default defineTool({
   description:
